@@ -37,6 +37,16 @@ Formulation of LDLNotationInput space: \(\mathbf{x} \in \mathcal{X} = \mathb
     </item>
     
     <item>
+      <title>nloptr</title>
+      <link>https://haaforever.github.io/blog/post/2020/12/07/nloptr/</link>
+      <pubDate>Mon, 07 Dec 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://haaforever.github.io/blog/post/2020/12/07/nloptr/</guid>
+      <description>IntroductionArguments of nloptr(…)OptionsMinimizing the Rosenbrock Banana FunctionMinimization with Inequality ConstraintsProjection onto Convex SetSummary of vignettes
+IntroductionR interface to NLopt (free/open-source library)NLopt addresses general nonlinear optimization problems of the form\[\begin{equation}\begin{split}&amp;amp; \min_{x \in \mathbb{R}^n} f(x) \\[10pt]\text{subject to} \quad &amp;amp; g(x) \leq 0 \\[10pt]&amp;amp; h(x) = 0 \\[10pt]&amp;amp; x_L \leq x \leq x_U\end{split}\end{equation}\]</description>
+    </item>
+    
+    <item>
       <title>Noise Constrative Estimation</title>
       <link>https://haaforever.github.io/blog/post/2020/12/07/noise-constrative-estimation/</link>
       <pubDate>Mon, 07 Dec 2020 00:00:00 +0000</pubDate>

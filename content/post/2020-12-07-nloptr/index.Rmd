@@ -1,0 +1,387 @@
+---
+title: nloptr
+date: '2020-12-07'
+slug: nloptr
+categories:
+  - R
+tags:
+  - R
+  - Optimization
+  - Projection
+output:
+  blogdown::html_page:
+    toc: true
+---
+
+
+\DeclareMathOperator*{\argmin}{argmin}
+\DeclareMathOperator*{\argmax}{argmax}
+\usepackage{amsmath}
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, fig.width = 6, fig.height = 6, warning = FALSE)
+```
+
+
+> Summary of [vignettes](https://cran.r-project.org/web/packages/nloptr/vignettes/nloptr.pdf)
+
+
+## Introduction
+
+
+ * R interface to [NLopt](https://nlopt.readthedocs.io/en/latest/) (free/open-source library)
+ * NLopt addresses general nonlinear optimization problems of the form
+ 
+\begin{equation}
+\begin{split}
+& \min_{x \in \mathbb{R}^n} f(x) \\[10pt]
+\text{subject to} \quad & g(x) \leq 0 \\[10pt]
+& h(x) = 0 \\[10pt]
+& x_L \leq x \leq x_U
+\end{split}
+\end{equation}
+
+
+## Arguments of nloptr(...)
+  * *x0*: vector with starting values
+  * *eval_f*: objective function
+  * *eval_grad_f*
+    + Gradient of the objective function
+    + Not all of the algorithms require a gradient
+  * *lb*
+    + Vector with lower bounds of the control variables
+    + Default: no lower bounds
+  * *ub*
+    + Vector with uppdf bounds of the control variables
+    + Default: no uppdf bounds
+  * *eval_g_ineq*: inequality constraints
+  * *eval_g_eq*: equality constraints
+  * *eval_jac_ineq*: jacobian of the inequality constraints
+  * *eval_jac_eq*: jacobian of the equality constraints
+  * *opts*: list with options
+
+
+## Options
+  * For more details, nloptr.print.options()
+  * algorithm: check [here](https://nlopt.readthedocs.io/en/latest/NLopt_Algorithms/)
+  * *stopval*
+    + -Inf <= *stopval* <= Inf
+    + Default: -Inf
+    + Stop minimization when an objective value <= *stopval* 
+  * *ftol_abs*
+    + *ftol_abs* > 0
+    + Default: 0
+    + Stop when an optimization step changes the function value by less than *ftol_abs*
+  * *xtol_rel*
+    + *xtol_rel* > 0
+    + Default: 1e-04
+    + Stop when an optimization step changes every parameter by less than xtol_rel multiplied by the absolute value of the parameter
+  * *xtol_abs*
+    + *xtol_abs* > 0
+    + Default: rep(0, length(x0))
+    + Stop when an optimization step changes every parameter x[i] by less than *xtol_abs[i]*
+  * *maxeval*
+    + Positive integer
+    + Default: 100
+    + Stop when the number of function evaluations exceeds *maxeval*
+  * *print_level*: 0 (default), 1, 2, 3
+
+
+## Minimizing the Rosenbrock Banana Function
+
+
+  * Unconstrained minimization problem
+  
+\begin{equation}
+\begin{split}
+& f(x) = 100 (x_2 - x_1^2)^2 + (1 - x_1)^2 \\[10pt]
+& \nabla f(x) =
+\begin{pmatrix}
+-400 x_1 (x_2 - x_1^2) - 2(1 - x_1) \\
+200 (x_2 - x_1^2)
+\end{pmatrix}
+\end{split}
+\end{equation}
+
+```{r}
+# Rosenbrock function
+fn.Rosen <- function(x) {
+  return( 100 * (x[2] - x[1]^2)^2 + (1 - x[1])^2 )
+}
+fn.Rosen.grad <- function(x) {
+  g1 <- -400 * x[1] * (x[2] - x[1]^2) - 2 * (1 - x[1])
+  g2 <- 200 * (x[2] - x[1]^2)
+  return(c(g1, g2))
+}
+
+# Data generation for visualization
+x1 <- seq(from = -2, to = 2, by = 0.1)
+x2 <- x1
+z <- matrix(data = 0, nrow = length(x1), ncol = length(x2))
+for (i in 1:length(x1)) {
+  for (j in 1:length(x2)) {
+    z[i, j] <- fn.Rosen(x = c(x1[i], x2[j]))
+  }
+}
+
+# 3D visualization using plotly
+library(plotly)
+fig <- plot_ly() %>%
+  add_trace(x = x1, y = x2, z = z, type = "surface", colorscale = "Picnic")
+fig
+```
+
+  * With gradient information (Low-storage BFGS: NLOPT_LD_LBFGS)
+```{r}
+library(nloptr)
+x0 <- c(-1, -1)
+opts <- list(algorithm = "NLOPT_LD_LBFGS", xtol_rel = 1e-8)
+res <- nloptr(x0 = x0, eval_f = fn.Rosen, eval_grad_f = fn.Rosen.grad, opts = opts)
+print(res)
+```
+
+  * Without gradient information (NEWUOA: NLOPT_LN_NEWUOA)
+```{r}
+library(nloptr)
+x0 <- c(-1, -1)
+opts <- list(algorithm = "NLOPT_LN_NEWUOA", xtol_rel = 1e-8, maxeval = 1000)
+res.nloptr <- nloptr(x0 = x0, eval_f = fn.Rosen, opts = opts)
+print(res.nloptr)
+```
+
+
+## Minimization with Inequality Constraints
+
+
+\begin{equation}
+\begin{split}
+& \min_{x \in \mathbb{R}^2} f(x) = \sqrt{x_2} \\[10pt]
+\text{subject to} \quad & x_2 \geq 0 \\[10pt]
+& x_2 \geq (a x_1 + b)^3 \\[10pt]
+& x_2 \geq (c x_1 + d)^3
+\end{split}
+\end{equation}
+
+  * $a = 2$, $b = 0$, $c = -1$, $d = 1$
+  * Re-formulate the constraints to be the form $g(x) \leq 0$
+  * The first constraint can be replaced with *nloptr(lb)*
+
+\begin{equation}
+\begin{split}
+& g_1 (x) = (a x_1 + b)^3 - x_2 \leq 0 \\[10pt]
+& g_2 (x) = (c x_1 + d)^3 - x_2 \leq 0
+\end{split}
+\end{equation}
+
+  * Gradient of the objective function
+  
+\begin{equation}
+\begin{split}
+\nabla f(x) =
+\begin{pmatrix}
+0 \\
+1 / 2 \sqrt{x}
+\end{pmatrix}
+\end{split}
+\end{equation}  
+
+  * Jacobian matrix of the constraints
+  
+\begin{equation}
+\begin{split}
+\mathbf{J(\mathbf{g})} & = (\frac{\partial \mathbf{g}}{\partial x_1}, \frac{\partial \mathbf{g}}{\partial x_2}) \\[10pt]
+& =
+\begin{pmatrix}
+3 a (a x_1 + b)^2 & -1 \\
+3 c (c x_1 + d)^2 & -1 \\
+\end{pmatrix}
+\end{split}
+\end{equation} 
+
+
+```{r}
+# They all have to contain additional parameters a, b, c, d
+# Objective function
+fn.obj <- function(x, a, b, c, d) {
+  return(sqrt(x[2]))
+}
+# Gradient of the objective function
+fn.obj.grad <- function( x, a, b, c, d) {
+  return(c(0, 0.5/sqrt(x[2])))
+}
+# Inequality constraints
+fn.constr <- function(x, a, b, c, d) {
+  g1 <- (a * x[1] + b)^3 - x[2] # 1st constraint
+  g2 <- (c * x[1] + d)^3 - x[2] # 2nd constraint
+  return(rbind(g1, g2)) # Have to combine rbind
+}
+# Jacobian matrix of the constraints
+fn.constr.jacob <- function(x, a, b, c, d) {
+  g1 <- c(3 * a * (a * x[1] + b)^2, -1.0)
+  g2 <- c(3 * c * (c * x[1] + d)^2, -1.0)
+  return(rbind(g1, g2))
+}
+```
+
+  * With gradient information (Method of Moving Asymptotes: NLOPT_LD_MMA)
+  
+```{r}
+res.nloptr <- nloptr(x0 = c(1, 5),
+               eval_f = fn.obj,
+               eval_grad_f = fn.obj.grad,
+               lb = c(-Inf, 0),
+               ub = c(Inf, Inf),
+               eval_g_ineq = fn.constr,
+               eval_jac_g_ineq = fn.constr.jacob,
+               opts = list("algorithm" = "NLOPT_LD_MMA",
+                           "xtol_rel"=1.0e-8,
+                           "print_level" = 2,
+                           "check_derivatives" = TRUE,
+                           "check_derivatives_print" = "all"),
+               a = 2, b = 0, c = -1, d = 1)
+print(res.nloptr)
+```
+
+  * Without gradient information (Constrained Optimization BY Linear Approximations: NLOPT_LN_COBYLA)
+  
+```{r}
+res.nloptr <- nloptr(x0 = c(1, 5),
+               eval_f = fn.obj,
+               lb = c(-Inf,0),
+               ub = c(Inf,Inf),
+               eval_g_ineq = fn.constr,
+               opts = list("algorithm"="NLOPT_LN_COBYLA",
+                           "xtol_rel"=1.0e-8),
+               a = 2, b = 0, c = -1, d = 1)
+print(res.nloptr)
+```
+
+
+## Projection onto Convex Set
+
+
+  * Projection onto a given convex set $\mathcal{X} \subseteq \mathbb{R}^n$
+
+<br>
+\begin{equation}
+\text{Proj}_{\mathcal{x}} (x) = \argmin_{v \; \in \mathcal{X}} \lVert x - v \rVert _2^2
+\end{equation}
+<br>
+
+  * Example
+
+\begin{equation}
+\begin{split}
+& \argmin_{x \in \mathbb{R}^2} f(x) = (x_1 - 2)^2 + (x_2 - 2)^2 \\[10pt]
+& \text{subject to} \quad g(x) = \lVert x \rVert \leq 1
+\end{split}
+\end{equation}
+
+  * Procedure
+    + Repeat
+    + Update using gradient descent method
+    + Projection onto $g(x)$ using *nloptr*
+
+```{r}
+##### Packages #####
+library(nloptr)
+library(plotly)
+
+##### Functions for minimization problem #####
+# Objective function
+fn.obj <- function(x) {
+  return((x[1] - 2)^2 + (x[2] - 2)^2)
+}
+# Its gradient
+fn.obj.grad <- function(x) {
+  g1 <- 2 * (x[1] - 2)
+  g2 <- 2 * (x[2] - 2)
+  return(c(g1, g2))
+}
+
+##### Functions for proejction problem
+# Objective function
+fn.obj.proj <- function(x, z) {
+  # Decision variable: x
+  return(0.5 * sum((x - z)^2)) # 0.5 * Sqaure of Euclidean distance
+}
+# Its gradient
+fn.obj.proj.grad <- function(x, z) {
+  return(x - z)
+} # L1 constraint
+fn.constr.proj <- function(x, z) {
+  return(sum(abs(x)) - 1)
+} # Its Jacobian matrix (1 by 2)
+fn.constr.jacob.proj <- function(x, z) {
+  return(c(sign(x[1]), sign(x[2])))
+}
+```
+
+```{r}
+
+##### Visualization Using plotly #####
+x1 <- x2 <- seq(from = -2, to = 3, by = 0.1)
+z <- matrix(data = 0, nrow = length(x1), ncol = length(x1))
+for (i in 1:length(x1)) {
+  for (j in 1:length(x2)) {
+    z[i, j] <- fn.obj(x = c(x1[i], x2[j]))
+  }
+}
+fig <- plot_ly(
+  x = x1,
+  y = x2,
+  z = z,
+  type = "contour",
+  contours = list(start = 0, end = 30, size = 1), # showlabels, coloring
+  colorscale = list(c(0, 1), c('black', 'white'))
+)
+fig <- fig %>% layout(showlegend = FALSE)
+fig <- fig %>% add_trace(x = c(-1, 0, 1, 0, -1), y = c(0, 1, 0, -1, 0),
+                         type = "scatter", mode = "line",
+                         line = list(shape = "linear", color = "yellow"))
+```
+
+```{r}
+##### Procedure #####
+itr <- 10 # iteration
+eta <- 0.2 # learning rate
+x.old <- c(-1, 1) # starting point
+for (i in 1:itr) {
+  # Update
+  x.new <- x.old - (eta * fn.obj.grad(x = x.old))
+  # Figure
+  fig <- fig %>% add_trace(x = c(x.old[1], x.new[1]), y = c(x.old[2], x.new[2]),
+                           type = "scatter", mode = "line+marker",
+                           line = list(color = "lawngreen", dash = "dash"),
+                           marker = list(size = 10, color = "lawngreen"))
+  # Projection
+  res.nloptr <- nloptr(x0 = c(0, 0),
+                       eval_f = fn.obj.proj,
+                       eval_grad_f = fn.obj.proj.grad,
+                       lb = c(-1, -1),
+                       ub = c(1, 1),
+                       eval_g_ineq = fn.constr.proj,
+                       eval_jac_g_ineq = fn.constr.jacob.proj,
+                       opts = list("algorithm" = "NLOPT_LD_MMA",
+                                   "xtol_rel"=1.0e-8,
+                                   "print_level" = 0,
+                                   "check_derivatives" = TRUE,
+                                   "check_derivatives_print" = "all"),
+                       z = x.new)
+  x.proj <- res.nloptr$"solution"
+  # Figure
+  fig <- fig %>% add_trace(x = c(x.new[1], x.proj[1]), y = c(x.new[2], x.proj[2]),
+                           type = "scatter", mode = "line+marker",
+                           line = list(color = "red", dash = "dash"),
+                           marker = list(size = 10, color = "red"))
+  #
+  x.old <- x.proj
+}
+```
+
+```{r}
+##### Results #####
+fig %>% hide_colorbar() # trace
+x.proj # final solution
+fn.obj(x.proj) # objective value
+sum(abs(x.proj)) # constraint
+```
