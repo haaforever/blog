@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Loss Function on Haji blog</title>
+    <link>https://haaforever.github.io/blog/tags/loss-function/</link>
+    <description>Recent content in Loss Function on Haji blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Mon, 07 Dec 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://haaforever.github.io/blog/tags/loss-function/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Hinge Rank Loss and AUC</title>
+      <link>https://haaforever.github.io/blog/post/2020/12/07/hinge-rank-loss-and-auc/</link>
+      <pubDate>Mon, 07 Dec 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://haaforever.github.io/blog/post/2020/12/07/hinge-rank-loss-and-auc/</guid>
+      <description>Steck, 2007, Hinge rank loss and the are under the ROC curve, European Conference on Machine Learning. pdf
+NotationDataset\(D = \{ (x_i, y_i) \} _{i=1}^{N}\)Class labels \(y_i \in \{ -1, +1 \}\)The number of positive and negative examples \(N^+\) and \(N^-\) respectivelyClassifier \(C\)Real-valued output \(c_i = C(x_i)\)Assume that there are no ties, i.e., \(c_i \neq c_j\) for all \(i, j\)Classification rule given the real-valued threshold \(\theta\): \(sign(c_i - \theta)\)Rank-version of \(C\)The smallest output-value gets assigned the lowest rankLet \(r_i \in \{ 1, \cdots, N \}\) be the rank of \(x_i\)\(r_j^+\): ranks of the positive examples, \(j = 1, \cdots, N^+\)\(r_k^-\): ranks of the negative examples, \(k = 1, \cdots, N^-\)Rank-threshold \(\tilde{\theta} = \max{\{ r_i: c_i \leq \theta \}} + 0.</description>
+    </item>
+    
+    <item>
+      <title>Some Experiments on Loss Functions</title>
+      <link>https://haaforever.github.io/blog/post/2020/12/07/some-experiments-on-loss-functions/</link>
+      <pubDate>Mon, 07 Dec 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://haaforever.github.io/blog/post/2020/12/07/some-experiments-on-loss-functions/</guid>
+      <description>Still working
+Surrogate loss functions\(y \in \{ -1, 1 \}\), \(h(x) \in \mathbb{R}\)Classification rule\[\begin{equation*}\hat{y} = \begin{cases}1 &amp;amp; h(x) \geq 0 \\-1 &amp;amp; \text{otherwise} \end{cases}\end{equation*}\]
+Classification margin \(m = yh(x) \in \mathbb{R}\)Margin-based loss function \(L(y, h(x))\)LossFormula0-1\(I\{yh(x)&amp;lt;0\}\)Logistic\(\log _2 (1+\exp(-yh(x)))\)Exponential\(\exp(-yh(x))\)Hinge\(\max \{ 0, 1-yh(x) \} = \{ 1-yh(x) \}_{+}\)Square\((1-yh(x))^2\)Savage\(1/(1+\exp(yh(x)))^2\)Sigmoid\(1/(1+\exp(yh(x)))\)Binomial deviance\(\log _2 (1 + \exp(-2yh(x)))\)Tangent\((2 \tan ^{-1} (yh(x))- 1)^2\)Data descriptionTwo 2D Gaussian distributionPositive samples \(X^{+} \sim N(\mu^{+}, I_2)\) where \(\mu^{+} = (1,1)^T\)Negative samples \(X^{-} \sim N(\mu^{-}, I_2)\) where \(\mu^{+} = (0,0)^T\)\(I_2\): \((2 \times 2)\) identity matrixSame prior distributionExperiments on error minimizationFind the optimal linear classifier \(h^{\star}\)Linear classifier \(h(\mathbf{x}) = w_{0} + w_1x_1 + w_2x_2 = w_{0} + \mathbf{w} \cdot \mathbf{x}\)Given training dataset \(D = \{ (\mathbf{x}_i,y_i) \}_{i=1}^{n} = \{ (\mathbf{x}^{+}_{1},1), \cdots, (\mathbf{x}^{+}_{n^{+}},1), (\mathbf{x}^{-}_{1},-1), \cdots, (\mathbf{x}^{-}_{n^{-}},-1) \}\)Original formulation\[\mathop{\mathrm{argmin}}_{w_{0}, \mathbf{w}} \Pr (Yh(X)&amp;lt;0)\]</description>
+    </item>
+    
+  </channel>
+</rss>

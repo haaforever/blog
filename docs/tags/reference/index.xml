@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Reference on Haji blog</title>
+    <link>https://haaforever.github.io/blog/tags/reference/</link>
+    <description>Recent content in Reference on Haji blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Mon, 07 Dec 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://haaforever.github.io/blog/tags/reference/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>AUC Optimization</title>
+      <link>https://haaforever.github.io/blog/post/2020/12/07/auc-optimization/</link>
+      <pubDate>Mon, 07 Dec 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://haaforever.github.io/blog/post/2020/12/07/auc-optimization/</guid>
+      <description>ApproximationYan et al., 2003, Optimizing classifier performance via an approximation to the Wilcoxon-Mann-Whitney statistic, International Conference on Machine Learning. pdfSteck, 2007, Hinge rank loss and the area under the ROC curve, European Conference on Machine Learning. pdfCalders and Jaroszewicz, 2007, Efficient AUC optimization for classification, European Conference on Principles of Data Mining and Knowledge Discovery. pdfAnalysisCortes and Mohri, 2004, AUC optimization vs.</description>
+    </item>
+    
+  </channel>
+</rss>

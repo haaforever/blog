@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>AUC on Haji blog</title>
+    <link>https://haaforever.github.io/blog/tags/auc/</link>
+    <description>Recent content in AUC on Haji blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Mon, 07 Dec 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://haaforever.github.io/blog/tags/auc/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>AUC Optimization</title>
+      <link>https://haaforever.github.io/blog/post/2020/12/07/auc-optimization/</link>
+      <pubDate>Mon, 07 Dec 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://haaforever.github.io/blog/post/2020/12/07/auc-optimization/</guid>
+      <description>ApproximationYan et al., 2003, Optimizing classifier performance via an approximation to the Wilcoxon-Mann-Whitney statistic, International Conference on Machine Learning. pdfSteck, 2007, Hinge rank loss and the area under the ROC curve, European Conference on Machine Learning. pdfCalders and Jaroszewicz, 2007, Efficient AUC optimization for classification, European Conference on Principles of Data Mining and Knowledge Discovery. pdfAnalysisCortes and Mohri, 2004, AUC optimization vs.</description>
+    </item>
+    
+    <item>
+      <title>Hinge Rank Loss and AUC</title>
+      <link>https://haaforever.github.io/blog/post/2020/12/07/hinge-rank-loss-and-auc/</link>
+      <pubDate>Mon, 07 Dec 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://haaforever.github.io/blog/post/2020/12/07/hinge-rank-loss-and-auc/</guid>
+      <description>Steck, 2007, Hinge rank loss and the are under the ROC curve, European Conference on Machine Learning. pdf
+NotationDataset\(D = \{ (x_i, y_i) \} _{i=1}^{N}\)Class labels \(y_i \in \{ -1, +1 \}\)The number of positive and negative examples \(N^+\) and \(N^-\) respectivelyClassifier \(C\)Real-valued output \(c_i = C(x_i)\)Assume that there are no ties, i.e., \(c_i \neq c_j\) for all \(i, j\)Classification rule given the real-valued threshold \(\theta\): \(sign(c_i - \theta)\)Rank-version of \(C\)The smallest output-value gets assigned the lowest rankLet \(r_i \in \{ 1, \cdots, N \}\) be the rank of \(x_i\)\(r_j^+\): ranks of the positive examples, \(j = 1, \cdots, N^+\)\(r_k^-\): ranks of the negative examples, \(k = 1, \cdots, N^-\)Rank-threshold \(\tilde{\theta} = \max{\{ r_i: c_i \leq \theta \}} + 0.</description>
+    </item>
+    
+    <item>
+      <title>One-Pass AUC Optimization</title>
+      <link>https://haaforever.github.io/blog/post/2020/12/07/one-pass-auc-optimization/</link>
+      <pubDate>Mon, 07 Dec 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://haaforever.github.io/blog/post/2020/12/07/one-pass-auc-optimization/</guid>
+      <description>Gao et al., 2013, One-pass AUC optimization, ICML. pdf
+MotivationAUC is measured by a sum of losses defined over pairs of instances from different classesThis causes a problem in applications involving big data or streaming data in which a large volume of data come in a short time periodIn this work, one-pass AUC optimization that requires going through the training data only once without storing the entire training dataset is proposedPreliminariesInstance space \(\mathcal{X} \in \mathbb{R}^d\)Label set \(\mathcal{Y} = \{ -1, +1 \}\)Unknown distribution \(\mathcal{D}\) over \(\mathcal{X} \times \mathcal{Y}\)A training sample of \(n_{+}\) positive instances and \(n_{-}\) negative onesTraining set \(\mathcal{S} = \{ (\mathbf{x}_1^{+}, +1), \cdots, (\mathbf{x}_{n_{+}}^{+}, +1), (\mathbf{x}_1^{-}, -1), \cdots, (\mathbf{x}_{n_{-}}^{-}, -1) \}\)Real-valued function \(f: \mathcal{X} \rightarrow \mathbb{R}\)AUC of \(f\) on \(\mathcal{S}\)\[\begin{equation}\sum_{i=1}^{n_{+}} \sum_{j=1}^{n_{-}} \frac{\mathbb{I}[f(\mathbf{x}_{i}^{+}) &amp;gt; f(\mathbf{x}_{j}^{-})]}{n_{+} n_{-}}\end{equation}\]</description>
+    </item>
+    
+    <item>
+      <title>Online AUC Maximization</title>
+      <link>https://haaforever.github.io/blog/post/2020/12/07/online-auc-maximization/</link>
+      <pubDate>Mon, 07 Dec 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://haaforever.github.io/blog/post/2020/12/07/online-auc-maximization/</guid>
+      <description>Zhao et al., 2011, Online AUC Maximization, ICML. pdf
+MotivationMost studies of online learning measure the performance of a learner by classification accuracy, which is inappropriate for applications where the data are unevenly distributed among different classesAUC maximization needs to optimize the pairwise loss between two instances from different classes, making it unattractive for large-scale applicationsThe authors address this challenge by exploiting the reservoir samplingPreliminaries\((\mathbf{x}_t, y_t)\): the training examples received at the \(t\)-th trial where \(\mathbf{x}_t \in \mathbb{R}^d\) and \(y_t \in \{ -1, 1\}\)Training dataset: \(\mathcal{D} = \{ (\mathbf{x}_i, y_i) \in \mathbb{R} \times \{ -1, 1\} | i \in [T] \}\)The set of positive instances: \(\mathcal{D}_+ = \{ (\mathbf{x}_i^+, 1) | i \in [T_+] \}\)The set of negative instances: \(\mathcal{D}_- = \{ (\mathbf{x}_j^-, -1) | j \in [T_-] \}\)\(T_+\), \(T_-\): the number of positive and negative instancesLinear classifier: \(\mathbf{w} \cdot \mathbf{x}\)\[\begin{equation}\begin{split}\text{AUC} (\mathbf{w}) &amp;amp; = \frac{\sum_{i=1}^{T^+} \sum_{j=1}^{T_-} \mathbb{I} (\mathbf{w} \cdot \mathbf{x}_i^+ &amp;gt; \mathbf{w} \cdot \mathbf{x}_j^-)}{T_+ T_-} \\[10pt]&amp;amp; = 1 - \frac{\sum_{i=1}^{T^+} \sum_{j=1}^{T_-} \mathbb{I} (\mathbf{w} \cdot \mathbf{x}_i^+ \leq \mathbf{w} \cdot \mathbf{x}_j^-)}{T_+ T_-}\end{split}\end{equation}\]</description>
+    </item>
+    
+    <item>
+      <title>Optimizing AUC Using Wilcoxon-Mann-Whitney Statistic</title>
+      <link>https://haaforever.github.io/blog/post/2020/12/07/optimizing-auc-using-wilcoxon-mann-whitney-statistic/</link>
+      <pubDate>Mon, 07 Dec 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://haaforever.github.io/blog/post/2020/12/07/optimizing-auc-using-wilcoxon-mann-whitney-statistic/</guid>
+      <description>Yan et al., 2003, Optimizing classifier performance via an approximation to the Wilcoxon-Mann-Whitney statistic, International Conference on Machine Learning. pdf
+IntroductionRelationship between AUC and WMW statisticMinimizing cross entropy or mean squared error does not necessarily maximize the area under the ROC curve (AUC)Let \(\{ x_0 , \cdots , x_{m-1} \}\) as the classifier outputs for \(m\) positive examples, and \(\{ y_0 , \cdots , y_{n-1} \}\) for \(n\) negative examples\(X\) and \(Y\) are random variableWilcoxon-Mann-Whitney (WMW) statistic \(U\) is an estimator of AUC \(\textit{P} (X &amp;gt; Y)\)\[U = \frac{ \sum_{i=0}^{m-1} \sum_{j=0}^{n-1} I(x_i , y_j)}{mn}\]</description>
+    </item>
+    
+  </channel>
+</rss>

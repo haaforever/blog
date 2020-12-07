@@ -1,0 +1,276 @@
+---
+title: Label Distribution Learning
+date: '2020-12-07'
+slug: label-distribution-learning
+categories:
+  - Paper
+tags:
+  - IEEE T KNOWL DATA EN
+  - Label Distribution
+  - Maximum Entropy Model
+  - Optimization
+---
+
+<link href="{{< relref "post/2020-12-07-label-distribution-learning/index.html" >}}index_files/anchor-sections/anchor-sections.css" rel="stylesheet" />
+<script src="{{< relref "post/2020-12-07-label-distribution-learning/index.html" >}}index_files/anchor-sections/anchor-sections.js"></script>
+
+
+
+<p>Geng, 2016, Label distribution learning, <em>IEEE Transactions on Knowledge and Data Engineering</em>. <a href="https://ieeexplore.ieee.org/abstract/document/7439855?casa_token=zEswd3iNxJIAAAAA:n1kpltbPeA89czcvDQQkO3MLSROswLp9g-nOu1oy0Zk11SK68PH8XfJ_TXG4DjWQeVVekIAD3uA">pdf</a></p>
+<hr />
+<div id="formulation-of-ldl" class="section level2">
+<h2>Formulation of LDL</h2>
+<ul>
+<li>Notation
+<ul>
+<li>Input space: <span class="math inline">\(\mathbf{x} \in \mathcal{X} = \mathbb{R}^q\)</span></li>
+<li>Complete set of labels: <span class="math inline">\(\mathcal{Y} = \{ y_1, \cdots, y_c \}\)</span></li>
+<li>Label distribution of <span class="math inline">\(\mathbf{x}_i\)</span>: <span class="math inline">\(D_i = \{ d_{\mathbf{x}_i}^{y_1}, \cdots, d_{\mathbf{x}_i}^{y_c} \}\)</span></li>
+<li>Description degree of <span class="math inline">\(y\)</span> to <span class="math inline">\(\mathbf{x}\)</span>: <span class="math inline">\(d_{\mathbf{x}}^y\)</span></li>
+<li><span class="math inline">\(d_{\mathbf{x}}^y \in [0,1]\)</span> and <span class="math inline">\(\sum_y d_{\mathbf{x}}^y = 1\)</span></li>
+<li>Training set: <span class="math inline">\(S = \{ (\mathbf{x}_1, D_1), \cdots, (\mathbf{x}_n, D_n) \}\)</span></li>
+</ul></li>
+<li>Learn a conditional probability mass function <span class="math inline">\(p(y|\mathbf{x})\)</span> from <span class="math inline">\(S\)</span>, where <span class="math inline">\(\mathbf{x} \in \mathcal{X}\)</span> and <span class="math inline">\(y \in \mathcal{Y}\)</span></li>
+<li>Optimization formulation
+<ul>
+<li>Given a parametric model <span class="math inline">\(p(y|\mathbf{x} ; \theta)\)</span>, the goal of LDL is to find <span class="math inline">\(\theta\)</span> that can generate a distribution similar to <span class="math inline">\(D_i\)</span>, given <span class="math inline">\(\mathbf{x}_i\)</span></li>
+<li>Example: Kullback-Leibler divergence
+<span class="math display">\[\begin{equation}
+\begin{split}
+&amp; \mathop{\mathrm{argmin}}_{\theta} \sum_i \sum_j \left( d_{\mathbf{x}_i}^{y_j} \log{\frac{d_{\mathbf{x}_i}^{y_j}}{p(y_j|\mathbf{x}_i ; \theta)}} \right) \\
+= \quad &amp; \mathop{\mathrm{argmax}}_{\theta} \sum_i \sum_j d_{\mathbf{x}_i}^{y_j} \log{p(y_j|\mathbf{x}_i ; \theta)}
+\end{split}
+\end{equation}\]</span></li>
+<li>When <span class="math inline">\(d_{\mathbf{x}_i}^{y_j} = I(y_j = y(\mathbf{x}_i))\)</span>, single label learning
+<span class="math display">\[\begin{equation}
+\mathop{\mathrm{argmax}}_{\theta} \sum_i \log{p(y(\mathbf{x}_i)|\mathbf{x}_i ; \theta)}
+\end{equation}\]</span></li>
+<li>When each instance is associated with a specific label set, multi-label learning
+<span class="math display">\[\begin{equation}
+\mathop{\mathrm{argmax}}_{\theta} \sum_i \frac{1}{|Y_i|} \sum_{y \in Y_i} \log{p(y | \mathbf{x}_i ; \theta)}
+\end{equation}\]</span></li>
+</ul></li>
+<li>LDL may be viewed as a more general learning framework which includes both SLL and MLL as its special cases</li>
+</ul>
+<p><br>
+<img src="images/Fig_02.PNG" />
+<br></p>
+<hr />
+</div>
+<div id="proposed-method" class="section level2">
+<h2>Proposed method</h2>
+<div id="problem-transformation-ldl-into-sll" class="section level4">
+<h4>Problem transformation: LDL into SLL</h4>
+<ul>
+<li>Each <span class="math inline">\((\mathbf{x}_i, D_i)\)</span> is transformed into <span class="math inline">\(c\)</span> single labels examples <span class="math inline">\((\mathbf{x}_i, y_j)\)</span> with the weight <span class="math inline">\(d_{\mathbf{x}_i}^{y_j}\)</span></li>
+<li>The learner must be able to output the confidence/probability for each labe <span class="math inline">\(y_j\)</span></li>
+<li>PT-Bayes: Naive Bayes, posterior probability computed by the Bayes rule</li>
+<li>PT-SVM: pairwise coupling multi-class method (Wu et al., 2004) and improved implementation of Platt’s posterior probability (Lin et al., 2007)</li>
+</ul>
+</div>
+<div id="algorithm-adaptation" class="section level4">
+<h4>Algorithm adaptation</h4>
+<ul>
+<li>AA-kNN</li>
+</ul>
+<p><span class="math display">\[\begin{equation}
+  p(y_j|\mathbf{x}) = \frac{1}{k} \sum_{i \in N_k (\mathbf{x})} d_{\mathbf{x}_i}^{y_j}
+\end{equation}\]</span></p>
+<ul>
+<li>AA-BP
+<ul>
+<li>Three-layer neural network</li>
+<li>Softmax activation function is used in each output node where <span class="math inline">\(\eta_j\)</span> is the input to the <span class="math inline">\(j\)</span>-th output node</li>
+<li>Loss: MSE
+<span class="math display">\[\begin{equation}
+z_j = \frac{\exp(\eta_j)}{\sum_{l=1}^c \exp(\eta_l)}
+\end{equation}\]</span></li>
+</ul></li>
+</ul>
+</div>
+<div id="specialized-algorithms" class="section level4">
+<h4>Specialized algorithms</h4>
+<ul>
+<li>Maximum entropy model (Berger et al., 1996)
+<span class="math display">\[\begin{equation}
+  p(y | \mathbf{x} ; \theta) = \frac{1}{Z} \exp{\left( \sum_k \theta_{y,k} g_k (\mathbf{x}) \right)}
+\end{equation}\]</span>
+<ul>
+<li>Normalization factor <span class="math inline">\(Z = \sum_y \exp{(\sum_l \theta_{y,l} g_l (\mathbf{x}))}\)</span></li>
+<li><span class="math inline">\(\theta_{y,k}\)</span>: <span class="math inline">\(k\)</span>-th element of <span class="math inline">\(\theta\)</span></li>
+<li><span class="math inline">\(g_k (\mathbf{x})\)</span>: <span class="math inline">\(k\)</span>-th feature of <span class="math inline">\(\mathbf{x}\)</span></li>
+</ul></li>
+<li>SA-IIS (Specialized Algorithm - Improved Iterative Scaling)
+<span class="math display">\[\begin{equation}
+\begin{split}
+  T(\theta) = &amp; \sum_i \sum_j d_{\mathbf{x}_i}^{y_j} \log{p(y_j|\mathbf{x}_i ; \theta)} \\
+= &amp; \sum_i \sum_j d_{\mathbf{x}_i}^{y_j} \log{\left( \frac{1}{Z} \exp{\left( \sum_k \theta_{y_j,k} g_k (\mathbf{x}) \right)} \right)}
+\end{split}
+\end{equation}\]</span>
+<ul>
+<li>The optimization of <span class="math inline">\(T(\theta)\)</span> uses a strategy similar to IIS (Improved Iterative Scaling, Della Pietra et al., 1997), a well-knowd algorithm for maximizing the likelihood of the maximum entropy model</li>
+<li>IIS starts with an arbitrary set of parameters</li>
+<li>For each step, it updates the current estimate of the parameters <span class="math inline">\(\theta\)</span> to <span class="math inline">\(\theta + \Delta\)</span></li>
+<li><span class="math inline">\(\Delta\)</span> maximizes a lower bound to the change in likelihood <span class="math inline">\(\Omega = T(\theta + \Delta) - T(\theta)\)</span></li>
+<li>The element of <span class="math inline">\(\Delta\)</span>, <span class="math inline">\(\delta_{y_j, k}\)</span> can be obtained by solving the equation
+<span class="math display">\[\begin{equation}
+\sum_i p(y_j | \mathbf{x}_i ; \theta) g_k (\mathbf{x}_i) \exp{\left( \delta_{y_j, k} s(g_k (\mathbf{x}_i)) g^{\#} (\mathbf{x}_i) \right)} - \sum_i d_{\mathbf{x}_i}^{y_j} g_k (\mathbf{x}_i) = 0
+\end{equation}\]</span></li>
+<li><span class="math inline">\(s(g_k (\mathbf{x}_i))\)</span>: sign of <span class="math inline">\(g_k (\mathbf{x}_i)\)</span></li>
+<li><span class="math inline">\(g^{\#} (\mathbf{x}_i) = \sum_k |g_k (\mathbf{x}_i)|\)</span></li>
+<li>For detailed derivation, see the appendix</li>
+<li>Use non-linear equation solvers, such as the Gauss-Newton method
+<br>
+<img src="images/Algorithm_01.PNG" />
+<br></li>
+</ul></li>
+<li>SA-BFGS
+<ul>
+<li>Minimization of <span class="math inline">\(T&#39;(\theta) = -T(\theta)\)</span> using BFGS method</li>
+<li>Current estimate <span class="math inline">\(\theta ^{(t)}\)</span>, update step <span class="math inline">\(\Delta = \theta ^{(t+1)} - \theta ^{(t)}\)</span>
+<span class="math display">\[\begin{equation}
+T&#39;(\theta ^{(t+1)}) \approx T&#39;(\theta ^{(t)}) + \nabla T&#39;(\theta ^{(t)})^T \Delta + \frac{1}{2} \Delta ^T H(\theta ^{(t)}) \Delta
+\end{equation}\]</span></li>
+<li><span class="math inline">\(\nabla T&#39;(\theta ^{(t)})\)</span>: gradient of <span class="math inline">\(T&#39;(\theta)\)</span> at <span class="math inline">\(\theta ^{(t)}\)</span></li>
+<li><span class="math inline">\(H(\theta ^{(t)})\)</span>: Hessian matrix of <span class="math inline">\(T&#39;(\theta)\)</span> at <span class="math inline">\(\theta ^{(t)}\)</span></li>
+<li>The minimizer of the above equation is
+<span class="math display">\[\begin{equation}
+\Delta ^{(t)} = -H^{-1} (\theta ^{(t)}) \nabla T&#39;(\theta ^{(t)})
+\end{equation}\]</span></li>
+<li>The line search Netwon method uses <span class="math inline">\(\Delta ^{(t)}\)</span> as the search direction <span class="math inline">\(p^{(t)} = \Delta ^{(t)}\)</span> and update the parameter by
+<span class="math display">\[\begin{equation}
+\theta ^{(t+1)} = \theta ^{(t)} + \alpha ^{(t)} p^{(t)}
+\end{equation}\]</span></li>
+<li>Step length <span class="math inline">\(\alpha ^{(t)}\)</span> is obtained from a line search procedure to satisfy the strong Wolfe conditions
+<span class="math display">\[\begin{equation}
+T&#39;(\theta ^{(t)} + \alpha ^{(t)} p^{(t)}) \leq T&#39;(\theta) + c_1 \alpha ^{(t)} \nabla T&#39;(\theta ^{(t)})^T p^{(t)}
+\end{equation}\]</span>
+<span class="math display">\[\begin{equation}
+\left| \nabla T&#39;(\theta ^{(t)} + \alpha ^{(t)} p^{(t)})^T p^{(t)} \right| \leq c_2 \left| \nabla T&#39;(\theta ^{(t)})^T p^{(t)} \right|
+\end{equation}\]</span>
+<span class="math display">\[\begin{equation}
+0 \leq c_1 \leq c_2
+\end{equation}\]</span></li>
+<li>Inverse Hessian matrix in each iteration is computaionally expensive</li>
+<li>BFGS: avoiding explicit calculation of <span class="math inline">\(H^{-1} (\theta ^{(t)})\)</span> by approximating it with an iteratively updated matrix <span class="math inline">\(B\)</span>
+<span class="math display">\[\begin{equation}
+\begin{split}
+s^{(t)} &amp; = \theta ^{(t+1)} - \theta ^{(t)} \\
+u^{(t)} &amp; = \nabla T&#39;(\theta ^{(t+1)}) - \nabla T&#39;(\theta ^{(t)}) \\
+\rho ^{(t)} &amp; = \frac{1}{s^{(t)} u^{(t)}} \\
+B^{(t+1)} &amp; = (I - \rho ^{(t)} s^{(t)} (u^{(t)})^T) B^{(t)} (I - \rho ^{(t)} u^{(t)} (s^{(t)})^T) + \rho ^{(t)} s^{(t)} (s^{(t)})^T \\
+\frac{\partial T&#39;(\theta)}{\partial \theta _{y_j,k}} &amp; = \sum_i \frac{\exp\left( \sum_k \theta _{y_j,k} g_k(\mathbf{x}_i) \right) g_k(\mathbf{x}_i)}{\sum_j \exp{\left(\sum_k \theta _{y_j,k} g_k(\mathbf{x}_i) \right)}} - \sum_i d_{\mathbf{x}_i}^{y_j} g_k (\mathbf{x}_i)
+\end{split}
+\end{equation}\]</span></li>
+</ul></li>
+</ul>
+<p><br>
+<img src="images/Algorithm_02.PNG" />
+<br></p>
+<hr />
+</div>
+</div>
+<div id="experiment" class="section level2">
+<h2>Experiment</h2>
+<div id="evaluation-measures" class="section level4">
+<h4>Evaluation Measures</h4>
+<ul>
+<li>Distance/similarity between probability distributions</li>
+<li>From (Cha, 2007)
+<br>
+<img src="images/Fig_03.PNG" />
+<br></li>
+</ul>
+</div>
+<div id="datasets" class="section level4">
+<h4>Datasets</h4>
+<ul>
+<li>Artificial dataset
+<ul>
+<li>Training dataset: <span class="math inline">\(D = \{ d_{\mathbf{x}}^{y_1}, d_{\mathbf{x}}^{y_2}, d_{\mathbf{x}}^{y_3}\}\)</span>, <span class="math inline">\(\mathbf{x} = [x_1, x_2, x_3]^T \sim Unif(-1,1)\)</span>, 500 instances
+<span class="math display">\[\begin{equation}
+\begin{split}
+t_i &amp; = x_i + 0.5 x_i^2 + 0.2 x_i^3 + 1, \quad i = 1, 2, 3 \\
+\psi _1 &amp; = (4 t_1 + 2 t_2 + t_3)^2 \\
+\psi _2 &amp; = (t_1 + 2 t_2 + 4 t_3 + 0.01 \psi _1)^2 \\
+\psi _3 &amp; = (t_1 + 4 t_2 + 2 t_3 + 0.01 \psi _2)^2 \\
+d_{\mathbf{x}}^{y_i} &amp; = \frac{\psi _i}{\psi _1 + \psi _2 + \psi _3}, \quad i = 1, 2, 3
+\end{split}
+\end{equation}\]</span></li>
+<li>Test dataset: <span class="math inline">\(x_1\)</span> and <span class="math inline">\(x_2\)</span> from the grid of the interval 0.01 within the range <span class="math inline">\([-1,1]\)</span>, i.e. 40,401 test instances
+<span class="math display">\[\begin{equation}
+x_3 = \sin{(\pi (x_1 + x_2))}
+\end{equation}\]</span></li>
+</ul></li>
+<li>Real-world dataset
+<ul>
+<li>Yeast- (Eisen et al., 1998)</li>
+<li>Human Gene (Yu et al., 2012)</li>
+<li>Natural Scene (Geng and Luo, 2014)</li>
+<li>Facial expression: JAFFE (Lyons et al., 1998), BU_3DFE (Yin et al., 2006)</li>
+<li>Movie: Netflix
+<br>
+<img src="images/Table_01.PNG" />
+<br></li>
+</ul></li>
+</ul>
+</div>
+<div id="methodology" class="section level4">
+<h4>Methodology</h4>
+<ul>
+<li>10 cross validation with parameter search</li>
+</ul>
+</div>
+<div id="results" class="section level4">
+<h4>Results</h4>
+<ul>
+<li>Artifical dataset</li>
+</ul>
+<p><br>
+<img src="images/Fig_04.PNG" />
+<br>
+<img src="images/Table_02.PNG" />
+<br></p>
+<ul>
+<li>Real-world dataset
+<br>
+<img src="images/Table_03.PNG" />
+<br>
+<img src="images/Table_04.PNG" />
+<br></li>
+</ul>
+<hr />
+</div>
+</div>
+<div id="further-study" class="section level2">
+<h2>Further study</h2>
+<ul>
+<li>Berger et al., 1996, <strong>A maximum entropy approach to natural language processing</strong>, <em>Computational linguistics</em>. <a href="https://www.cs.colorado.edu/~mozer/Teaching/syllabi/6622/papers/MaxEntNLP.pdf">pdf</a></li>
+<li>Bengio et al., 2010, <strong>Label embedding trees for large multi-class tasks</strong>, <em>Advances in Neural Information Processing Systems</em>. <a href="http://papers.nips.cc/paper/4027-label-embedding-trees-for-large-multi-class-tasks.pdf">pdf</a></li>
+<li>Caruana, 1997, <strong>Multitask learning</strong>, <em>Machine Learning</em>. <a href="https://link.springer.com/article/10.1023/A:1007379606734">pdf</a></li>
+<li>Lampert et al., 2013, <strong>Attribute-based classification for zero-shot visual object categorization</strong>, <em>IEEE Transactions on Pattern Analysis and Machine Intelligence</em>. <a href="https://hannes.nickisch.org/papers/articles/lampert13attributes.pdf">pdf</a></li>
+<li>Nickel et al., 2011, <strong>A three-way model for collective learning on multi-relational data</strong>, <em>International Conference on Machine Learning</em>. <a href="https://www.dbs.ifi.lmu.de/~tresp/papers/ICML2011-final.pdf">pdf</a></li>
+<li>Quost and Denoeux, 2009, <strong>Learning from data with uncertain labels by boosting credal classifiers</strong>, <em>ACM SIGKDD Workshop on Knowledge Discovery from Uncertain Data</em>. <a href="https://dl.acm.org/doi/pdf/10.1145/1610555.1610561">pdf</a></li>
+<li>Raykar et al., 2010, <strong>Learning from crowds</strong>, <em>Journal of Machine Learning Research</em>. <a href="https://www.jmlr.org/papers/volume11/raykar10a/raykar10a.pdf">pdf</a></li>
+<li>Wu et al., 2004, <strong>Probability estimates for multi-class classification by pairwise coupling</strong>, <em>Journal of Machine Learning Research</em>. <a href="https://www.jmlr.org/papers/volume5/wu04a/wu04a.pdf">pdf</a></li>
+<li>Zhang and Zhou, 2006, <strong>Multilabel neural networks with applications to functional genomics and text categorization</strong>, <em>IEEE Transactions on Knowledge and Data Engineering</em>. <a href="http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.130.7318&amp;rep=rep1&amp;type=pdf">pdf</a></li>
+<li>Zhang and Zhang, 2007, <strong>Multi-instance multi-label learning with application to scene classification</strong>, <em>Advances in Neural Information Processing Systems</em>. <a href="http://papers.nips.cc/paper/3047-multi-instance-multi-label-learning-with-application-to-scene-classification.pdf">pdf</a></li>
+</ul>
+<hr />
+</div>
+<div id="references" class="section level2">
+<h2>References</h2>
+<ul>
+<li>Berger et al., 1996, <strong>A maximum entropy approach to natural language processing</strong>, <em>Computational linguistics</em>. <a href="https://www.cs.colorado.edu/~mozer/Teaching/syllabi/6622/papers/MaxEntNLP.pdf">pdf</a></li>
+<li>Cha, 2007, <strong>Comprehensive survey on distance/similarity measures between probability density functions</strong>, <em>International Journal of Mathematical Models and Methods in Applied Sciences</em>. <a href="http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.154.8446&amp;rep=rep1&amp;type=pdf">pdf</a></li>
+<li>Della Pietra et al., 1997, <strong>Inducing features of random fields</strong>, <em>IEEE Transactions on Pattern Analysis and Machine Intelligence</em>. <a href="https://ieeexplore.ieee.org/abstract/document/588021">pdf</a></li>
+<li>Eisen et al., 1998, <strong>Cluster analysis and display of genome-wide expression patterns</strong>, <em>National Academy of Sciences</em>. <a href="https://www.pnas.org/content/95/25/14863.short">pdf</a></li>
+<li>Geng and Luo, 2014, <strong>Multilabel ranking with inconsistent rankers</strong>, <em>IEEE Conference on Computer Vision and Pattern Recognition</em>. <a href="https://www.cv-foundation.org/openaccess/content_cvpr_2014/html/Geng_Multilabel_Ranking_with_2014_CVPR_paper.html">pdf</a></li>
+<li>Lin et al., 2007, <strong>A note on Platt’s probabilistic outputs for support vector machines</strong>, <em>Machine Learning</em>. <a href="https://link.springer.com/article/10.1007/s10994-007-5018-6">pdf</a></li>
+<li>Lyons et al., 1998, <strong>Coding facial expressions with gabor wavelets</strong>, <em>IEEE International Conference on Automatic Face and Gesture Recognition</em>. <a href="https://ieeexplore.ieee.org/abstract/document/670949/">pdf</a></li>
+<li>Wu et al., 2004, <strong>Probability estimates for multi-class classification by pairwise coupling</strong>, <em>Journal of Machine Learning Research</em>. <a href="https://www.jmlr.org/papers/v5/wu04a.html?907d3908">pdf</a></li>
+<li>Yin et al., 2006, <strong>A 3D facial expression database for facial behavior research</strong>, <em>IEEE International Conference on Automatic Face and Gesture Recognition</em>. <a href="https://ieeexplore.ieee.org/abstract/document/1613022/">pdf</a></li>
+<li>Yu et al., 2012, <strong>Discriminate the falsely predicted protein-coding genes in Aeropyrum Pernix K1 genome based on graphical representation</strong>, <em>Match-Communications in Mathematical and Computer Chemistry</em>. <a href="http://www.bioprotection.org/articles/DNA-19.pdf">pdf</a></li>
+</ul>
+<hr />
+</div>

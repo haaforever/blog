@@ -1,0 +1,492 @@
+---
+title: Noise Constrative Estimation
+author: ''
+date: '2020-12-07'
+slug: noise-constrative-estimation
+categories:
+  - Paper
+tags:
+  - ATSTATS
+  - Density Estimation
+  - Optimization
+---
+
+
+\DeclareMathOperator*{\argmin}{argmin}
+\DeclareMathOperator*{\argmax}{argmax}
+\usepackage{amsmath}
+```{r, setup, include=FALSE}
+knitr::opts_chunk$set(
+  fig.width = 6, fig.height = 6
+)
+```
+
+
+Gutmann and Hyvarinen, 2010, **Noise-contrastive estimation: A new estimation principle for unnormalized statistical models**, *AISTATS*. [pdf](http://proceedings.mlr.press/v9/gutmann10a/gutmann10a.pdf)
+
+
+***
+
+
+## Estimation Problem
+
+
+  * Given a sample of a random vector $\mathbf{x} \in \mathbb{R}^n$ from an unknown pdf $p_d(\cdot)$
+  * Our model: a parameterized family of functions $\{ p_m(\cdot;\alpha) \}_{\alpha}$
+  * How to estimate $\alpha$ from the observed sample by maximizing some objective function?
+  * Any solution to this estimation problem must yield a normalized density
+
+\begin{equation}
+\begin{split}
+& p_m(\cdot;\alpha) = \frac{p_m^0(\cdot;\alpha)}{Z(\alpha)} \\[10pt]
+& Z(\alpha) = \int p_m^0(\mathbf{u};\alpha) d\mathbf{u}
+\end{split}
+\end{equation}
+
+  * However, the calculation of $Z(\alpha)$ is very problematic
+
+
+***
+
+
+## Noise-Constrative Estimator
+
+
+  * Learning by comparison: by discriminating between data and noise, learn properties of the data in the from of a statistical model
+  * Definition
+    + Including the $Z(\alpha)$ as  another parameter $c$
+\begin{equation}
+\begin{split}
+& \log p_m(\cdot;\theta) = \log p_m^0(\cdot;\alpha) + c \\[10pt]
+& \theta = \{ \alpha, c\}
+\end{split}
+\end{equation}
+    + $c$: an estimate of the negative logarithm of $Z(\alpha)$
+    + $p_m(\cdot;\theta)$ will only integrate to one for some specific choice of $c$
+  * Observations
+    + Observed data: $X = \{ \mathbf{x}_1, \cdots, \mathbf{x}_T \} \sim p_m(\cdot;\theta)$
+    + Noise (artificial generated): $Y = \{ \mathbf{y}_1, \cdots, \mathbf{y}_T \} \sim p_n(\cdot)$
+    + Union of $X$ and $Y$: $U = \{ \mathbf{u}_1, \cdots, \mathbf{u}_{2T} \}$
+    + $C_t$: Binary class label of $\mathbf{u}_t$
+\begin{equation}
+C_t = \begin{cases}
+1 & \mathbf{u}_t \in X \\[10pt]
+0 & \mathbf{u}_t \in Y
+\end{cases}
+\end{equation}
+  * Objective function $J_T(\theta)$
+\begin{equation}
+\begin{split}
+& G(\mathbf{u} ; \theta)  = \log p_m(\mathbf{u} ; \theta) - \log p_n(\mathbf{u}) \\[10pt]
+& h(\mathbf{u} ; \theta) = \frac{1}{1 + \exp(-G(\mathbf{u} ; \theta))} \\[10pt]
+& J_T(\theta) = \frac{1}{2T} \sum_t \left( \log h(\mathbf{x}_t ; \theta) + \log (1 - h(\mathbf{y}_t ; \theta)) \right) \\[10pt]
+& \hat{\theta}_T = \argmax_{\theta} J_T(\theta)
+\end{split}
+\end{equation}
+    + Class-conditional probability \  
+\begin{equation}
+\begin{split}
+& P( \mathbf{u} | C=1 ; \theta) = p_m(\mathbf{u};\theta) \\[10pt]
+& P(\mathbf{u} | C = 0) = p_n(\mathbf{u})
+\end{split}
+\end{equation}
+    + Posterior probability \   
+\begin{equation}
+\begin{split}
+P(C=1 | \mathbf{u} ; \theta) & = \frac{P( \mathbf{u} | C=1 ; \theta) P(C=1)}{P(\mathbf{u} ; \theta)} \\[10pt]
+& = \frac{p_m(\mathbf{u} ; \theta)}{p_m(\mathbf{u} ; \theta) + p_n(\mathbf{u})} \\[10pt]
+& = h(\mathbf{u} ; \theta) \\[10pt]
+P(C=0 | \mathbf{u} ; \theta) & = 1 - h(\mathbf{u} ; \theta)
+\end{split}
+\end{equation}
+    + Log-likelihood for Bernoulli-distributed $C_t$ \   
+\begin{equation}
+\begin{split}
+\mathcal{l}(\theta) & = \sum_t (C_t \log P(C_t = 1|\mathbf{u}_t ; \theta) + (1 - C_t) \log P(C_t = 0|\mathbf{u}_t ; \theta)) \\[10pt]
+& = \sum_t \left( \log h(\mathbf{x}_t ; \theta) + \log (1 - h(\mathbf{y}_t ; \theta)) \right)
+\end{split}
+\end{equation}
+
+
+***
+
+## Example with R
+  * Observations
+    + Observed data: $\mathbf{x} = (x_1, x_2) \sim \mathcal{N} _2 (\mathbf{0}, \mathbb{I} _2)$
+      <br/>
+      <br/>
+      $$
+      \begin{aligned}
+      & p_d(\mathbf{x}) = \frac{1}{2 \pi} \exp{(\mathbf{x} ^T \mathbf{x})} \\[11pt]
+      & \log p_d(\mathbf{x}) = - \log 2 \pi - \frac{1}{2} \lVert \mathbf{x} \rVert _2^2 = - \log 2 \pi - \frac{1}{2} x_1^2 - \frac{1}{2} x_2^2
+      \end{aligned}
+      $$
+      <br/>
+      <br/>
+    + Noise: $\mathbf{y} \sim \text{Unif} ([-3, 3] \times [-3, 3])$
+      <br/>
+      <br/>
+      $$
+      \begin{aligned}
+      & p_n(\mathbf{y}) = \frac{1}{36} \\[11pt]
+      & \log p_n(\mathbf{y}) = \log \frac{1}{36}
+      \end{aligned}
+      $$
+      <br/>
+      <br/>
+      
+```{r}
+##### Data generation
+# Observed data
+n <- 500 # number of observations
+d <- 2 # dimension
+x <- mvtnorm::rmvnorm(n = n, mean = rep(0, d), sigma = diag(x = 1, nrow = d))
+colnames(x) <- paste0("x", 1:d)
+# Noisy data
+s <- 36 # area
+y <- cbind(runif(n = n, min = -3, max = 3),
+           runif(n = n, min = -3, max = 3))
+plot(x, col = "red", xlim = c(-3, 3), ylim = c(-3, 3))
+points(x = y[,1], y = y[,2])
+# Noise model
+fn.log.p.n <- function(y, s) {
+  p.n <- 1 / s
+  log.p.n <- rep(log(p.n), nrow(y))
+  return(log.p.n)
+}
+```
+
+```{r}
+fn.log.p.n(y = x[1:10,], s = s)
+```
+
+```{r}
+fn.log.p.n(y = y[1:10,], s = s)
+```
+
+```{r}
+# Optimal values
+w.opt <- c(0, 0, -1/2, 0, -1/2)
+names(w.opt) <- c("x1", "x2", "x1*x1", "x1*x2", "x2*x2")
+c.opt <- - log(2*pi)
+names(c.opt) <- "c"
+c(w.opt, c.opt)
+```
+
+  * Our model
+    <br/>
+    <br/>
+    $$
+    \begin{aligned}
+    & \log p_m^0 (\mathbf{x} ; \mathbf{w}) = w_1 x_1 + w_2 x_2 + w_3 x_1^2 + w_4 x_1 x_2 + w_5 x_2^2 \\[11pt]
+    & \log p_m (\mathbf{x} ; \mathbf{w}) = \log p_m^0 (\mathbf{x} ; \mathbf{w}) + c
+    \end{aligned}
+    $$
+    <br/>
+    <br/>
+
+```{r}
+# Initial values (very bad starting points)
+w.init <- c(1, -1, 0, 0, 0)
+names(w.init) <- names(w.opt)
+c.init <- -3
+names(c.init) <- names(c.opt)
+c(w.init, c.init)
+```
+
+```{r}
+# Our model
+# log.p.m.zero <- w1x1 + w2x2 + w3x1^2 + w4x1x2 + x5x2^2
+# log.p.m <- log.p.m.zero + c
+fn.log.p.m <- function(x, theta) {
+  # theta: vectorized parameters for optim
+  # ex) theta = c(w.init, c.init)
+  len.theta <- length(theta)
+  w <- theta[1:(len.theta - 1)] # parameters for unnormalized pdf
+  c <- theta[len.theta] # normalization constant
+  #
+  x.poly <- cbind(x, x[,1] * x[,1], x[,1] * x[,2], x[,2] * x[,2])
+  log.p.m.zero <- as.numeric(rbind(x.poly) %*% cbind(w))
+  log.p.m <- log.p.m.zero + c
+  return(log.p.m)
+}
+```
+
+```{r}
+fn.log.p.m(x = x[1:10,], theta = c(w.init, c.init))
+```
+
+```{r}
+fn.log.p.m(x = y[1:10,], theta = c(w.init, c.init))
+```
+
+  * Optimization using BFGS method
+
+```{r}
+# Loss function
+fn.loss <- function(x, theta, y, s) {
+  u <- rbind(x, y)
+  ix.x <- 1:nrow(x)
+  ix.y <- (nrow(x) + 1) : (2 * nrow(x))
+  log.p.m <- fn.log.p.m(x = u, theta = theta)
+  log.p.n <- fn.log.p.n(y = u, s = s)
+  g <- log.p.m - log.p.n
+  h.u <- 1 / (1 + exp(-g))
+  h.x <- h.u[ix.x]
+  h.y <- h.u[ix.y]
+  loss <- - mean(log(h.x) + log(1 - h.y))
+  return(loss)
+}
+fn.loss(x = x, theta = c(w.init, c.init), y = y, s = s)
+# Optimization
+itr <- 500
+res.opt <- optim(par = c(w.init, c.init), method = "BFGS",
+                 control = list(maxit = itr),
+                 fn = fn.loss, x = x, y = y, s = s)
+res.opt
+```
+
+  * Visualization
+
+```{r}
+# For decision boundary
+x1.ref <- seq(from = -3, to = 3, length.out = 100)
+x2.ref <- seq(from = -3, to = 3, length.out = 100)
+x.test <- as.matrix(expand.grid(x1.ref, x2.ref)) ; rm(x1.ref, x2.ref)
+plot(x, col = "red", xlim = c(-3, 3), ylim = c(-3, 3))
+points(x = y[,1], y = y[,2])
+points(x = x.test[,1], y = x.test[,2], cex = 0.4, pch = 16, col = "darkseagreen3")
+```
+
+```{r}
+# Plot decision boundary using initial parameters
+fn.prob.post <- function(x, theta.m, theta.n) {
+  log.p.m <- fn.log.p.m(x = x, theta = theta.m)
+  log.p.n <- fn.log.p.n(y = x, s = theta.n)
+  g <- log.p.m - log.p.n
+  pr <- 1 / (1 + exp(-g))
+  return(pr)
+}
+y.hat <- fn.prob.post(x = x.test, theta.m = c(w.init, c.init), theta.n = s)
+col <- c()
+col[y.hat >= 0.5] <- "lightpink"
+col[y.hat < 0.5] <- "grey"
+plot(x, col = "red", xlim = c(-3, 3), ylim = c(-3, 3))
+points(x = y[,1], y = y[,2])
+points(x = x.test[,1], y = x.test[,2], cex = 0.4, pch = 16, col = col)
+```
+
+```{r}
+#
+y.hat <- fn.prob.post(x = x.test, theta.m = res.opt$"par", theta.n = s)
+col <- c()
+col[y.hat >= 0.5] <- "lightpink"
+col[y.hat < 0.5] <- "grey"
+plot(x, col = "red", xlim = c(-3, 3), ylim = c(-3, 3))
+points(x = y[,1], y = y[,2])
+points(x = x.test[,1], y = x.test[,2], cex = 0.4, pch = 16, col = col)
+```
+
+
+## Properties of the Estimator
+
+
+  * The behavior of the estimator $\hat{\theta}_T$ when the sample size $T$ becomes arbitrarily large
+  * $J_T(\theta)$ converges in probability to $J$
+
+\begin{equation}
+J(\theta) = \frac{1}{2} \mathbb{E} \left[ \log h(\mathbf{x} ; \theta) + \log (1 - h(\mathbf{y} ; \theta)) \right]
+\end{equation}
+
+  * Let $\tilde{J}$ denote the objective $J$ seen as a function of $f(\cdot) = \log p_m(\cdot ; \theta)$ where $r(\cdot)$ is logistic function
+
+\begin{equation}
+\tilde{J}(\theta) = \frac{1}{2} \mathbb{E} \left[ \log r(f(\mathbf{x}) - \log p_n(\mathbf{x})) + \log (1 - r(f(\mathbf{x}) - \log p_n(\mathbf{x}))) \right]
+\end{equation}
+
+  * **Theorem 1** (Nonparametric estimation) $\tilde{J}$ attains a maximum at $f(\cdot) = \log p_d(\cdot)$. There are no other extrema if the noise density $p_n(\cdot)$ is chosen such it is nonzero whenever $p_d(\cdot)$ is nonzero
+    + The data pdf $p_d(\cdot)$ can be found by maximization of $\tilde{J}$, i.e. by learning a classifier under the ideal situation of infinite amount of data
+  * **Theorem 2** (Consistency) If conditions (a) to (c) are fulfilled then $\hat{\theta}_T$ converges in probability to $\theta^{\star}$ \   
+
+$\begin{aligned}
+\\
+& \text{(a) } p_n(\cdot) \text{ is nonzero whenever } p_d(\cdot) \text{ is nonzero} \\[10pt]
+& \text{(b) } \sup_{\theta} | J_T(\theta) - J(\theta) | \xrightarrow{P} 0 \\[10pt]
+& \text{(c) } I = \int \mathbf{g}(\mathbf{x}) \mathbf{g}(\mathbf{x})^T P(\mathbf{x}) p_d(\mathbf{x}) d\mathbf{x} \text{ has full rank}, \\[10pt]
+& \quad \quad \text{where } P(\mathbf{x}) = \frac{}{p_d(\mathbf{x}) + p_n(\mathbf{x})} \text{ and } \mathbf{g}(\mathbf{x}) = \nabla _{\theta} \log p_m(\mathbf{x} ; \theta) |_{\theta^{\star}}
+\end{aligned}$
+    + $\hat{\theta}_T$ that the value of $\theta$ which globally maximizes $J_T$ converges to $\theta^{\star}$ and leads to the correct estimate of $p_d(\cdot)$ as the sample size $T$ increases
+  * **Theorem 3** (Asymptotic normality) $\sqrt{T}(\hat{\theta} - \theta^{\star})$ is asymptotically normal with mean zero and covariance matrix $\Sigma$ \   
+\begin{equation}
+\Sigma = I^{-1} - 2I^{-1} \left[ \int \mathbf{g}(\mathbf{x}) P(\mathbf{x}) p_d(\mathbf{x}) d\mathbf{x} \right] \left[ \int \mathbf{g}(\mathbf{x})^T P(\mathbf{x}) p_d(\mathbf{x}) d\mathbf{x} \right] I^{-1}
+\end{equation}
+    + This describes the distribution of the estimation error $(\hat{\theta} - \theta^{\star})$ for large sample sizes
+  * **Corollary 1** For large sample size $T$, the mean squared error $\mathbb{E} \lVert \hat{\theta} - \theta^{\star} \rVert ^2$ behaves like $\text{tr}(\Sigma) / T$
+
+
+***
+
+
+## Choice of the Noise Distribution
+
+
+  * In practice, we'd like to have a noise distribution which fulfills the following:
+    1. It is easy to sample from, since the method relies on a set of samples $Y$ from the noise distribution
+    2. It allows for an analytical expression for the log-pdf, so that we can evaluate the objective function without any problems
+    3. It leads to a small jmean squared error $\mathbb{E} \lVert \hat{\theta} - \theta^{\star} \rVert ^2$
+  * Noise distribution sould be close to the data distribution, because otherwise, the classification problem might be too easy and would not require the system to learn much about the structure of the data
+
+
+***
+
+
+## Simulations with Artificial Data
+
+
+  * Data $\mathbf{x} \in \mathbb{R}^4$ is generated via the ICA model
+
+\begin{equation}
+\begin{split}
+& \mathbf{s} \sim Laplace (0,1) \\[10pt]
+& A = (\mathbf{a}_1, \cdots, \mathbf{a}_4) \qquad (4 \times 4) \text{ mixing matrix} \\[10pt]
+& \log p_d(\mathbf{x}) = - \sum_{i=1}^4 \sqrt{2} |\mathbf{b}_i^{\star} \mathbf{x}| + (\log |\text{det}(B^{\star})| - \log 4) \\[10pt]
+& B^{\star} = A^{-1} \\[10pt]
+& \mathbf{b}_i^{\star}: i \text{-th row of } B^{\star} \\[10pt]
+& c^{\star} = \log |\text{det}(B^{\star})| - \log 4
+\end{split}
+\end{equation}
+
+```{r}
+# Data generation
+n <- 500 # number of observations
+d <- 4 # dimension
+s <- matrix(data = rmutil::rlaplace(n = n * d, m = 0, s = 1), nrow = n, ncol = d) # source
+a <- matrix(data = runif(n = d^2, min = -1, max = 1), nrow = d) # mixing matrix
+x <- s %*% t(a)
+plot(data.frame(x))
+```
+
+```{r}
+# Optimal values
+b.opt <- solve(a)
+c.opt <- log(abs(det(b.opt))) - log(4)
+b.opt <- as.numeric(t(b.opt))
+c(b.opt, c.opt)
+```
+
+  * Model
+
+\begin{equation}
+\begin{split}
+& \log p_m(\mathbf{x} ; \theta) = \log p_m^0(\mathbf{x} ; \alpha) + c \\[10pt]
+& \log p_m^0 (\mathbf{x} ; \alpha) = - \sum_{i=1}^4 \sqrt{2} |\mathbf{b}_i^{\star} \mathbf{x}| \\[10pt]
+& \text{Total set of parameters } \theta = \{ \alpha \in \mathbb{R}^{16}, c \}
+\end{split}
+\end{equation}
+
+```{r}
+# Initial values
+b.init <- rnorm(n = d^2, mean = 0, sd = 1)
+c.init <- rnorm(n = 1, mean = 0, sd = 1)
+# Our model
+fn.log.p.m <- function(x, theta) {
+  # theta: vectorized parameters for optim
+  b <- theta[1:(ncol(x)^2)] # parameters for unnormalized pdf
+  b <- matrix(data = b, nrow = ncol(x), byrow = TRUE)
+  c <- theta[(ncol(x)^2) + 1] # normalization constant
+  log.p.m.zero <- - rowSums(sqrt(2) * abs(rbind(x) %*% t(b)))
+  log.p.m <- log.p.m.zero + c
+  return(log.p.m)
+}
+fn.log.p.m(x = x[1:10,], theta = c(b.init, c.init))
+```
+
+  * Estimation method
+    + Noise: Gaussian with the same mean and covariance matrix as $\mathbf{x}$
+    + Using conjugate gradient algorithm
+```{r}
+# Noise model
+mu <- colMeans(x)
+sigma <- cov(x)
+y <- mvtnorm::rmvnorm(n = n, mean = mu, sigma = sigma)
+plot(data.frame(rbind(x, y)), col = c(rep(1, n), rep(3, n)))
+fn.log.p.n <- function(y, mu, sigma) {
+  p.n <- mvtnorm::dmvnorm(x = y, mean = mu, sigma = sigma)
+  log.p.n <- log(p.n)
+  return(log.p.n)
+}
+fn.log.p.n(y = y[1:10,], mu = mu, sigma = sigma)
+
+
+# Loss function
+fn.loss <- function(x, theta, y, mu, sigma) {
+  u <- rbind(x, y)
+  ix.x <- 1:nrow(x)
+  ix.y <- (nrow(x) + 1) : (2 * nrow(x))
+  log.p.m <- fn.log.p.m(x = u, theta = theta)
+  log.p.n <- fn.log.p.n(y = u, mu = mu, sigma = sigma)
+  g <- log.p.m - log.p.n
+  h.u <- 1 / (1 + exp(-g))
+  h.x <- h.u[ix.x]
+  h.y <- h.u[ix.y]
+  loss <- - mean(log(h.x) + log(1 - h.y))
+  return(loss)
+}
+fn.loss(x = x, theta = c(b.init, c.init), y = y, mu = mu, sigma = sigma)
+```
+
+```{r}
+# Optimization
+itr <- 200
+res.opt <- optim(par = c(b.init, c.init), method = "CG", control = list(maxit = itr), fn = fn.loss, x = x, y = y, mu = mu, sigma = sigma)
+res.opt$"par"
+
+
+# Optimization for tracking MSE
+res.par <- matrix(data = 0, nrow = itr + 1, ncol = length(c(b.init, c.init)))
+res.par[1,] <- c(b.init, c.init)
+par.opt <- c(b.opt, c.opt)
+mse <- sqrt(sum((par.opt - res.par[1,])^2))
+loss <- fn.loss(x = x, theta = res.par[1,], y = y, mu = mu, sigma = sigma)
+for (i in 1:itr) {
+  # i <- 1
+   # No change when maxit = 1 
+  res <- optim(par = res.par[i,], method = "CG", control = list(maxit = 2),
+               fn = fn.loss, x = x, y = y, mu = mu, sigma = sigma)
+  mse[i + 1] <- sqrt(sum((par.opt - res$par)^2))
+  loss[i + 1] <- res$value
+  res.par[i + 1,] <- res$par
+}
+plot(mse)
+plot(loss)
+
+data.frame("Min_MSE" = res.par[which.min(mse),],
+           "Min_Loss" = res.par[which.min(loss),],
+           "Optimal" = par.opt)
+```
+
+  * Results
+<br>
+![](images/Fig_01.PNG)
+<br>
+
+
+***
+
+
+## Further Study
+
+
+  * Hinton, 2002, **Training products of experts by minimizing contrastive divergence**, *Neural Computation*. [pdf](http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.124.730&rep=rep1&type=pdf)
+  * Teh et al., 2004, **Energy-based models for sparse overcomplete representations**, *Journal of Machine Learning Research*. [pdf](http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.93.8380&rep=rep1&type=pdf)
+
+
+***
+
+
+## Note
+
+
+  * Despite of $a \sim Unif(-1,1)$, correlated variables of $\mathbf{x}$ are observed... How about regularization?
+  * Using maximum entropy model, applying NCE to data generation method for imbalance classification
+

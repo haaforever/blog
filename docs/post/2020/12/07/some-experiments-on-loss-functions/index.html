@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Some Experiments on Loss Functions | Haji blog</title>
+    <link rel="stylesheet" href="https://haaforever.github.io/blog/css/style.css" />
+    <link rel="stylesheet" href="https://haaforever.github.io/blog/css/fonts.css" />
+    
+  </head>
+
+  <body>
+    <nav>
+    <ul class="menu">
+      
+      <li><a href="https://haaforever.github.io/blog/">Home</a></li>
+      
+      <li><a href="https://haaforever.github.io/blog/about/">About</a></li>
+      
+      <li><a href="https://haaforever.github.io/blog/categories/">Categories</a></li>
+      
+      <li><a href="https://haaforever.github.io/blog/tags/">Tags</a></li>
+      
+      <li><a href="https://haaforever.github.io/blog/index.xml">Subscribe</a></li>
+      
+    </ul>
+    <hr/>
+    </nav>
+
+<div class="article-meta">
+<h1><span class="title">Some Experiments on Loss Functions</span></h1>
+
+<h2 class="date">2020/12/07</h2>
+</div>
+
+<main>
+
+<link href="https://haaforever.github.io/blog/post/2020/12/07/some-experiments-on-loss-functions/index_files/anchor-sections/anchor-sections.css" rel="stylesheet" />
+<script src="https://haaforever.github.io/blog/post/2020/12/07/some-experiments-on-loss-functions/index_files/anchor-sections/anchor-sections.js"></script>
+
+
+
+<blockquote>
+<p>Still working</p>
+</blockquote>
+<hr />
+<div id="surrogate-loss-functions" class="section level2">
+<h2>Surrogate loss functions</h2>
+<ul>
+<li><span class="math inline">\(y \in \{ -1, 1 \}\)</span>, <span class="math inline">\(h(x) \in \mathbb{R}\)</span></li>
+<li>Classification rule</li>
+</ul>
+<p><span class="math display">\[\begin{equation*}
+\hat{y} = \begin{cases}
+1 &amp; h(x) \geq 0 \\
+-1  &amp; \text{otherwise} 
+\end{cases}
+\end{equation*}\]</span></p>
+<ul>
+<li>Classification margin <span class="math inline">\(m = yh(x) \in \mathbb{R}\)</span></li>
+<li>Margin-based loss function <span class="math inline">\(L(y, h(x))\)</span></li>
+</ul>
+<table>
+<thead>
+<tr class="header">
+<th align="center">Loss</th>
+<th align="center">Formula</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">0-1</td>
+<td align="center"><span class="math inline">\(I\{yh(x)&lt;0\}\)</span></td>
+</tr>
+<tr class="even">
+<td align="center">Logistic</td>
+<td align="center"><span class="math inline">\(\log _2 (1+\exp(-yh(x)))\)</span></td>
+</tr>
+<tr class="odd">
+<td align="center">Exponential</td>
+<td align="center"><span class="math inline">\(\exp(-yh(x))\)</span></td>
+</tr>
+<tr class="even">
+<td align="center">Hinge</td>
+<td align="center"><span class="math inline">\(\max \{ 0, 1-yh(x) \} = \{ 1-yh(x) \}_{+}\)</span></td>
+</tr>
+<tr class="odd">
+<td align="center">Square</td>
+<td align="center"><span class="math inline">\((1-yh(x))^2\)</span></td>
+</tr>
+<tr class="even">
+<td align="center">Savage</td>
+<td align="center"><span class="math inline">\(1/(1+\exp(yh(x)))^2\)</span></td>
+</tr>
+<tr class="odd">
+<td align="center">Sigmoid</td>
+<td align="center"><span class="math inline">\(1/(1+\exp(yh(x)))\)</span></td>
+</tr>
+<tr class="even">
+<td align="center">Binomial deviance</td>
+<td align="center"><span class="math inline">\(\log _2 (1 + \exp(-2yh(x)))\)</span></td>
+</tr>
+<tr class="odd">
+<td align="center">Tangent</td>
+<td align="center"><span class="math inline">\((2 \tan ^{-1} (yh(x))- 1)^2\)</span></td>
+</tr>
+</tbody>
+</table>
+<p><img src="https://haaforever.github.io/blog/post/2020/12/07/some-experiments-on-loss-functions/index_files/figure-html/unnamed-chunk-2-1.png" width="768" style="display: block; margin: auto;" /></p>
+<hr />
+</div>
+<div id="data-description" class="section level2">
+<h2>Data description</h2>
+<ul>
+<li>Two 2D Gaussian distribution</li>
+<li>Positive samples <span class="math inline">\(X^{+} \sim N(\mu^{+}, I_2)\)</span> where <span class="math inline">\(\mu^{+} = (1,1)^T\)</span></li>
+<li>Negative samples <span class="math inline">\(X^{-} \sim N(\mu^{-}, I_2)\)</span> where <span class="math inline">\(\mu^{+} = (0,0)^T\)</span></li>
+<li><span class="math inline">\(I_2\)</span>: <span class="math inline">\((2 \times 2)\)</span> identity matrix</li>
+<li>Same prior distribution</li>
+</ul>
+<hr />
+</div>
+<div id="experiments-on-error-minimization" class="section level2">
+<h2>Experiments on error minimization</h2>
+<ul>
+<li>Find the optimal linear classifier <span class="math inline">\(h^{\star}\)</span></li>
+<li>Linear classifier <span class="math inline">\(h(\mathbf{x}) = w_{0} + w_1x_1 + w_2x_2 = w_{0} + \mathbf{w} \cdot \mathbf{x}\)</span></li>
+<li>Given training dataset <span class="math inline">\(D = \{ (\mathbf{x}_i,y_i) \}_{i=1}^{n} = \{ (\mathbf{x}^{+}_{1},1), \cdots, (\mathbf{x}^{+}_{n^{+}},1), (\mathbf{x}^{-}_{1},-1), \cdots, (\mathbf{x}^{-}_{n^{-}},-1) \}\)</span></li>
+<li>Original formulation</li>
+</ul>
+<p><span class="math display">\[\mathop{\mathrm{argmin}}_{w_{0}, \mathbf{w}} \Pr (Yh(X)&lt;0)\]</span></p>
+<ul>
+<li>Empirical loss minimization</li>
+</ul>
+<p><span class="math display">\[\mathop{\mathrm{argmin}}_{w_{0}, \mathbf{w}} \sum_{i=1}^{n} L(y_i,h(\mathbf{x}_i))\]</span></p>
+<div id="learning-curve-for-each-loss-function" class="section level3">
+<h3>Learning curve for each loss function</h3>
+<ul>
+<li>Training size: <span class="math inline">\(n^{+} = 1,000\)</span>, <span class="math inline">\(n^{-} = 1,000\)</span></li>
+<li>Gradient descent method with full-batch update</li>
+<li>Worst starting point: <span class="math inline">\((w_{0}^{(0)}, w_{1}^{(0)}, w_{2}^{(0)}) = (0, -1, 1)\)</span></li>
+<li>Learning rate <span class="math inline">\(\eta \in \{ 0.05, 0.1, 0.5 \}\)</span></li>
+<li>Epoch: 200</li>
+<li>Estimation of test error: <span class="math inline">\(n^{+} = 100,000\)</span>, <span class="math inline">\(n^{-} = 100,000\)</span></li>
+<li>Right click the image and open with new tab</li>
+</ul>
+<p><img src="https://haaforever.github.io/blog/post/2020/12/07/some-experiments-on-loss-functions/index_files/figure-html/unnamed-chunk-3-1.png" width="1536" style="display: block; margin: auto;" /><img src="https://haaforever.github.io/blog/post/2020/12/07/some-experiments-on-loss-functions/index_files/figure-html/unnamed-chunk-3-2.png" width="1536" style="display: block; margin: auto;" /><img src="https://haaforever.github.io/blog/post/2020/12/07/some-experiments-on-loss-functions/index_files/figure-html/unnamed-chunk-3-3.png" width="1536" style="display: block; margin: auto;" /></p>
+</div>
+<div id="noisy-environment" class="section level3">
+<h3>Noisy environment</h3>
+</div>
+<div id="stochastic-update" class="section level3">
+<h3>Stochastic update</h3>
+</div>
+</div>
+
+</main>
+
+  <footer>
+  <script src="//yihui.org/js/math-code.js"></script>
+<script async src="//mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+<script async src="//yihui.org/js/center-img.js"></script>
+
+  
+  <hr/>
+  © <a href="https://www.instagram.com/hajiboost/">Jihyeon Ha</a> 2020 &ndash; | <a href="https://github.com/haaforever">Github</a>
+  
+  </footer>
+  </body>
+</html>
+

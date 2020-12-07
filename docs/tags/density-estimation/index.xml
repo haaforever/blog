@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Density Estimation on Haji blog</title>
+    <link>https://haaforever.github.io/blog/tags/density-estimation/</link>
+    <description>Recent content in Density Estimation on Haji blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Mon, 07 Dec 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://haaforever.github.io/blog/tags/density-estimation/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Noise Constrative Estimation</title>
+      <link>https://haaforever.github.io/blog/post/2020/12/07/noise-constrative-estimation/</link>
+      <pubDate>Mon, 07 Dec 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://haaforever.github.io/blog/post/2020/12/07/noise-constrative-estimation/</guid>
+      <description>Gutmann and Hyvarinen, 2010, Noise-contrastive estimation: A new estimation principle for unnormalized statistical models, AISTATS. pdf
+Estimation ProblemGiven a sample of a random vector \(\mathbf{x} \in \mathbb{R}^n\) from an unknown pdf \(p_d(\cdot)\)Our model: a parameterized family of functions \(\{ p_m(\cdot;\alpha) \}_{\alpha}\)How to estimate \(\alpha\) from the observed sample by maximizing some objective function?Any solution to this estimation problem must yield a normalized density\[\begin{equation}\begin{split}&amp;amp; p_m(\cdot;\alpha) = \frac{p_m^0(\cdot;\alpha)}{Z(\alpha)} \\[10pt]&amp;amp; Z(\alpha) = \int p_m^0(\mathbf{u};\alpha) d\mathbf{u}\end{split}\end{equation}\]</description>
+    </item>
+    
+  </channel>
+</rss>

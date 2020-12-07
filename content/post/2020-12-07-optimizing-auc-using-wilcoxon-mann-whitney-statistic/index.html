@@ -1,0 +1,96 @@
+---
+title: Optimizing AUC Using Wilcoxon-Mann-Whitney Statistic
+date: '2020-12-07'
+slug: optimizing-auc-using-wilcoxon-mann-whitney-statistic
+categories:
+  - Paper
+tags:
+  - ICML
+  - AUC
+---
+
+<link href="{{< relref "post/2020-12-07-optimizing-auc-using-wilcoxon-mann-whitney-statistic/index.html" >}}index_files/anchor-sections/anchor-sections.css" rel="stylesheet" />
+<script src="{{< relref "post/2020-12-07-optimizing-auc-using-wilcoxon-mann-whitney-statistic/index.html" >}}index_files/anchor-sections/anchor-sections.js"></script>
+
+
+<p>Yan et al., 2003, Optimizing classifier performance via an approximation to the Wilcoxon-Mann-Whitney statistic, <em>International Conference on Machine Learning</em>. <a href="https://www.aaai.org/Papers/ICML/2003/ICML03-110.pdf">pdf</a></p>
+<hr />
+<div id="introduction" class="section level2">
+<h2>Introduction</h2>
+<ul>
+<li>Relationship between AUC and WMW statistic
+<ul>
+<li>Minimizing cross entropy or mean squared error does not necessarily maximize the area under the ROC curve (AUC)</li>
+<li>Let <span class="math inline">\(\{ x_0 , \cdots , x_{m-1} \}\)</span> as the classifier outputs for <span class="math inline">\(m\)</span> positive examples, and <span class="math inline">\(\{ y_0 , \cdots , y_{n-1} \}\)</span> for <span class="math inline">\(n\)</span> negative examples</li>
+<li><span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span> are random variable</li>
+<li>Wilcoxon-Mann-Whitney (WMW) statistic <span class="math inline">\(U\)</span> is an estimator of AUC <span class="math inline">\(\textit{P} (X &gt; Y)\)</span></li>
+</ul></li>
+</ul>
+<p><span class="math display">\[U = \frac{ \sum_{i=0}^{m-1} \sum_{j=0}^{n-1} I(x_i , y_j)}{mn}\]</span></p>
+<p><span class="math display">\[\begin{equation*}
+I(x_i , y_j) = \begin{cases}
+1 &amp; x_i &gt; y_j \\
+0 &amp; \text{otherwise} 
+\end{cases}
+\end{equation*}\]</span></p>
+<ul>
+<li>Difficulty of optimizing AUC directly
+<ul>
+<li>AUC itself is non-differentiable and cannot be optimized by gradient based methods</li>
+<li>In the information retrieval field, some related work exists on optimizing ranks</li>
+</ul></li>
+</ul>
+<hr />
+</div>
+<div id="proposed-method" class="section level2">
+<h2>Proposed method</h2>
+<ul>
+<li>Differentiable approximation to <span class="math inline">\(I\)</span>
+<ul>
+<li>A larger <span class="math inline">\(\beta\)</span> would make <span class="math inline">\(S\)</span> close to <span class="math inline">\(I\)</span>, but this bring in numerical prolbem during optimization because of steep gradients</li>
+<li>During the process of minimizing <span class="math inline">\(R_1\)</span>, when a positive samples has a higher output than a negative sample by a margin <span class="math inline">\(\gamma\)</span>, this pair of samples will not contribute to the objective function</li>
+<li>The influence of the training samples is adaptively adjusted according to the pairwise comparisons during training</li>
+<li>Positive margin <span class="math inline">\(\gamma\)</span> is need for better generalization</li>
+<li>Maximizing <span class="math inline">\(R_2\)</span> is ineffective because it makes the optimization focus on maximizing the difference between <span class="math inline">\(x_i\)</span> and <span class="math inline">\(y_j\)</span> rather than on moving more pairs of <span class="math inline">\(x_i\)</span> and <span class="math inline">\(y_j\)</span> to satisfy <span class="math inline">\(x_i - y_j &gt; \gamma\)</span></li>
+</ul></li>
+</ul>
+<p><img src="{{< relref "post/2020-12-07-optimizing-auc-using-wilcoxon-mann-whitney-statistic/index.html" >}}index_files/figure-html/unnamed-chunk-1-1.png" width="384" style="display: block; margin: auto;" /></p>
+<p><span class="math display">\[S(x_i, y_j) = \frac{1}{1 + \exp{\{ - \beta (x_i - y_j) \}}}\]</span></p>
+<p><span class="math display">\[\begin{equation*}
+R_1 (x_i , y_j) = \begin{cases}
+(-(x_i - y_j - \gamma))^p &amp; x_i - y_j &lt; \gamma \\
+0  &amp; \text{otherwise} 
+\end{cases}
+\end{equation*}\]</span></p>
+<p><span class="math display">\[\begin{equation*}
+R_2 (x_i , y_j) = \begin{cases}
+(x_i - y_j - \gamma)^p &amp; x_i - y_j &gt; \gamma \\
+0  &amp; \text{otherwise} 
+\end{cases}
+\end{equation*}\]</span></p>
+<hr />
+</div>
+<div id="experiment" class="section level2">
+<h2>Experiment</h2>
+<ul>
+<li>Churn prediction: 140,000 customers, 6% churn rate, 55 features, positive weight 2 in weighted MSE</li>
+<li>Cross-sell acceptance prediction: 260,00 customers, 0.6% positive sample, 41 features, positive weight 10 in weighted MSE</li>
+</ul>
+<p><img src="images/Fig_05_06.PNG" /></p>
+<hr />
+</div>
+<div id="further-study" class="section level2">
+<h2>Further study</h2>
+<ul>
+<li>Hand and Till, 2001, A simple generalisation of the area under the ROC curve for multiple class classification problems, <em>Machine learning</em>. <a href="https://link.springer.com/article/10.1023%2FA%3A1010920819831">pdf</a></li>
+</ul>
+<hr />
+</div>
+<div id="note" class="section level2">
+<h2>Note</h2>
+<ul>
+<li>Other approximation (margin-based loss functions)</li>
+<li>Determination of <span class="math inline">\(\gamma\)</span> (in view of the difficulty of a classification problem)</li>
+<li>Determination of <span class="math inline">\(\beta\)</span> and <span class="math inline">\(p\)</span> (I think they have a similar effect to …)</li>
+</ul>
+</div>

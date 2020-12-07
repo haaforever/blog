@@ -1,0 +1,166 @@
+---
+title: Hinge Rank Loss and AUC
+date: '2020-12-07'
+slug: hinge-rank-loss-and-auc
+categories:
+  - Paper
+tags:
+  - ECML
+  - AUC
+  - Loss Function
+---
+
+<link href="{{< relref "post/2020-12-07-hinge-rank-loss-and-auc/index.html" >}}index_files/anchor-sections/anchor-sections.css" rel="stylesheet" />
+<script src="{{< relref "post/2020-12-07-hinge-rank-loss-and-auc/index.html" >}}index_files/anchor-sections/anchor-sections.js"></script>
+
+
+
+<p>Steck, 2007, <strong>Hinge rank loss and the are under the ROC curve</strong>, <em>European Conference on Machine Learning</em>. <a href="https://link.springer.com/chapter/10.1007/978-3-540-74958-5_33">pdf</a></p>
+<hr />
+<div id="notation" class="section level2">
+<h2>Notation</h2>
+<ul>
+<li>Dataset
+<ul>
+<li><span class="math inline">\(D = \{ (x_i, y_i) \} _{i=1}^{N}\)</span></li>
+<li>Class labels <span class="math inline">\(y_i \in \{ -1, +1 \}\)</span></li>
+<li>The number of positive and negative examples <span class="math inline">\(N^+\)</span> and <span class="math inline">\(N^-\)</span> respectively</li>
+</ul></li>
+<li>Classifier <span class="math inline">\(C\)</span>
+<ul>
+<li>Real-valued output <span class="math inline">\(c_i = C(x_i)\)</span></li>
+<li>Assume that there are no ties, i.e., <span class="math inline">\(c_i \neq c_j\)</span> for all <span class="math inline">\(i, j\)</span></li>
+<li>Classification rule given the real-valued threshold <span class="math inline">\(\theta\)</span>: <span class="math inline">\(sign(c_i - \theta)\)</span></li>
+</ul></li>
+<li>Rank-version of <span class="math inline">\(C\)</span>
+<ul>
+<li>The smallest output-value gets assigned the lowest rank</li>
+<li>Let <span class="math inline">\(r_i \in \{ 1, \cdots, N \}\)</span> be the rank of <span class="math inline">\(x_i\)</span></li>
+<li><span class="math inline">\(r_j^+\)</span>: ranks of the positive examples, <span class="math inline">\(j = 1, \cdots, N^+\)</span></li>
+<li><span class="math inline">\(r_k^-\)</span>: ranks of the negative examples, <span class="math inline">\(k = 1, \cdots, N^-\)</span></li>
+<li>Rank-threshold <span class="math inline">\(\tilde{\theta} = \max{\{ r_i: c_i \leq \theta \}} + 0.5 = \min{\{ r_i: c_i &gt; \theta \}} - 0.5\)</span></li>
+<li>Classification rule: <span class="math inline">\(sign(r_i - \tilde{\theta})\)</span></li>
+</ul></li>
+</ul>
+<hr />
+</div>
+<div id="auc" class="section level2">
+<h2>AUC</h2>
+<p><span class="math display">\[\begin{equation}
+\begin{split}
+AUC &amp; = \frac{1}{N^+ N^-} \sum_{j=1}^{N^+} \sum_{k=1}^{N^-} I(r_j^+ &gt; r_k^-) \\
+&amp; = \frac{1}{N^+ N^-} \sum_{j=1}^{N^+} (r_j^+ - j) \\
+&amp; = \frac{1}{N^+ N^-} \left( \left( \sum_{j=1}^{N^+} r_j^+ \right) - \binom{N^+ + 1}{2} \right)
+\end{split}
+\end{equation}\]</span></p>
+<hr />
+</div>
+<div id="hinge-rank-loss-and-auc" class="section level2">
+<h2>Hinge Rank Loss and AUC</h2>
+<ul>
+<li>Hinge loss
+<ul>
+<li><span class="math inline">\((a)_+ = a\)</span> if <span class="math inline">\(a &gt; 0\)</span>, and 0 otherwise</li>
+</ul></li>
+</ul>
+<p><span class="math display">\[\begin{equation}
+L_{\theta}^{H} = \sum_{i=1}^{N} (1 - y_i (c_i - \theta))_+
+\end{equation}\]</span></p>
+<ul>
+<li>Hinge rank loss</li>
+</ul>
+<p><span class="math display">\[\begin{equation}
+L_{\tilde{\theta}}^{HR} = \sum_{i=1}^{N} (0.5 - y_i (r_i - \tilde{\theta}))_+
+\end{equation}\]</span>
++ Since <span class="math inline">\(r_i - \tilde{\theta} \in \{ \pm0.5, \pm1.5, \cdots\}\)</span>, <span class="math inline">\((0.5 - y_i (r_i - \tilde{\theta}))_+ \in \{ 0, 1, 2, \cdots\}\)</span>
++ No loss is incurred for any correctly classified example</p>
+<pre class="r"><code>n &lt;- 10
+y &lt;- sample(x = c(-1, 1), size = n, replace = TRUE)
+c &lt;- runif(n = length(y), min = -1.5, max = 1.5)
+c &lt;- round(x = c, digits = 2)
+r &lt;- rank(x = c)
+
+
+theta &lt;- 0
+# max(r[c &lt;= theta]) + 0.5 == min(r[c &gt; theta]) - 0.5
+t.theta &lt;- min(r[c &gt; theta]) - 0.5
+
+
+loss.h &lt;- c()
+loss.hr &lt;- c()
+for (i in 1:length(y)) {
+  loss.h[i] &lt;- max(0, 1 - y[i] * (c[i] - theta))
+  loss.hr[i] &lt;- max(0, 0.5 - (y[i] * (r[i] - t.theta)))
+}
+
+
+ix &lt;- order(c, decreasing = TRUE)
+cbind(y, c, r, &quot;L^H&quot; = loss.h, &quot;L^HR&quot; = loss.hr)[ix,]</code></pre>
+<pre><code>##        y     c    r  L^H L^HR
+##  [1,] -1  1.40 10.0 2.40  2.0
+##  [2,] -1  1.38  9.0 2.38  1.0
+##  [3,] -1 -0.11  8.0 0.89  0.0
+##  [4,]  1 -0.15  7.0 1.15  2.0
+##  [5,] -1 -0.68  6.0 0.32  0.0
+##  [6,] -1 -0.78  4.5 0.22  0.0
+##  [7,]  1 -0.78  4.5 1.78  4.5
+##  [8,]  1 -0.94  3.0 1.94  6.0
+##  [9,] -1 -1.23  2.0 0.00  0.0
+## [10,] -1 -1.46  1.0 0.00  0.0</code></pre>
+<ul>
+<li>For the following, let <span class="math inline">\(\bar{\theta} = \tilde{\theta} - 0.5 \in \mathbb{N}\)</span></li>
+<li><strong>Proposition 1.</strong> For the hinge rank loss holds the following with the number of false negatives <span class="math inline">\(N_{\bar{\theta}}^{fn} = \sum_{j=1}^{N^+} I(r_j^+ \leq \bar{\theta})\)</span></li>
+</ul>
+<p><span class="math display">\[\begin{equation}
+L_{\bar{\theta}}^{HR} = N_{\bar{\theta}}^{fn} + N^+ \bar{\theta} + \binom{N-\bar{\theta} + 1}{2} - \sum_{j=1}^{N^+} r_j^+
+\end{equation}\]</span></p>
+<ul>
+<li><strong>Proposition 2.</strong> The AUC is related to the hinge rank loss and the number of false negatives as follows where <span class="math inline">\({const}_{D,\bar{\theta}} = \binom{N^- - \bar{\theta} + 1}{2}\)</span> if <span class="math inline">\(N^- \geq \bar{\theta}\)</span> and <span class="math inline">\({const}_{D,\bar{\theta}} = \binom{\bar{\theta} - N^-}{2}\)</span> otherwise; <span class="math inline">\({const}_{D,\bar{\theta}}\)</span> is a constant given the data <span class="math inline">\(D\)</span> and the rank-threshold <span class="math inline">\(\bar{\theta}\)</span>, i.e. it is independent of the classifier <span class="math inline">\(C\)</span></li>
+</ul>
+<p><span class="math display">\[\begin{equation}
+\begin{split}
+AUC &amp; = 1 - \frac{L_{\bar{\theta}}^{HR} - {const}_{D,\bar{\theta}} - N_{\bar{\theta}}^{fn}}{N^+ N^-} \\
+AUC &amp; \geq 1 - \frac{L_{\bar{\theta}}^{HR} - {const}_{D,\bar{\theta}}}{N^+ N^-}
+\end{split}
+\end{equation}\]</span></p>
+<ul>
+<li><strong>Proposition 3.</strong> The lower bound in Proposition 2. is tight in the asymptotic limit <span class="math inline">\(N \to \infty\)</span> under the mild assumption that <span class="math inline">\(N^+ / N^- \to \epsilon\)</span>, where <span class="math inline">\(0 &lt; \epsilon &lt; 1\)</span> is a constant</li>
+<li><strong>Corollary.</strong> For the choice <span class="math inline">\(\bar{\theta} = N^-\)</span>, the relation among AUC, hinge rank loss and 0-1 loss reads</li>
+</ul>
+<p><span class="math display">\[\begin{equation}
+\begin{split}
+AUC &amp; = 1 - \frac{L_{N^-}^{HR} - 0.5 \times L_{N^-}^{0-1}}{N^+ N^-} \\
+AUC &amp; \geq 1 - \frac{L_{N^-}^{HR}}{N^+ N^-}
+\end{split}
+\end{equation}\]</span></p>
+<hr />
+</div>
+<div id="hinge-loss-as-a-parametric-approximation" class="section level2">
+<h2>Hinge Loss as a Parametric Approximation</h2>
+<ul>
+<li>While minimizing the hinge rank loss would provide an asymptotically tight bound on the AUC, this is computationally expensive</li>
+<li>Hinge rank loss may simply be approximated by its parametric counterpart, the standard hinge loss</li>
+<li>Hmmmmmm…</li>
+</ul>
+<hr />
+</div>
+<div id="experiments" class="section level2">
+<h2>Experiments</h2>
+<ul>
+<li>Preprocessing the data by an affine transformation</li>
+<li>Linear classifier (hyperplane)
+<br>
+<img src="images/Table_01.PNG" />
+<br>
+<img src="images/Fig_01.PNG" />
+<br></li>
+</ul>
+<hr />
+</div>
+<div id="further-study" class="section level2">
+<h2>Further Study</h2>
+<ul>
+<li>Schölkopf et al., 1998, <strong>Nonlinear component analysis as a kernel eigenvalue problem</strong>, <em>Neural Computation</em>. <a href="http://alex.smola.org/papers/1998/SchSmoMul98.pdf">pdf</a></li>
+<li>Shivaswamy and Jebara, 2007, <strong>Ellipsoidal machines</strong>, <em>Artificial Intelligence and Statistics</em>. <a href="http://proceedings.mlr.press/v2/shivaswamy07a/shivaswamy07a.pdf">pdf</a></li>
+</ul>
+</div>

@@ -1,0 +1,199 @@
+---
+title: AUC Optimization
+date: '2020-12-07'
+slug: auc-optimization
+categories:
+  - Reference
+tags:
+  - Reference
+  - AUC
+---
+
+
+***
+
+
+## Approximation
+
+
+  * Yan et al., 2003, **Optimizing classifier performance via an approximation to the Wilcoxon-Mann-Whitney statistic**, *International Conference on Machine Learning*. [pdf](https://www.aaai.org/Papers/ICML/2003/ICML03-110.pdf)
+  * Steck, 2007, **Hinge rank loss and the area under the ROC curve**, *European Conference on Machine Learning*. [pdf](https://link.springer.com/chapter/10.1007/978-3-540-74958-5_33)
+  * Calders and Jaroszewicz, 2007, **Efficient AUC optimization for classification**, *European Conference on Principles of Data Mining and Knowledge Discovery*. [pdf](https://link.springer.com/chapter/10.1007/978-3-540-74976-9_8)
+
+
+***
+
+
+## Analysis
+
+
+  * Cortes and Mohri, 2004, **AUC optimization vs. error rate minimization**, *Advances in Neural Information Processing Systems*. [pdf](http://papers.nips.cc/paper/2518-auc-optimization-vs-error-rate-minimization.pdf)
+  * Cortes and Mohri, 2005, **Confidence intervals for the area under the ROC curve**, *Advances in Neural Information Processing Systems*. [pdf](http://papers.nips.cc/paper/2645-confidence-intervals-for-the-area-under-the-roc-curve.pdf)
+  * Usunier et al., 2005, **A data-dependent generalisation error bound for the AUC**, *International Conference on Machine Learning Workshop on ROC Analysis in Machine Learning*. [pdf](http://dmip.webs.upv.es/ROCML2005/papers/usunierCRC.pdf)
+  * Agarwal et al., 2005, **Generalization bounds for the area under the ROC curve**, *Journal of Machine Learning Research*. [pdf](https://www.jmlr.org/papers/v6/agarwal05a.html)
+  * Davis and Goadrich, 2006, **The relationship between precision-recall and ROC curves**, *International Conference on Machine Learning*. [pdf](https://dl.acm.org/doi/abs/10.1145/1143844.1143874?casa_token=hI7sUtS46RkAAAAA%3Admr70W4TQrjIhk9EyvoZZ7yPr646o36vAri7cRB_st2cIWlxK0VleSAQBKMhhu7j6JatRc15NDdgOA)
+  * Vanderlooy and Hullermeier, 2008, **A critical analysis of variants of the AUC**, *Machine Learning*. [pdf](https://link.springer.com/content/pdf/10.1007/s10994-008-5070-x.pdf)
+  * Vayatis et al., 2009, **AUC optimization and the two-sample problem**, *Advances in Neural Information Processing Systems*. [pdf](http://papers.nips.cc/paper/3838-auc-optimization-and-the-two-sample-problem)
+  * Clemencon and Vayatis, 2009, **Empirical performance maximization for linear rank statistics**, *Advances in Neural Information Processing Systems*. [pdf](http://papers.nips.cc/paper/3437-empirical-performance-maximization-for-linear-rank-statistics)
+  * Bertail et al., 2009, **On bootstrapping the ROC curve**, *Advances in Neural Information Processing Systems*. [pdf](http://papers.nips.cc/paper/3404-on-bootstrapping-the-roc-curve)
+  * Peel et al., 2010, **Empirical Bernstein inequalities for U-statistics**, *Advances in Neural Information Processing Systems*. [pdf](http://papers.nips.cc/paper/4081-empirical-bernstein-inequalities-for-u-statistics)
+  * Clemencon and Vayatis, 2010, **Overlaying classifiers: a practical approach to optimal scoring**, *Constructive Approximation*. [pdf](https://link.springer.com/content/pdf/10.1007/s00365-010-9084-9.pdf)
+  * Airolaj et al., 2011, **An experimental comparison of cross-validation techniques for estimating the area under the ROC curve**, *Computational Statistics & Data Analysis*. [pdf](https://www.sciencedirect.com/science/article/abs/pii/S0167947310004469)
+  * Yousef, 2013, **Assessing classifiers in terms of the partial area under the ROC curve**, *Computational Statistics & Data Analysis*. [pdf](https://www.sciencedirect.com/science/article/abs/pii/S0167947313000881)
+  * Gao and Zhou, 2015, **On the consistency of AUC pairwise optimization**, *International Conference on Artificial Intelligence*. [pdf](http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.720.2415&rep=rep1&type=pdf)
+  * Norton and Uryasev, 2019, **Maximization of AUC and buffered AUC in binary classification**, *Mathematical Programming*. [pdf](https://link.springer.com/article/10.1007/s10107-018-1312-2)
+
+
+***
+
+
+## Learning Strategy
+
+
+  * Gao et al., 2013, **One-pass AUC optimization**, *International Conference on Machine Learning*. [pdf](http://proceedings.mlr.press/v28/gao13.pdf)
+  * Liu et al., 2018, **Fast stochastic AUC maximization with** $O(1/n)$**-convergence rate**, *International Conference on Machine Learning*. [pdf](http://proceedings.mlr.press/v80/liu18g.html)
+  * Natole et al., 2018, **Stochastic proximal algorithms for AUC maximization**, *International Conference on Machine Learning*. [pdf](http://proceedings.mlr.press/v80/natole18a.html)
+  * Khalid et al., 2018, **Scalable nonlinear AUC maximization methods**, *Joint European Conference on Machine Learning and Knowledge Discovery in Databases*. [pdf](https://link.springer.com/chapter/10.1007/978-3-030-10928-8_18)
+  * Cheng et al., 2018, **An adaptive mini-batch stochastic gradient method for AUC maximization**, *Neurocomputing*. [pdf](https://www.sciencedirect.com/science/article/abs/pii/S0925231218309913)
+  * Lei and Ying, 2019, **Stochastic proximal AUC maximization**, *arXiv*. [pdf](https://arxiv.org/abs/1906.06053)
+  * Dan and Sahoo, 2019, **Variance reduced stochastic proximal algorithm for AUC maximization**, *arXiv*. [pdf](https://arxiv.org/abs/1911.03548)
+  * Gultekin et al., 2020, **MBA: Mini-batch AUC optimization**, *IEEE Transactions on Neural Networks and Learning Systems*. [pdf](https://ieeexplore.ieee.org/abstract/document/9018079?casa_token=4brIaaIJfGAAAAAA:vyKfPao9gWSPoWMEQi96NQmUvgGqucIH-OettyT54ZIkEFcEwF_2qsjaMzdUchhGWrtZmdCYXQ)
+
+
+***
+
+
+## SVM
+
+
+  * Ataman and Street, 2005, **Optimizing area under the ROC curve using ranking SVMs**, *ACM SIGKDD International Conference on Knowledge Discovery in Data Mining*. [pdf](https://d1wqtxts1xzle7.cloudfront.net/40480075/Optimizing_area_under_the_ROC_curve_usin20151129-22655-1gaqs9g.pdf?1448824279=&response-content-disposition=inline%3B+filename%3DOptimizing_area_under_the_ROC_curve_usin.pdf&Expires=1599473482&Signature=bwQDMFQUrUIPZxULVx8lUZEAfTKi15ls~I2jTETSi~2hooZT9nokFI1xNmqJjaSrLD6I-MM4V4xJc4S0C8IROM~5mxNN6GBdr3MbPSgXnXZdF0YrpaUP2mEQaN7VDQjKix34r-3q6JlF78vo-YLZoIUeNyINW7PgG-XrmqFODiZKLlkaGbCG9N1wFPVOcC0MdYVu0sQsnuHD1hvmKlqqpMOuDZRamUn5OAeLifmhAluaKmusl7InGysEQKgsQWX702ATy19vkD3cXuRGf1fZO2dgImaKPDKSb6oHEHK1kwV6BNP8jzijxUVJIWxb7gc3BQyhJbEwT1GpiMXspysclw__&Key-Pair-Id=APKAJLOHF5GGSLRBV4ZA)
+  * Brefeld and Scheffer, 2005, **AUC maximizing support vector learning**, *International Conference on Machine Learning Workshop on ROC Analysis in Machine Learning*. [pdf](http://download.hrz.tu-darmstadt.de/pub/FB20/Dekanat/Publikationen/KMA/auc.pdf)
+  * Ataman et al., 2006, **Learning to rank by maximizing AUC with linear programming**, *IEEE International Joint Conference on Neural Network*. [pdf](https://ieeexplore.ieee.org/abstract/document/1716080/?casa_token=lKB-47Vh70kAAAAA:6Aw3ecHartQktzqYPYuUb_EES-eSdijEVDm--Xvj8J9QaPBO_k0UMt3ogJ9cJ6O49BcEXoSrtw)
+  * Narasimhan and Agarwal, 2013, **SVMpAUCtight: a new support vector method for optimizing partial AUC based on a tight convex upper bound**, *ACM SIGKDD International Conference on Knowledge Discovery and Data Mining*. [pdf](https://dl.acm.org/doi/abs/10.1145/2487575.2487674?casa_token=cphnXuSwuY8AAAAA:WrhigCVlt84uLa9lOeXN1eyr_n4zZV1vlcSlWIHwKzK9-fzvPJGH6i6XKLJT1flF6JNZuVQxND-cFA)
+  * Narasimhan and Agarwal, 2013, **A structural SVM based approach for optimizing partial AUC**, *International Conference on Machine Learning*. [pdf](http://proceedings.mlr.press/v28/narasimhan13.pdf)
+  * Narasimhan and Agarwal, 2017, **Support vector algorithms for optimizing the partial area under the ROC curve**, *Neural Computation*. [pdf](https://www.mitpressjournals.org/doi/abs/10.1162/NECO_a_00972)
+  * Kakkar et al., 2017, **A sparse nonlinear classifier design using AUC optimization**, *SIAM International Conference on Data Mining*. [pdf](https://epubs.siam.org/doi/abs/10.1137/1.9781611974973.33)
+  * Wang et al., 2020, **Least squares support vector machines with fast leave-one-out AUC optimization on imbalanced prostate cancer data**, *International Journal of Machine Learning and Cybernetics*. [pdf](https://link.springer.com/content/pdf/10.1007/s13042-020-01081-y.pdf)
+
+
+***
+
+
+## Boosting
+
+
+  * Freund et al., 2003, **An efficient boosting algorithm for combining preferences**, *Journal of Machine Learning Research*. [pdf](https://www.jmlr.org/papers/v4/freund03a.html)
+  * Long and Servedio, 2008, **Boosting the area under the ROC curve**, *Advances in Neural Information Processing Systems*. [pdf](http://papers.nips.cc/paper/3247-boosting-the-area-under-the-roc-curve.pdf)
+  * Moribe et al., 2008, **Smooth boosting for margin-based ranking**, *International Conference on Algorithmic Learning Theory*. [pdf](https://link.springer.com/chapter/10.1007/978-3-540-87987-9_21)
+  * Rudin and Schapire, 2009, **Margin-based ranking and an equivalence between AdaBoost and RankBoost**, *Journal of Machine Learning Research*. [pdf](https://core.ac.uk/download/pdf/4417047.pdf)
+  * Komori, 2011, **A boosting method for maximization of the area under the ROC curve**, *Annals of the Institute of Statistical Mathematics*. [pdf](https://link.springer.com/content/pdf/10.1007/s10463-009-0264-y.pdf)
+  * Wang et al., 2011, **HingeBoost: ROC-based boost for classification and variable selection**, *The International Journal of Biostatistics*. [pdf](https://www.degruyter.com/view/journals/ijb/7/1/article-0000102202155746791304.xml)
+  * Takenouchi et al., 2012, **An extension of the receiver operating characteristic curve and AUC-optimal classification**, *Neural Computation*. [pdf](https://www.mitpressjournals.org/doi/abs/10.1162/NECO_a_00336)
+
+
+***
+
+
+## Classifier-dependent
+
+
+  * (Decision tree) Ferri et al., 2002, **Learning decision trees using the area under the ROC curve**, *International Conference on Machine Learning*. [pdf](https://d1wqtxts1xzle7.cloudfront.net/47905472/ICML02.pdf?1470725853=&response-content-disposition=inline%3B+filename%3DLearning_Decision_Trees_Using_the_Area_U.pdf&Expires=1599475851&Signature=MVkeE0xMu6xbp9Q1dHXta6xUf5T~uYYhI8MWP8dKna1EcX0vTkGwVzY1Qfani5gfJB8PXkdYWomL0qSVeTHSbmQTLYh7pSjYXnVTlzTv8sF7b20BkikvtYU6~Y2-sl9CSihHh0uJfoZFbU2r0eIUTOH9Hwfy~KqUXCHL-ZBYToz0f8rLZ3WK-RtSbMD6ZPB53VfW53Uj1mXDodIGRR47NEkrmMCA2AqCABUtaBI-9yMxbbtzCFk6e9Kh9SMRNP8d8gUBarSKp1j454gLF64Yp-L06PvrDJz9feLCsnNUSb9HLdz1uQIdPklZwX2JSzWw8xofu6~SzUY2ZPIKWBwVlQ__&Key-Pair-Id=APKAJLOHF5GGSLRBV4ZA)
+  * (Linear classifier) Herschtal and Raskutti, 2004, **Optimising area under the ROC curve using gradient descent**, *International Conference on Machine Learning*. [pdf](https://dl.acm.org/doi/pdf/10.1145/1015330.1015366)
+  * (Non-linear classifier) Herschtal et al., 2006, **Area under ROC optimisation using a ramp approximation**, *SIAM International Conference on Data Mining*. [pdf](https://epubs.siam.org/doi/abs/10.1137/1.9781611972764.1)
+  * (Linear classifier) Marrocco et al., 2008, **Maximizing the area under the ROC curve by pairwise feature combination**, *Pattern Recognition*. [pdf](https://www.sciencedirect.com/science/article/abs/pii/S0031320307005067)
+  * (Extreme learning machines) Yang et al., 2017, **Optimizing area under the ROC curve via extreme learning machines**, *Knowledge-Based Systems*. [pdf](https://www.sciencedirect.com/science/article/abs/pii/S0950705117302241)
+  * (Vector quantization) Villmann et al., 2018, **Learning vector quantization classifiers for ROC-optimization**, *Computational Statistics*. [pdf](https://link.springer.com/article/10.1007/s00180-016-0678-y)
+
+
+***
+
+
+## Ensemble
+
+
+  * Gao et al., 2006, **An ensemble classifier learning approach to ROC optimization**, *International Conference on Pattern Recognition*. [pdf](https://ieeexplore.ieee.org/abstract/document/1699296?casa_token=DOTe5YDPwxkAAAAA:9_AFrbIZaOYNFZKoK4-HgvTv4YWHu8U414z1HoKvO9H9Q7DR5aONsGwHND1Ydg0oJP9HfzxL-g)
+  * Marrocco et al., 2006, **Exploiting AUC for optimal linear combinations of dichotomizers**, *Pattern Recognition Letters*. [pdf](https://www.sciencedirect.com/science/article/abs/pii/S0167865505003077)
+  * Barreno et al., 2008, **Optimal ROC curve for a combination of classifiers**, *Advances in Neural Information Processing Systems*. [pdf](http://papers.nips.cc/paper/3263-optimal-roc-curve-for-a-combination-of-classifiers)
+  * Toh et al., 2008, **Maximizing area under ROC curve for biometric scores fusion**, *Pattern Recognition*. [pdf](https://www.sciencedirect.com/science/article/abs/pii/S0031320308001337)
+
+
+***
+
+
+## Online Learning
+
+
+  * Zhao et al., 2011, **Online AUC maximization**, *International Conference on Machine Learning*, [pdf](http://www.icml-2011.org/papers/198_icmlpaper.pdf)
+  * Kim et al., 2012, **An online AUC formulation for binary classification**, *Pattern Recognition*. [pdf](https://www.sciencedirect.com/science/article/abs/pii/S0031320311004729)
+  * Ding et al., 2015, **An adaptive gradient method for online AUC maximization**, *AAAI Conference on Artificial Intelligence*. [pdf](https://y-ding.github.io/papers/AAAI2015.pdf)
+  * Ying et al., 2016, **Stochastic online AUC maximization**, *Advances in Neural Information Processing Systems*. [pdf](http://papers.nips.cc/paper/6065-stochastic-online-auc-maximization)
+  * Ding et al., 2017, **Large scale kernel methods for online auc maximization**, *IEEE International Conference on Data Mining*. [pdf](https://ieeexplore.ieee.org/abstract/document/8215481?casa_token=aLsWcaHA83cAAAAA:ACL1KT-Cc__zkkY9Go5Id80YDL0AMe3AtDnN1YSzfOHa9w-BFv-_lge3qARvqX-sAVbg1GfDug)
+  * Cheng et al., 2018, **An adaptive robust online method for AUC maximization**, *IEEE Access*. [pdf](https://ieeexplore.ieee.org/abstract/document/8463453)
+  * Hu et al., 2017, **Online nonlinear AUC maximization for imbalanced data sets**, *IEEE Transactions on Neural Networks and Learning Systems*. [pdf](https://ieeexplore.ieee.org/abstract/document/7835710?casa_token=vOaQhAJ7TZIAAAAA:K4t8WyX1L7VXSTT1-C56Q1vTqeNlMgyd-EengXlOxGcT24suZv7L7rHzIjaXlcEPPl-aD5zGFg)
+
+
+***
+
+
+## Semi-supervised Learning
+
+
+  * Wang et al., 2015, **Optimizing area under the ROC curve using semi-supervised learning**, *Pattern Recognition*. [pdf](https://www.sciencedirect.com/science/article/abs/pii/S0031320314002842)
+  * Fujino and Ueda, 2016, **A semi-supervised AUC optimization method with generative models**. *IEEE International Conference on Data Mining*. [pdf](https://ieeexplore.ieee.org/abstract/document/7837920/?casa_token=n2DXwVnUfRAAAAAA:hNjESXqsQJnsyQ2UWw9NNuiFG4WzjClrIU7cau36Vlo0CkOVYyjslb0nswI2D_eUTq7eTCpsIQ)
+  * Xie and Li, 2018, **Semi-supervised AUC optimization Without guessing labels of unlabeled data**, *AAAI Conference on Artificial Intelligence*. [pdf](https://ai.nju.edu.cn/_upload/tpl/04/10/1040/template1040/publications/aaai18-samult.pdf)
+  * Ren et al., 2018, **A robust AUC maximization framework with simultaneous outlier detection and feature selection for positive-unlabeled classification**, *IEEE Transactions on Neural Networks and Learning Systems*. [pdf](https://ieeexplore.ieee.org/abstract/document/8487003?casa_token=4MS1XVSE_ZAAAAAA:sVzXjYTWIXZTgTc3UvJV2dHRbnHSrAd2udxLX7Ip0qb8aOU-xNbeKKmsUbPuQ-UvsdlON3JGEQ)
+  * Sakai et al., 2018, **Semi-supervised AUC optimization based on positive-unlabeled learning**, *Machine Learning*. [pdf](https://link.springer.com/article/10.1007/s10994-017-5678-9)
+  * Iwata et al., 2020, **Semi-supervised learning for maximizing the partial AUC**, *AAAI Conference on Artificial Intelligence*. [pdf](https://aiide.org/ojs/index.php/AAAI/article/view/5846)
+  * Shi et al., 2020, **Quadruply stochastic gradient method for large scale nonlinear semi-supervised ordinal regression AUC optimization**, *AAAI Conference on Artificial Intelligence*. [pdf](https://arxiv.org/abs/1912.11193)
+
+
+***
+
+
+## Active Learning
+
+
+  * Culver et al., 2006, **Active learning to maximize area under the ROC curve**, *IEEE International Conference on Data Mining*. [pdf](https://ieeexplore.ieee.org/abstract/document/4053043/?casa_token=kAszramjC5oAAAAA:M1XriUwtARZo1kGMvehZzi_A4ZkU_9SWX9__38MEZ374w1Js4NaPl5vS_sMcUB-dUtJwZ5dTRw)
+  * Donmez and Carbonell, 2009, **Active sampling for rank learning via optimizing the area under the ROC curve**, *European Conference on Information Retrieval*. [pdf](https://link.springer.com/chapter/10.1007/978-3-642-00958-7_10)
+  * Han and Zhao, 2010, **AUC maximization linear classifier based on active learning and its application**, *Neurocomputing*. [pdf](https://www.sciencedirect.com/science/article/abs/pii/S0925231210000093)
+
+
+***
+
+
+## Deep Learning
+
+
+  * Wang et al., 2016, **AUCpreD: proteome-level protein disorder prediction by AUC-maximized deep convolutional neural fields**, *Bioinformatics*. [pdf](https://academic.oup.com/bioinformatics/article-abstract/32/17/i672/2450776)
+  * Wang et al., 2016, **AUC-maximized deep convolutional neural fields for protein sequence labeling**, *European Conference on Machine Learning and Knowledge Discovery in Databases*. [pdf](https://link.springer.com/chapter/10.1007/978-3-319-46227-1_1)
+  * Fan et al., 2019, **AUC optimization for deep learning based voice activity detection**, *IEEE International Conference on Acoustics, Speech and Signal Processing*. [pdf](https://ieeexplore.ieee.org/abstract/document/8682803/?casa_token=MXcKWwsV6FoAAAAA:X6pEnJNqtKytzOmnbqdi2UPfXbhPy3vI4lQ-F-gky2zk1SxyXuMl2tZA66f3S2jfuozRbDbRyw)
+  * Liu et al., 2019, **Stochastic AUC maximization with deep neural networks**, *International Conference on Learning Representations*. [pdf](https://openreview.net/forum?id=HJepXaVYDr)
+  * Bai et al., 2020, **Partial AUC optimization based deep speaker embeddings with class-center learning for text-independent speaker verification**, *IEEE International Conference on Acoustics, Speech and Signal Processing*. [pdf](https://ieeexplore.ieee.org/abstract/document/9053674?casa_token=hrC-kAhCVxkAAAAA:aJ4xRuoTIxmnDSbNIcSRHHBs8aL2fbuBlLdw-qofcOtdAabznED_n3zePOCr_zFEFFIlyxanJg)
+
+
+***
+
+
+## Ranking
+
+
+  * Burges et al., 2007, **Learning to rank with nonsmooth cost functions**, *Advances in Neural Information Processing Systems*. [pdf](http://papers.nips.cc/paper/2971-learning-to-rank-with-nonsmooth-cost-functions.pdf)
+  * Clemencon and Vayatis, 2007, **Ranking the best instances**, *Journal of Machine Learning Research*. [pdf](https://www.jmlr.org/papers/v8/clemencon07a.html)
+  * Balcan et al., 2008, **Robust reductions from ranking to classification**, *Machine Learning*. [pdf](https://link.springer.com/content/pdf/10.1007/s10994-008-5058-6.pdf)
+  * Clemencon et al., 2008, **Ranking and empirical minimization of U-statistics**, *The Annals of Statistics*. [pdf](https://projecteuclid.org/euclid.aos/1205420521)
+  * Rudin, 2009, **The p-norm push: a simple convex ranking algorithm that concentrates at the top of the list**, *Journal of Machine Learning Research*. [pdf](https://www.jmlr.org/papers/volume10/rudin09b/rudin09b.pdf)
+  * Güvenir and Kurtcephe, 2012, **Ranking instances by maximizing the area under ROC curve**, *IEEE Transactions on Knowledge and Data Engineering*. [pdf](https://ieeexplore.ieee.org/abstract/document/6338929/?casa_token=IjWK-ZnEg3kAAAAA:9mawB8Q8DToNygx81RS-fzSaVBAtlzQNnnUDXSzFbtELcOGn_cslu3NsjransjYo2-OAniPnvg)
+  * Welleck, 2016, **Efficient AUC optimization for information ranking applications**, *European Conference on Information Retrieval*. [pdf](https://link.springer.com/chapter/10.1007/978-3-319-30671-1_12)
+  * Cruz et al., 2016, **Tackling class imbalance with ranking**, *IEEE International Joint Conference on Neural Networks*. [pdf](https://ieeexplore.ieee.org/abstract/document/7727469/?casa_token=VPkoHYTjrNEAAAAA:vPY0P1WHLS9xCXmHvyHV2q0JSkUht9RcRJQOpZLXeI_XfsWHLQlwAkLWA0PDIF2yeP6rzVDh0A)
+
+
+***
+
+
+## Recommender System
+
+
+  * Aiolli et al., 2014, **Convex AUC optimization for top-N recommendation with implicit feedback**, *ACM Conference on Recommender Systems*. [pdf](https://dl.acm.org/doi/abs/10.1145/2645710.2645770?casa_token=dGiPd9VjedoAAAAA:SvvMPXNznXpOotWsRBcSh8pmztAdRoPjR9CiOlTjytUttBDCNNHl_uhmGZ8g4b9MSuHLe99lDA1-rw)
+  * Dhanjal et al., 2015, **AUC optimisation and collaborative filtering**, *arXiv*. [pdf](https://arxiv.org/abs/1508.06091)
+  * Han et al., 2019, **AUC-MF: point of interest recommendation with AUC maximization**, *IEEE International Conference on Data Engineering*. [pdf](https://ieeexplore.ieee.org/abstract/document/8731461/?casa_token=YbKG-X8EDzoAAAAA:ywDdkmQqTAFv5NxANw08RzlSyhRQHVj5-FCaCMkloqHUHipyn8hj3VI9zXDGgB8HxKuZwrigJQ)
+

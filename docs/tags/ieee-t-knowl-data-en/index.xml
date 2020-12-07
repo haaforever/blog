@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>IEEE T KNOWL DATA EN on Haji blog</title>
+    <link>https://haaforever.github.io/blog/tags/ieee-t-knowl-data-en/</link>
+    <description>Recent content in IEEE T KNOWL DATA EN on Haji blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Mon, 07 Dec 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://haaforever.github.io/blog/tags/ieee-t-knowl-data-en/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Label Distribution Learning</title>
+      <link>https://haaforever.github.io/blog/post/2020/12/07/label-distribution-learning/</link>
+      <pubDate>Mon, 07 Dec 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://haaforever.github.io/blog/post/2020/12/07/label-distribution-learning/</guid>
+      <description>Geng, 2016, Label distribution learning, IEEE Transactions on Knowledge and Data Engineering. pdf
+Formulation of LDLNotationInput space: \(\mathbf{x} \in \mathcal{X} = \mathbb{R}^q\)Complete set of labels: \(\mathcal{Y} = \{ y_1, \cdots, y_c \}\)Label distribution of \(\mathbf{x}_i\): \(D_i = \{ d_{\mathbf{x}_i}^{y_1}, \cdots, d_{\mathbf{x}_i}^{y_c} \}\)Description degree of \(y\) to \(\mathbf{x}\): \(d_{\mathbf{x}}^y\)\(d_{\mathbf{x}}^y \in [0,1]\) and \(\sum_y d_{\mathbf{x}}^y = 1\)Training set: \(S = \{ (\mathbf{x}_1, D_1), \cdots, (\mathbf{x}_n, D_n) \}\)Learn a conditional probability mass function \(p(y|\mathbf{x})\) from \(S\), where \(\mathbf{x} \in \mathcal{X}\) and \(y \in \mathcal{Y}\)Optimization formulationGiven a parametric model \(p(y|\mathbf{x} ; \theta)\), the goal of LDL is to find \(\theta\) that can generate a distribution similar to \(D_i\), given \(\mathbf{x}_i\)Example: Kullback-Leibler divergence\[\begin{equation}\begin{split}&amp;amp; \mathop{\mathrm{argmin}}_{\theta} \sum_i \sum_j \left( d_{\mathbf{x}_i}^{y_j} \log{\frac{d_{\mathbf{x}_i}^{y_j}}{p(y_j|\mathbf{x}_i ; \theta)}} \right) \\= \quad &amp;amp; \mathop{\mathrm{argmax}}_{\theta} \sum_i \sum_j d_{\mathbf{x}_i}^{y_j} \log{p(y_j|\mathbf{x}_i ; \theta)}\end{split}\end{equation}\]When \(d_{\mathbf{x}_i}^{y_j} = I(y_j = y(\mathbf{x}_i))\), single label learning\[\begin{equation}\mathop{\mathrm{argmax}}_{\theta} \sum_i \log{p(y(\mathbf{x}_i)|\mathbf{x}_i ; \theta)}\end{equation}\]When each instance is associated with a specific label set, multi-label learning\[\begin{equation}\mathop{\mathrm{argmax}}_{\theta} \sum_i \frac{1}{|Y_i|} \sum_{y \in Y_i} \log{p(y | \mathbf{x}_i ; \theta)}\end{equation}\]LDL may be viewed as a more general learning framework which includes both SLL and MLL as its special cases</description>
+    </item>
+    
+  </channel>
+</rss>

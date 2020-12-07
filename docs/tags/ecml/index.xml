@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>ECML on Haji blog</title>
+    <link>https://haaforever.github.io/blog/tags/ecml/</link>
+    <description>Recent content in ECML on Haji blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Mon, 07 Dec 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://haaforever.github.io/blog/tags/ecml/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Hinge Rank Loss and AUC</title>
+      <link>https://haaforever.github.io/blog/post/2020/12/07/hinge-rank-loss-and-auc/</link>
+      <pubDate>Mon, 07 Dec 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://haaforever.github.io/blog/post/2020/12/07/hinge-rank-loss-and-auc/</guid>
+      <description>Steck, 2007, Hinge rank loss and the are under the ROC curve, European Conference on Machine Learning. pdf
+NotationDataset\(D = \{ (x_i, y_i) \} _{i=1}^{N}\)Class labels \(y_i \in \{ -1, +1 \}\)The number of positive and negative examples \(N^+\) and \(N^-\) respectivelyClassifier \(C\)Real-valued output \(c_i = C(x_i)\)Assume that there are no ties, i.e., \(c_i \neq c_j\) for all \(i, j\)Classification rule given the real-valued threshold \(\theta\): \(sign(c_i - \theta)\)Rank-version of \(C\)The smallest output-value gets assigned the lowest rankLet \(r_i \in \{ 1, \cdots, N \}\) be the rank of \(x_i\)\(r_j^+\): ranks of the positive examples, \(j = 1, \cdots, N^+\)\(r_k^-\): ranks of the negative examples, \(k = 1, \cdots, N^-\)Rank-threshold \(\tilde{\theta} = \max{\{ r_i: c_i \leq \theta \}} + 0.</description>
+    </item>
+    
+  </channel>
+</rss>

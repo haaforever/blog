@@ -1,0 +1,497 @@
+---
+title: Noise Constrative Estimation
+author: ''
+date: '2020-12-07'
+slug: noise-constrative-estimation
+categories:
+  - Paper
+tags:
+  - ATSTATS
+  - Density Estimation
+  - Optimization
+---
+
+<link href="{{< relref "post/2020-12-07-noise-constrative-estimation/index.html" >}}index_files/anchor-sections/anchor-sections.css" rel="stylesheet" />
+<script src="{{< relref "post/2020-12-07-noise-constrative-estimation/index.html" >}}index_files/anchor-sections/anchor-sections.js"></script>
+
+
+
+<p>Gutmann and Hyvarinen, 2010, <strong>Noise-contrastive estimation: A new estimation principle for unnormalized statistical models</strong>, <em>AISTATS</em>. <a href="http://proceedings.mlr.press/v9/gutmann10a/gutmann10a.pdf">pdf</a></p>
+<hr />
+<div id="estimation-problem" class="section level2">
+<h2>Estimation Problem</h2>
+<ul>
+<li>Given a sample of a random vector <span class="math inline">\(\mathbf{x} \in \mathbb{R}^n\)</span> from an unknown pdf <span class="math inline">\(p_d(\cdot)\)</span></li>
+<li>Our model: a parameterized family of functions <span class="math inline">\(\{ p_m(\cdot;\alpha) \}_{\alpha}\)</span></li>
+<li>How to estimate <span class="math inline">\(\alpha\)</span> from the observed sample by maximizing some objective function?</li>
+<li>Any solution to this estimation problem must yield a normalized density</li>
+</ul>
+<p><span class="math display">\[\begin{equation}
+\begin{split}
+&amp; p_m(\cdot;\alpha) = \frac{p_m^0(\cdot;\alpha)}{Z(\alpha)} \\[10pt]
+&amp; Z(\alpha) = \int p_m^0(\mathbf{u};\alpha) d\mathbf{u}
+\end{split}
+\end{equation}\]</span></p>
+<ul>
+<li>However, the calculation of <span class="math inline">\(Z(\alpha)\)</span> is very problematic</li>
+</ul>
+<hr />
+</div>
+<div id="noise-constrative-estimator" class="section level2">
+<h2>Noise-Constrative Estimator</h2>
+<ul>
+<li>Learning by comparison: by discriminating between data and noise, learn properties of the data in the from of a statistical model</li>
+<li>Definition
+<ul>
+<li>Including the <span class="math inline">\(Z(\alpha)\)</span> as another parameter <span class="math inline">\(c\)</span>
+<span class="math display">\[\begin{equation}
+\begin{split}
+&amp; \log p_m(\cdot;\theta) = \log p_m^0(\cdot;\alpha) + c \\[10pt]
+&amp; \theta = \{ \alpha, c\}
+\end{split}
+\end{equation}\]</span></li>
+<li><span class="math inline">\(c\)</span>: an estimate of the negative logarithm of <span class="math inline">\(Z(\alpha)\)</span></li>
+<li><span class="math inline">\(p_m(\cdot;\theta)\)</span> will only integrate to one for some specific choice of <span class="math inline">\(c\)</span></li>
+</ul></li>
+<li>Observations
+<ul>
+<li>Observed data: <span class="math inline">\(X = \{ \mathbf{x}_1, \cdots, \mathbf{x}_T \} \sim p_m(\cdot;\theta)\)</span></li>
+<li>Noise (artificial generated): <span class="math inline">\(Y = \{ \mathbf{y}_1, \cdots, \mathbf{y}_T \} \sim p_n(\cdot)\)</span></li>
+<li>Union of <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span>: <span class="math inline">\(U = \{ \mathbf{u}_1, \cdots, \mathbf{u}_{2T} \}\)</span></li>
+<li><span class="math inline">\(C_t\)</span>: Binary class label of <span class="math inline">\(\mathbf{u}_t\)</span>
+<span class="math display">\[\begin{equation}
+C_t = \begin{cases}
+1 &amp; \mathbf{u}_t \in X \\[10pt]
+0 &amp; \mathbf{u}_t \in Y
+\end{cases}
+\end{equation}\]</span></li>
+</ul></li>
+<li>Objective function <span class="math inline">\(J_T(\theta)\)</span>
+<span class="math display">\[\begin{equation}
+\begin{split}
+&amp; G(\mathbf{u} ; \theta)  = \log p_m(\mathbf{u} ; \theta) - \log p_n(\mathbf{u}) \\[10pt]
+&amp; h(\mathbf{u} ; \theta) = \frac{1}{1 + \exp(-G(\mathbf{u} ; \theta))} \\[10pt]
+&amp; J_T(\theta) = \frac{1}{2T} \sum_t \left( \log h(\mathbf{x}_t ; \theta) + \log (1 - h(\mathbf{y}_t ; \theta)) \right) \\[10pt]
+&amp; \hat{\theta}_T = \mathop{\mathrm{argmax}}_{\theta} J_T(\theta)
+\end{split}
+\end{equation}\]</span>
+<ul>
+<li>Class-conditional probability  
+<span class="math display">\[\begin{equation}
+\begin{split}
+&amp; P( \mathbf{u} | C=1 ; \theta) = p_m(\mathbf{u};\theta) \\[10pt]
+&amp; P(\mathbf{u} | C = 0) = p_n(\mathbf{u})
+\end{split}
+\end{equation}\]</span></li>
+<li>Posterior probability  <br />
+<span class="math display">\[\begin{equation}
+\begin{split}
+P(C=1 | \mathbf{u} ; \theta) &amp; = \frac{P( \mathbf{u} | C=1 ; \theta) P(C=1)}{P(\mathbf{u} ; \theta)} \\[10pt]
+&amp; = \frac{p_m(\mathbf{u} ; \theta)}{p_m(\mathbf{u} ; \theta) + p_n(\mathbf{u})} \\[10pt]
+&amp; = h(\mathbf{u} ; \theta) \\[10pt]
+P(C=0 | \mathbf{u} ; \theta) &amp; = 1 - h(\mathbf{u} ; \theta)
+\end{split}
+\end{equation}\]</span></li>
+<li>Log-likelihood for Bernoulli-distributed <span class="math inline">\(C_t\)</span>  <br />
+<span class="math display">\[\begin{equation}
+\begin{split}
+\mathcal{l}(\theta) &amp; = \sum_t (C_t \log P(C_t = 1|\mathbf{u}_t ; \theta) + (1 - C_t) \log P(C_t = 0|\mathbf{u}_t ; \theta)) \\[10pt]
+&amp; = \sum_t \left( \log h(\mathbf{x}_t ; \theta) + \log (1 - h(\mathbf{y}_t ; \theta)) \right)
+\end{split}
+\end{equation}\]</span></li>
+</ul></li>
+</ul>
+<hr />
+</div>
+<div id="example-with-r" class="section level2">
+<h2>Example with R</h2>
+<ul>
+<li>Observations
+<ul>
+<li>Observed data: <span class="math inline">\(\mathbf{x} = (x_1, x_2) \sim \mathcal{N} _2 (\mathbf{0}, \mathbb{I} _2)\)</span>
+<br/>
+<br/>
+<span class="math display">\[
+\begin{aligned}
+&amp; p_d(\mathbf{x}) = \frac{1}{2 \pi} \exp{(\mathbf{x} ^T \mathbf{x})} \\[11pt]
+&amp; \log p_d(\mathbf{x}) = - \log 2 \pi - \frac{1}{2} \lVert \mathbf{x} \rVert _2^2 = - \log 2 \pi - \frac{1}{2} x_1^2 - \frac{1}{2} x_2^2
+\end{aligned}
+\]</span>
+<br/>
+<br/></li>
+<li>Noise: <span class="math inline">\(\mathbf{y} \sim \text{Unif} ([-3, 3] \times [-3, 3])\)</span>
+<br/>
+<br/>
+<span class="math display">\[
+\begin{aligned}
+&amp; p_n(\mathbf{y}) = \frac{1}{36} \\[11pt]
+&amp; \log p_n(\mathbf{y}) = \log \frac{1}{36}
+\end{aligned}
+\]</span>
+<br/>
+<br/></li>
+</ul></li>
+</ul>
+<pre class="r"><code>##### Data generation
+# Observed data
+n &lt;- 500 # number of observations
+d &lt;- 2 # dimension
+x &lt;- mvtnorm::rmvnorm(n = n, mean = rep(0, d), sigma = diag(x = 1, nrow = d))
+colnames(x) &lt;- paste0(&quot;x&quot;, 1:d)
+# Noisy data
+s &lt;- 36 # area
+y &lt;- cbind(runif(n = n, min = -3, max = 3),
+           runif(n = n, min = -3, max = 3))
+plot(x, col = &quot;red&quot;, xlim = c(-3, 3), ylim = c(-3, 3))
+points(x = y[,1], y = y[,2])</code></pre>
+<p><img src="{{< relref "post/2020-12-07-noise-constrative-estimation/index.html" >}}index_files/figure-html/unnamed-chunk-1-1.png" width="576" /></p>
+<pre class="r"><code># Noise model
+fn.log.p.n &lt;- function(y, s) {
+  p.n &lt;- 1 / s
+  log.p.n &lt;- rep(log(p.n), nrow(y))
+  return(log.p.n)
+}</code></pre>
+<pre class="r"><code>fn.log.p.n(y = x[1:10,], s = s)</code></pre>
+<pre><code>##  [1] -3.583519 -3.583519 -3.583519 -3.583519 -3.583519 -3.583519 -3.583519
+##  [8] -3.583519 -3.583519 -3.583519</code></pre>
+<pre class="r"><code>fn.log.p.n(y = y[1:10,], s = s)</code></pre>
+<pre><code>##  [1] -3.583519 -3.583519 -3.583519 -3.583519 -3.583519 -3.583519 -3.583519
+##  [8] -3.583519 -3.583519 -3.583519</code></pre>
+<pre class="r"><code># Optimal values
+w.opt &lt;- c(0, 0, -1/2, 0, -1/2)
+names(w.opt) &lt;- c(&quot;x1&quot;, &quot;x2&quot;, &quot;x1*x1&quot;, &quot;x1*x2&quot;, &quot;x2*x2&quot;)
+c.opt &lt;- - log(2*pi)
+names(c.opt) &lt;- &quot;c&quot;
+c(w.opt, c.opt)</code></pre>
+<pre><code>##        x1        x2     x1*x1     x1*x2     x2*x2         c 
+##  0.000000  0.000000 -0.500000  0.000000 -0.500000 -1.837877</code></pre>
+<ul>
+<li>Our model
+<br/>
+<br/>
+<span class="math display">\[
+\begin{aligned}
+&amp; \log p_m^0 (\mathbf{x} ; \mathbf{w}) = w_1 x_1 + w_2 x_2 + w_3 x_1^2 + w_4 x_1 x_2 + w_5 x_2^2 \\[11pt]
+&amp; \log p_m (\mathbf{x} ; \mathbf{w}) = \log p_m^0 (\mathbf{x} ; \mathbf{w}) + c
+\end{aligned}
+\]</span>
+<br/>
+<br/></li>
+</ul>
+<pre class="r"><code># Initial values (very bad starting points)
+w.init &lt;- c(1, -1, 0, 0, 0)
+names(w.init) &lt;- names(w.opt)
+c.init &lt;- -3
+names(c.init) &lt;- names(c.opt)
+c(w.init, c.init)</code></pre>
+<pre><code>##    x1    x2 x1*x1 x1*x2 x2*x2     c 
+##     1    -1     0     0     0    -3</code></pre>
+<pre class="r"><code># Our model
+# log.p.m.zero &lt;- w1x1 + w2x2 + w3x1^2 + w4x1x2 + x5x2^2
+# log.p.m &lt;- log.p.m.zero + c
+fn.log.p.m &lt;- function(x, theta) {
+  # theta: vectorized parameters for optim
+  # ex) theta = c(w.init, c.init)
+  len.theta &lt;- length(theta)
+  w &lt;- theta[1:(len.theta - 1)] # parameters for unnormalized pdf
+  c &lt;- theta[len.theta] # normalization constant
+  #
+  x.poly &lt;- cbind(x, x[,1] * x[,1], x[,1] * x[,2], x[,2] * x[,2])
+  log.p.m.zero &lt;- as.numeric(rbind(x.poly) %*% cbind(w))
+  log.p.m &lt;- log.p.m.zero + c
+  return(log.p.m)
+}</code></pre>
+<pre class="r"><code>fn.log.p.m(x = x[1:10,], theta = c(w.init, c.init))</code></pre>
+<pre><code>##  [1] -0.1230594 -3.0495950 -4.4729246 -4.2063108  1.0260953 -3.2700812
+##  [7] -1.5275617  0.4567511 -2.4646030 -3.6735548</code></pre>
+<pre class="r"><code>fn.log.p.m(x = y[1:10,], theta = c(w.init, c.init))</code></pre>
+<pre><code>##  [1] -3.9148040 -3.6832952 -3.7856016 -6.8454587 -3.8719122 -2.4799451
+##  [7] -0.6408185 -2.9219549  0.2443362 -2.8604239</code></pre>
+<ul>
+<li>Optimization using BFGS method</li>
+</ul>
+<pre class="r"><code># Loss function
+fn.loss &lt;- function(x, theta, y, s) {
+  u &lt;- rbind(x, y)
+  ix.x &lt;- 1:nrow(x)
+  ix.y &lt;- (nrow(x) + 1) : (2 * nrow(x))
+  log.p.m &lt;- fn.log.p.m(x = u, theta = theta)
+  log.p.n &lt;- fn.log.p.n(y = u, s = s)
+  g &lt;- log.p.m - log.p.n
+  h.u &lt;- 1 / (1 + exp(-g))
+  h.x &lt;- h.u[ix.x]
+  h.y &lt;- h.u[ix.y]
+  loss &lt;- - mean(log(h.x) + log(1 - h.y))
+  return(loss)
+}
+fn.loss(x = x, theta = c(w.init, c.init), y = y, s = s)</code></pre>
+<pre><code>## [1] 2.189919</code></pre>
+<pre class="r"><code># Optimization
+itr &lt;- 500
+res.opt &lt;- optim(par = c(w.init, c.init), method = &quot;BFGS&quot;,
+                 control = list(maxit = itr),
+                 fn = fn.loss, x = x, y = y, s = s)
+res.opt</code></pre>
+<pre><code>## $par
+##          x1          x2       x1*x1       x1*x2       x2*x2           c 
+##  0.01037291 -0.02037821 -0.45569975  0.05815747 -0.49241408 -1.86343752 
+## 
+## $value
+## [1] 1.009165
+## 
+## $counts
+## function gradient 
+##       17       14 
+## 
+## $convergence
+## [1] 0
+## 
+## $message
+## NULL</code></pre>
+<ul>
+<li>Visualization</li>
+</ul>
+<pre class="r"><code># For decision boundary
+x1.ref &lt;- seq(from = -3, to = 3, length.out = 100)
+x2.ref &lt;- seq(from = -3, to = 3, length.out = 100)
+x.test &lt;- as.matrix(expand.grid(x1.ref, x2.ref)) ; rm(x1.ref, x2.ref)
+plot(x, col = &quot;red&quot;, xlim = c(-3, 3), ylim = c(-3, 3))
+points(x = y[,1], y = y[,2])
+points(x = x.test[,1], y = x.test[,2], cex = 0.4, pch = 16, col = &quot;darkseagreen3&quot;)</code></pre>
+<p><img src="{{< relref "post/2020-12-07-noise-constrative-estimation/index.html" >}}index_files/figure-html/unnamed-chunk-10-1.png" width="576" /></p>
+<pre class="r"><code># Plot decision boundary using initial parameters
+fn.prob.post &lt;- function(x, theta.m, theta.n) {
+  log.p.m &lt;- fn.log.p.m(x = x, theta = theta.m)
+  log.p.n &lt;- fn.log.p.n(y = x, s = theta.n)
+  g &lt;- log.p.m - log.p.n
+  pr &lt;- 1 / (1 + exp(-g))
+  return(pr)
+}
+y.hat &lt;- fn.prob.post(x = x.test, theta.m = c(w.init, c.init), theta.n = s)
+col &lt;- c()
+col[y.hat &gt;= 0.5] &lt;- &quot;lightpink&quot;
+col[y.hat &lt; 0.5] &lt;- &quot;grey&quot;
+plot(x, col = &quot;red&quot;, xlim = c(-3, 3), ylim = c(-3, 3))
+points(x = y[,1], y = y[,2])
+points(x = x.test[,1], y = x.test[,2], cex = 0.4, pch = 16, col = col)</code></pre>
+<p><img src="{{< relref "post/2020-12-07-noise-constrative-estimation/index.html" >}}index_files/figure-html/unnamed-chunk-11-1.png" width="576" /></p>
+<pre class="r"><code>#
+y.hat &lt;- fn.prob.post(x = x.test, theta.m = res.opt$&quot;par&quot;, theta.n = s)
+col &lt;- c()
+col[y.hat &gt;= 0.5] &lt;- &quot;lightpink&quot;
+col[y.hat &lt; 0.5] &lt;- &quot;grey&quot;
+plot(x, col = &quot;red&quot;, xlim = c(-3, 3), ylim = c(-3, 3))
+points(x = y[,1], y = y[,2])
+points(x = x.test[,1], y = x.test[,2], cex = 0.4, pch = 16, col = col)</code></pre>
+<p><img src="{{< relref "post/2020-12-07-noise-constrative-estimation/index.html" >}}index_files/figure-html/unnamed-chunk-12-1.png" width="576" /></p>
+</div>
+<div id="properties-of-the-estimator" class="section level2">
+<h2>Properties of the Estimator</h2>
+<ul>
+<li>The behavior of the estimator <span class="math inline">\(\hat{\theta}_T\)</span> when the sample size <span class="math inline">\(T\)</span> becomes arbitrarily large</li>
+<li><span class="math inline">\(J_T(\theta)\)</span> converges in probability to <span class="math inline">\(J\)</span></li>
+</ul>
+<p><span class="math display">\[\begin{equation}
+J(\theta) = \frac{1}{2} \mathbb{E} \left[ \log h(\mathbf{x} ; \theta) + \log (1 - h(\mathbf{y} ; \theta)) \right]
+\end{equation}\]</span></p>
+<ul>
+<li>Let <span class="math inline">\(\tilde{J}\)</span> denote the objective <span class="math inline">\(J\)</span> seen as a function of <span class="math inline">\(f(\cdot) = \log p_m(\cdot ; \theta)\)</span> where <span class="math inline">\(r(\cdot)\)</span> is logistic function</li>
+</ul>
+<p><span class="math display">\[\begin{equation}
+\tilde{J}(\theta) = \frac{1}{2} \mathbb{E} \left[ \log r(f(\mathbf{x}) - \log p_n(\mathbf{x})) + \log (1 - r(f(\mathbf{x}) - \log p_n(\mathbf{x}))) \right]
+\end{equation}\]</span></p>
+<ul>
+<li><strong>Theorem 1</strong> (Nonparametric estimation) <span class="math inline">\(\tilde{J}\)</span> attains a maximum at <span class="math inline">\(f(\cdot) = \log p_d(\cdot)\)</span>. There are no other extrema if the noise density <span class="math inline">\(p_n(\cdot)\)</span> is chosen such it is nonzero whenever <span class="math inline">\(p_d(\cdot)\)</span> is nonzero
+<ul>
+<li>The data pdf <span class="math inline">\(p_d(\cdot)\)</span> can be found by maximization of <span class="math inline">\(\tilde{J}\)</span>, i.e. by learning a classifier under the ideal situation of infinite amount of data</li>
+</ul></li>
+<li><strong>Theorem 2</strong> (Consistency) If conditions (a) to (c) are fulfilled then <span class="math inline">\(\hat{\theta}_T\)</span> converges in probability to <span class="math inline">\(\theta^{\star}\)</span>  </li>
+</ul>
+<p><span class="math inline">\(\begin{aligned} \\ &amp; \text{(a) } p_n(\cdot) \text{ is nonzero whenever } p_d(\cdot) \text{ is nonzero} \\[10pt] &amp; \text{(b) } \sup_{\theta} | J_T(\theta) - J(\theta) | \xrightarrow{P} 0 \\[10pt] &amp; \text{(c) } I = \int \mathbf{g}(\mathbf{x}) \mathbf{g}(\mathbf{x})^T P(\mathbf{x}) p_d(\mathbf{x}) d\mathbf{x} \text{ has full rank}, \\[10pt] &amp; \quad \quad \text{where } P(\mathbf{x}) = \frac{}{p_d(\mathbf{x}) + p_n(\mathbf{x})} \text{ and } \mathbf{g}(\mathbf{x}) = \nabla _{\theta} \log p_m(\mathbf{x} ; \theta) |_{\theta^{\star}} \end{aligned}\)</span>
++ <span class="math inline">\(\hat{\theta}_T\)</span> that the value of <span class="math inline">\(\theta\)</span> which globally maximizes <span class="math inline">\(J_T\)</span> converges to <span class="math inline">\(\theta^{\star}\)</span> and leads to the correct estimate of <span class="math inline">\(p_d(\cdot)\)</span> as the sample size <span class="math inline">\(T\)</span> increases
+* <strong>Theorem 3</strong> (Asymptotic normality) <span class="math inline">\(\sqrt{T}(\hat{\theta} - \theta^{\star})\)</span> is asymptotically normal with mean zero and covariance matrix <span class="math inline">\(\Sigma\)</span>  <br />
+<span class="math display">\[\begin{equation}
+\Sigma = I^{-1} - 2I^{-1} \left[ \int \mathbf{g}(\mathbf{x}) P(\mathbf{x}) p_d(\mathbf{x}) d\mathbf{x} \right] \left[ \int \mathbf{g}(\mathbf{x})^T P(\mathbf{x}) p_d(\mathbf{x}) d\mathbf{x} \right] I^{-1}
+\end{equation}\]</span>
++ This describes the distribution of the estimation error <span class="math inline">\((\hat{\theta} - \theta^{\star})\)</span> for large sample sizes
+* <strong>Corollary 1</strong> For large sample size <span class="math inline">\(T\)</span>, the mean squared error <span class="math inline">\(\mathbb{E} \lVert \hat{\theta} - \theta^{\star} \rVert ^2\)</span> behaves like <span class="math inline">\(\text{tr}(\Sigma) / T\)</span></p>
+<hr />
+</div>
+<div id="choice-of-the-noise-distribution" class="section level2">
+<h2>Choice of the Noise Distribution</h2>
+<ul>
+<li>In practice, we’d like to have a noise distribution which fulfills the following:
+<ol style="list-style-type: decimal">
+<li>It is easy to sample from, since the method relies on a set of samples <span class="math inline">\(Y\)</span> from the noise distribution</li>
+<li>It allows for an analytical expression for the log-pdf, so that we can evaluate the objective function without any problems</li>
+<li>It leads to a small jmean squared error <span class="math inline">\(\mathbb{E} \lVert \hat{\theta} - \theta^{\star} \rVert ^2\)</span></li>
+</ol></li>
+<li>Noise distribution sould be close to the data distribution, because otherwise, the classification problem might be too easy and would not require the system to learn much about the structure of the data</li>
+</ul>
+<hr />
+</div>
+<div id="simulations-with-artificial-data" class="section level2">
+<h2>Simulations with Artificial Data</h2>
+<ul>
+<li>Data <span class="math inline">\(\mathbf{x} \in \mathbb{R}^4\)</span> is generated via the ICA model</li>
+</ul>
+<p><span class="math display">\[\begin{equation}
+\begin{split}
+&amp; \mathbf{s} \sim Laplace (0,1) \\[10pt]
+&amp; A = (\mathbf{a}_1, \cdots, \mathbf{a}_4) \qquad (4 \times 4) \text{ mixing matrix} \\[10pt]
+&amp; \log p_d(\mathbf{x}) = - \sum_{i=1}^4 \sqrt{2} |\mathbf{b}_i^{\star} \mathbf{x}| + (\log |\text{det}(B^{\star})| - \log 4) \\[10pt]
+&amp; B^{\star} = A^{-1} \\[10pt]
+&amp; \mathbf{b}_i^{\star}: i \text{-th row of } B^{\star} \\[10pt]
+&amp; c^{\star} = \log |\text{det}(B^{\star})| - \log 4
+\end{split}
+\end{equation}\]</span></p>
+<pre class="r"><code># Data generation
+n &lt;- 500 # number of observations
+d &lt;- 4 # dimension
+s &lt;- matrix(data = rmutil::rlaplace(n = n * d, m = 0, s = 1), nrow = n, ncol = d) # source
+a &lt;- matrix(data = runif(n = d^2, min = -1, max = 1), nrow = d) # mixing matrix
+x &lt;- s %*% t(a)
+plot(data.frame(x))</code></pre>
+<p><img src="{{< relref "post/2020-12-07-noise-constrative-estimation/index.html" >}}index_files/figure-html/unnamed-chunk-13-1.png" width="576" /></p>
+<pre class="r"><code># Optimal values
+b.opt &lt;- solve(a)
+c.opt &lt;- log(abs(det(b.opt))) - log(4)
+b.opt &lt;- as.numeric(t(b.opt))
+c(b.opt, c.opt)</code></pre>
+<pre><code>##  [1]  -1.0678034   2.7347721 -11.4978249  -0.5658957   1.5007761  -1.5540557
+##  [7]   4.3488915  -0.3689997   4.9651959  -7.6275323  34.6154340  -0.4827444
+## [13]  -2.5772972   3.1499491 -16.3455963  -0.4142487   1.7389489</code></pre>
+<ul>
+<li>Model</li>
+</ul>
+<p><span class="math display">\[\begin{equation}
+\begin{split}
+&amp; \log p_m(\mathbf{x} ; \theta) = \log p_m^0(\mathbf{x} ; \alpha) + c \\[10pt]
+&amp; \log p_m^0 (\mathbf{x} ; \alpha) = - \sum_{i=1}^4 \sqrt{2} |\mathbf{b}_i^{\star} \mathbf{x}| \\[10pt]
+&amp; \text{Total set of parameters } \theta = \{ \alpha \in \mathbb{R}^{16}, c \}
+\end{split}
+\end{equation}\]</span></p>
+<pre class="r"><code># Initial values
+b.init &lt;- rnorm(n = d^2, mean = 0, sd = 1)
+c.init &lt;- rnorm(n = 1, mean = 0, sd = 1)
+# Our model
+fn.log.p.m &lt;- function(x, theta) {
+  # theta: vectorized parameters for optim
+  b &lt;- theta[1:(ncol(x)^2)] # parameters for unnormalized pdf
+  b &lt;- matrix(data = b, nrow = ncol(x), byrow = TRUE)
+  c &lt;- theta[(ncol(x)^2) + 1] # normalization constant
+  log.p.m.zero &lt;- - rowSums(sqrt(2) * abs(rbind(x) %*% t(b)))
+  log.p.m &lt;- log.p.m.zero + c
+  return(log.p.m)
+}
+fn.log.p.m(x = x[1:10,], theta = c(b.init, c.init))</code></pre>
+<pre><code>##  [1] -10.167318 -18.046268  -3.493401  -3.851108 -14.295308 -20.772439
+##  [7] -16.389326  -8.988520  -4.958315 -17.833190</code></pre>
+<ul>
+<li>Estimation method
+<ul>
+<li>Noise: Gaussian with the same mean and covariance matrix as <span class="math inline">\(\mathbf{x}\)</span></li>
+<li>Using conjugate gradient algorithm</li>
+</ul></li>
+</ul>
+<pre class="r"><code># Noise model
+mu &lt;- colMeans(x)
+sigma &lt;- cov(x)
+y &lt;- mvtnorm::rmvnorm(n = n, mean = mu, sigma = sigma)
+plot(data.frame(rbind(x, y)), col = c(rep(1, n), rep(3, n)))</code></pre>
+<p><img src="{{< relref "post/2020-12-07-noise-constrative-estimation/index.html" >}}index_files/figure-html/unnamed-chunk-16-1.png" width="576" /></p>
+<pre class="r"><code>fn.log.p.n &lt;- function(y, mu, sigma) {
+  p.n &lt;- mvtnorm::dmvnorm(x = y, mean = mu, sigma = sigma)
+  log.p.n &lt;- log(p.n)
+  return(log.p.n)
+}
+fn.log.p.n(y = y[1:10,], mu = mu, sigma = sigma)</code></pre>
+<pre><code>##  [1] -3.306050 -2.346724 -2.792790 -2.778671 -2.418834 -2.568218 -2.749788
+##  [8] -2.210911 -2.423041 -5.291618</code></pre>
+<pre class="r"><code># Loss function
+fn.loss &lt;- function(x, theta, y, mu, sigma) {
+  u &lt;- rbind(x, y)
+  ix.x &lt;- 1:nrow(x)
+  ix.y &lt;- (nrow(x) + 1) : (2 * nrow(x))
+  log.p.m &lt;- fn.log.p.m(x = u, theta = theta)
+  log.p.n &lt;- fn.log.p.n(y = u, mu = mu, sigma = sigma)
+  g &lt;- log.p.m - log.p.n
+  h.u &lt;- 1 / (1 + exp(-g))
+  h.x &lt;- h.u[ix.x]
+  h.y &lt;- h.u[ix.y]
+  loss &lt;- - mean(log(h.x) + log(1 - h.y))
+  return(loss)
+}
+fn.loss(x = x, theta = c(b.init, c.init), y = y, mu = mu, sigma = sigma)</code></pre>
+<pre><code>## [1] 8.281887</code></pre>
+<pre class="r"><code># Optimization
+itr &lt;- 200
+res.opt &lt;- optim(par = c(b.init, c.init), method = &quot;CG&quot;, control = list(maxit = itr), fn = fn.loss, x = x, y = y, mu = mu, sigma = sigma)
+res.opt$&quot;par&quot;</code></pre>
+<pre><code>##  [1] -0.679131403  0.485405892 -0.270039202  0.211353185 -0.244509196
+##  [6] -0.141846388 -0.938414194 -0.405202736  0.209630474  0.438933188
+## [11] -1.441725296 -0.426648616 -0.269371291  0.363076643 -1.726505072
+## [16] -0.008731007 -0.550986547</code></pre>
+<pre class="r"><code># Optimization for tracking MSE
+res.par &lt;- matrix(data = 0, nrow = itr + 1, ncol = length(c(b.init, c.init)))
+res.par[1,] &lt;- c(b.init, c.init)
+par.opt &lt;- c(b.opt, c.opt)
+mse &lt;- sqrt(sum((par.opt - res.par[1,])^2))
+loss &lt;- fn.loss(x = x, theta = res.par[1,], y = y, mu = mu, sigma = sigma)
+for (i in 1:itr) {
+  # i &lt;- 1
+   # No change when maxit = 1 
+  res &lt;- optim(par = res.par[i,], method = &quot;CG&quot;, control = list(maxit = 2),
+               fn = fn.loss, x = x, y = y, mu = mu, sigma = sigma)
+  mse[i + 1] &lt;- sqrt(sum((par.opt - res$par)^2))
+  loss[i + 1] &lt;- res$value
+  res.par[i + 1,] &lt;- res$par
+}
+plot(mse)</code></pre>
+<p><img src="{{< relref "post/2020-12-07-noise-constrative-estimation/index.html" >}}index_files/figure-html/unnamed-chunk-17-1.png" width="576" /></p>
+<pre class="r"><code>plot(loss)</code></pre>
+<p><img src="{{< relref "post/2020-12-07-noise-constrative-estimation/index.html" >}}index_files/figure-html/unnamed-chunk-17-2.png" width="576" /></p>
+<pre class="r"><code>data.frame(&quot;Min_MSE&quot; = res.par[which.min(mse),],
+           &quot;Min_Loss&quot; = res.par[which.min(loss),],
+           &quot;Optimal&quot; = par.opt)</code></pre>
+<pre><code>##         Min_MSE    Min_Loss     Optimal
+## 1  -0.011472646 -0.36675074  -1.0678034
+## 2  -0.327915670 -0.15439597   2.7347721
+## 3   0.209830192  0.27801739 -11.4978249
+## 4   0.253137812  0.27687560  -0.5658957
+## 5   0.077913174 -0.02118762   1.5007761
+## 6  -0.334477071 -0.37518392  -1.5540557
+## 7   0.187742140  0.14740258   4.3488915
+## 8  -0.341547155 -0.45805840  -0.3689997
+## 9  -0.149873243 -0.09708178   4.9651959
+## 10  0.444342222  0.32190585  -7.6275323
+## 11 -1.199189518 -1.31235201  34.6154340
+## 12 -0.135373881 -0.13879506  -0.4827444
+## 13 -0.609603903 -0.65712203  -2.5772972
+## 14  0.055091891  0.54343559   3.1499491
+## 15 -0.638170121 -0.59206225 -16.3455963
+## 16  0.006906337  0.14873637  -0.4142487
+## 17 -0.158763430 -0.59071193   1.7389489</code></pre>
+<ul>
+<li>Results
+<br>
+<img src="images/Fig_01.PNG" />
+<br></li>
+</ul>
+<hr />
+</div>
+<div id="further-study" class="section level2">
+<h2>Further Study</h2>
+<ul>
+<li>Hinton, 2002, <strong>Training products of experts by minimizing contrastive divergence</strong>, <em>Neural Computation</em>. <a href="http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.124.730&amp;rep=rep1&amp;type=pdf">pdf</a></li>
+<li>Teh et al., 2004, <strong>Energy-based models for sparse overcomplete representations</strong>, <em>Journal of Machine Learning Research</em>. <a href="http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.93.8380&amp;rep=rep1&amp;type=pdf">pdf</a></li>
+</ul>
+<hr />
+</div>
+<div id="note" class="section level2">
+<h2>Note</h2>
+<ul>
+<li>Despite of <span class="math inline">\(a \sim Unif(-1,1)\)</span>, correlated variables of <span class="math inline">\(\mathbf{x}\)</span> are observed… How about regularization?</li>
+<li>Using maximum entropy model, applying NCE to data generation method for imbalance classification</li>
+</ul>
+</div>

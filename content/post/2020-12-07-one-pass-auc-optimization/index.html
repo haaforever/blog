@@ -1,0 +1,285 @@
+---
+title: One-Pass AUC Optimization
+author: ''
+date: '2020-12-07'
+slug: one-pass-auc-optimization
+categories:
+  - Paper
+tags:
+  - ICML
+  - AUC
+  - Optimization
+  - Online Learning
+---
+
+<link href="{{< relref "post/2020-12-07-one-pass-auc-optimization/index.html" >}}index_files/anchor-sections/anchor-sections.css" rel="stylesheet" />
+<script src="{{< relref "post/2020-12-07-one-pass-auc-optimization/index.html" >}}index_files/anchor-sections/anchor-sections.js"></script>
+
+
+
+<p>Gao et al., 2013, <strong>One-pass AUC optimization</strong>, <em>ICML</em>. <a href="https://scholar.google.co.kr/scholar?cluster=16210065053805563556&amp;hl=ko&amp;as_sdt=0,5">pdf</a></p>
+<hr />
+<div id="motivation" class="section level2">
+<h2>Motivation</h2>
+<ul>
+<li>AUC is measured by a sum of losses defined over pairs of instances from different classes</li>
+<li>This causes a problem in applications involving big data or streaming data in which a large volume of data come in a short time period</li>
+<li>In this work, one-pass AUC optimization that requires going through the training data only once without storing the entire training dataset is proposed</li>
+</ul>
+<hr />
+</div>
+<div id="preliminaries" class="section level2">
+<h2>Preliminaries</h2>
+<ul>
+<li>Instance space <span class="math inline">\(\mathcal{X} \in \mathbb{R}^d\)</span></li>
+<li>Label set <span class="math inline">\(\mathcal{Y} = \{ -1, +1 \}\)</span></li>
+<li>Unknown distribution <span class="math inline">\(\mathcal{D}\)</span> over <span class="math inline">\(\mathcal{X} \times \mathcal{Y}\)</span></li>
+<li>A training sample of <span class="math inline">\(n_{+}\)</span> positive instances and <span class="math inline">\(n_{-}\)</span> negative ones</li>
+<li>Training set <span class="math inline">\(\mathcal{S} = \{ (\mathbf{x}_1^{+}, +1), \cdots, (\mathbf{x}_{n_{+}}^{+}, +1), (\mathbf{x}_1^{-}, -1), \cdots, (\mathbf{x}_{n_{-}}^{-}, -1) \}\)</span></li>
+<li>Real-valued function <span class="math inline">\(f: \mathcal{X} \rightarrow \mathbb{R}\)</span></li>
+<li>AUC of <span class="math inline">\(f\)</span> on <span class="math inline">\(\mathcal{S}\)</span></li>
+</ul>
+<p><span class="math display">\[\begin{equation}
+\sum_{i=1}^{n_{+}} \sum_{j=1}^{n_{-}} \frac{\mathbb{I}[f(\mathbf{x}_{i}^{+}) &gt; f(\mathbf{x}_{j}^{-})]}{n_{+} n_{-}}
+\end{equation}\]</span></p>
+<ul>
+<li>In practice, AUC optimization is approximated by an optimization problem that minimizes the following objective function where <span class="math inline">\(l\)</span> is a loss function</li>
+<li>Here, linear classifier <span class="math inline">\(f(\mathbf{x}) = \mathbf{w}^\text{T} \mathbf{x}\)</span> and square loss are used</li>
+</ul>
+<p><span class="math display">\[\begin{equation}
+L(\mathbf{w}) = \frac{\lambda}{2} \lVert \mathbf{w} \rVert _2^2 + \sum_{i=1}^{n_{+}} \sum_{j=1}^{n_{-}} \frac{(1 - \mathbf{w}^\text{T} (\mathbf{x}_i^+ - \mathbf{x}_j^-))^2}{2 n_{+} n_{-}}
+\end{equation}\]</span></p>
+<hr />
+</div>
+<div id="opauc" class="section level2">
+<h2>OPAUC</h2>
+<ul>
+<li>Modifying the overall loss <span class="math inline">\(L(\mathbf{w})\)</span> as a sum of losses for individual training instances</li>
+<li>For i.i.d. sequence <span class="math inline">\(\mathcal{S}_t = \{ (\mathbf{x}_1, y_1), \cdots, (\mathbf{x}_t, y_t) \}\)</span>, the loss of <span class="math inline">\(\mathbf{x}_t\)</span> is calculated by using former instances with the opposite sign of <span class="math inline">\(y_t\)</span></li>
+</ul>
+<p><span class="math display">\[\begin{equation}
+L_t(\mathbf{w}) = \frac{\lambda}{2} \lVert \mathbf{w} \rVert _2^2 + \frac{\sum_{i=1}^{t-1} \mathbb{I}[y_t \neq y_i](1 - y_t \mathbf{w}^\text{T} (\mathbf{x}_t - \mathbf{x}_i))^2}{2 \left| \{ i \in [t-1] : y_i y_t = -1 \} \right|}
+\end{equation}\]</span></p>
+<ul>
+<li>R example</li>
+</ul>
+<p><span class="math display">\[\begin{equation}
+\begin{split}
+&amp; a_t = \sum_{i=1}^{t-1} \mathbb{I}[y_t \neq y_i](1 - y_t \mathbf{w}^\text{T} (\mathbf{x}_t - \mathbf{x}_i))^2 \\[10pt]
+&amp; A_n = \sum_{i=1}^{n_{+}} \sum_{j=1}^{n_{-}} (1 - \mathbf{w}^\text{T} (\mathbf{x}_i^+ - \mathbf{x}_j^-))^2 = a_1 + \cdots + a_n
+\end{split}
+\end{equation}\]</span></p>
+<pre class="r"><code>##### Toy example #####
+n.pos &lt;- 5
+n.neg &lt;- 10
+n &lt;- n.pos + n.neg
+f.pos &lt;- runif(n = n.pos, min = 0, max = 1)
+f.neg &lt;- runif(n = n.neg, min = -1, max = 1)
+f &lt;- c(f.pos, f.neg) # classifier output
+y &lt;- c(rep(1, n.pos), rep(-1, n.neg))
+dt &lt;- data.frame(y, f)
+dt &lt;- dt[sample(x = 1:n, size = n),]
+dt &lt;- data.frame(t = 1:n, dt)
+rownames(dt) &lt;-  NULL
+dt</code></pre>
+<pre><code>##     t  y           f
+## 1   1 -1  0.57115627
+## 2   2  1  0.69148004
+## 3   3 -1  0.65319819
+## 4   4 -1  0.28752907
+## 5   5 -1 -0.76962313
+## 6   6  1  0.92191846
+## 7   7 -1  0.13493007
+## 8   8  1  0.09643691
+## 9   9  1  0.94639890
+## 10 10 -1 -0.90878564
+## 11 11 -1  0.03024890
+## 12 12  1  0.81600953
+## 13 13 -1  0.84330899
+## 14 14 -1  0.93284236
+## 15 15 -1  0.67318396</code></pre>
+<pre class="r"><code>##### Define functions #####
+fn.auc &lt;- function(y, yhat) {
+  ix.pos &lt;- which(y == 1)
+  ix.neg &lt;- which(y == -1)
+  if (length(ix.neg) == 0 | length(ix.pos) == 0) {
+    stop(paste0(&quot;Positive: &quot;, length(ix.pos), &quot;, Negative: &quot;, length(ix.neg)))
+  }
+  diff.pair &lt;- sapply(X = yhat[ix.pos], FUN = function(x) {
+    return(x - yhat[ix.neg])
+  })
+  diff.pair &lt;- as.numeric(diff.pair)
+  auc &lt;- sum(diff.pair &gt; 0) / (length(ix.pos) * length(ix.neg))
+  return(auc)
+}
+
+
+fn.A.n &lt;- function(y, yhat) {
+  ix.pos &lt;- which(y == 1)
+  ix.neg &lt;- which(y == -1)
+  if (length(ix.neg) == 0 | length(ix.pos) == 0) {
+    stop(paste0(&quot;Positive: &quot;, length(ix.pos), &quot;, Negative: &quot;, length(ix.neg)))
+  }
+  diff.pair &lt;- sapply(X = yhat[ix.pos], FUN = function(x) {
+    return(x - yhat[ix.neg])
+  })
+  diff.pair &lt;- as.numeric(diff.pair)
+  return(sum((1 - diff.pair)^2))
+}
+
+
+fn.a.t &lt;- function(y, yhat) {
+  # Target: last element
+  ix.target &lt;- length(y)
+  ix.pair &lt;- which(y != y[ix.target])
+  if (length(ix.pair) == 0) {
+    stop(paste0(&quot;No data opposite in sign of y.target&quot;))
+  }
+  diff.pair &lt;- yhat[ix.target] - yhat[ix.pair]
+  return(sum((1 - y[ix.target] * diff.pair)^2))
+}</code></pre>
+<pre class="r"><code>##### Result #####
+res &lt;- data.frame(dt, AUC = 0, A.n = 0, a.t = 0, cumsum.a.t = 0, AUC.square = 0, AUC.square.t = 0)
+st &lt;- which(diff(dt$&quot;y&quot;) != 0)[1] + 1
+for (t in st:n) {
+  # t &lt;- st
+  res$&quot;AUC&quot;[t] &lt;- fn.auc(y = dt$&quot;y&quot;[1:t], yhat = dt$&quot;f&quot;[1:t])
+  res$&quot;A.n&quot;[t] &lt;- fn.A.n(y = dt$&quot;y&quot;[1:t], yhat = dt$&quot;f&quot;[1:t])
+  res$&quot;a.t&quot;[t] &lt;- fn.a.t(y = dt$&quot;y&quot;[1:t], yhat = dt$&quot;f&quot;[1:t])
+  n.neg.t &lt;- sum(res$&quot;y&quot;[1:t] == -1)
+  n.pos.t &lt;- sum(res$&quot;y&quot;[1:t] == 1)
+  res$&quot;AUC.square&quot;[t] &lt;- res$&quot;A.n&quot;[t] / (n.neg.t * n.pos.t)
+  res$&quot;AUC.square.t&quot;[t] &lt;- res$&quot;a.t&quot;[t] / (n.neg.t * n.pos.t)
+}
+res$&quot;cumsum.a.t&quot; &lt;- cumsum(res$&quot;a.t&quot;)
+res &lt;- round(x = res, digits = 4)
+res</code></pre>
+<pre><code>##     t  y       f    AUC     A.n    a.t cumsum.a.t AUC.square AUC.square.t
+## 1   1 -1  0.5712 0.0000  0.0000 0.0000     0.0000     0.0000       0.0000
+## 2   2  1  0.6915 1.0000  0.7738 0.7738     0.7738     0.7738       0.7738
+## 3   3 -1  0.6532 1.0000  1.6987 0.9249     1.6987     0.8494       0.4625
+## 4   4 -1  0.2875 1.0000  2.0540 0.3553     2.0540     0.6847       0.1184
+## 5   5 -1 -0.7696 1.0000  2.2666 0.2126     2.2666     0.5667       0.0532
+## 6   6  1  0.9219 1.0000  3.8348 1.5682     3.8348     0.4794       0.1960
+## 7   7 -1  0.1349 1.0000  4.0768 0.2420     4.0768     0.4077       0.0242
+## 8   8  1  0.0964 0.7333 11.1902 7.1134    11.1902     0.7460       0.4742
+## 9   9  1  0.9464 0.8000 12.7447 1.5545    12.7447     0.6372       0.0777
+## 10 10 -1 -0.9088 0.8333 14.5265 1.7818    14.5265     0.6053       0.0742
+## 11 11 -1  0.0302 0.8571 15.5320 1.0055    15.5320     0.5547       0.0359
+## 12 12  1  0.8160 0.8857 18.0414 2.5094    18.0414     0.5155       0.0717
+## 13 13 -1  0.8433 0.8250 25.1284 7.0870    25.1284     0.6282       0.1772
+## 14 14 -1  0.9328 0.7556 33.2841 8.1557    33.2841     0.7396       0.1812
+## 15 15 -1  0.6732 0.7600 38.5614 5.2772    38.5614     0.7712       0.1055</code></pre>
+<hr />
+</div>
+<div id="gradients" class="section level2">
+<h2>Gradients</h2>
+<ul>
+<li><span class="math inline">\(X_t^+\)</span> and <span class="math inline">\(X_t^-\)</span>: the sets of positive and negative instances in <span class="math inline">\(\mathcal{S}_t\)</span></li>
+<li><span class="math inline">\(T_t^+\)</span> and <span class="math inline">\(T_t^-\)</span>: their respective cardinality</li>
+<li>For <span class="math inline">\(y_t = 1\)</span>, (trick: <span class="math inline">\(+ \mathbf{c}_t^- [\mathbf{c}_t^-]^\text{T} \mathbf{w} - \mathbf{c}_t^- [\mathbf{c}_t^-]^\text{T} \mathbf{w}\)</span>)</li>
+</ul>
+<p>\begin{aligned}
+L_t() &amp; =  + _t _t^  - <em>t + </em>{i:y_i = -1}  \[10pt]
+&amp; =  - _t + _t^- + (_t - _t^-)(_t - _t<sup>-)</sup>  + S_t^- 
+\end{aligned}</p>
+<ul>
+<li>Mean vector of negative class at <span class="math inline">\(t\)</span></li>
+</ul>
+<p><span class="math display">\[\begin{equation}
+c_t^- = \sum_{i:y_i = -1} \frac{\mathbf{x}_i}{T_t^-}
+\end{equation}\]</span></p>
+<ul>
+<li>Covariance matrix of negative class at <span class="math inline">\(t\)</span></li>
+</ul>
+<p><span class="math display">\[\begin{equation}
+S_t^- = \sum_{i:y_i = -1} \frac{\mathbf{x}_i \mathbf{x}_i^\text{T} - \mathbf{c}_t^- [\mathbf{c}_t^-]^\text{T}}{T_t^-}
+\end{equation}\]</span></p>
+<ul>
+<li>For <span class="math inline">\(y_t = -1\)</span>, in a similar manner</li>
+</ul>
+<p><span class="math display">\[\begin{equation}
+\nabla L_t(\mathbf{w}) = \lambda \mathbf{w} + \mathbf{x}_t - \mathbf{c}_t^+ + (\mathbf{x}_t - \mathbf{c}_t^+)(\mathbf{x}_t - \mathbf{c}_t^+)^\text{T} \mathbf{w} + S_t^+ \mathbf{w}
+\end{equation}\]</span></p>
+<hr />
+</div>
+<div id="algorithm" class="section level2">
+<h2>Algorithm</h2>
+<ul>
+<li>Initialize <span class="math inline">\(\Gamma_0^- = \Gamma_0^+ = [\mathbf{0}]_{d \times d}\)</span> where <span class="math inline">\(u = d\)</span></li>
+<li>At each iteration, set <span class="math inline">\(S_t^+ = \Gamma_t^+\)</span> and <span class="math inline">\(S_t^- = \Gamma_t^-\)</span></li>
+</ul>
+<p>\begin{aligned}
+&amp; <em>t^+ = </em>{t-1}^+ +  + <em>{t-1}^+ [_{t-1}^+]^ - </em>{t}^+ [_{t}^+]^ \[10pt]
+&amp; <em>t^- = </em>{t-1}^- +  + <em>{t-1}^- [_{t-1}^-]^ - </em>{t}^- [_{t}^-]^
+\end{aligned}</p>
+<p><br>
+<img src="images/Algorithm_01.PNG" />
+<br></p>
+<hr />
+</div>
+<div id="theoretical-analysis" class="section level2">
+<h2>Theoretical Analysis</h2>
+<ul>
+<li><strong>Theorem 1.</strong> For square loss <span class="math inline">\(l(t) = (1-t)^2\)</span>, the surrogate loss <span class="math inline">\(\Psi(f, \mathbf{x}, \mathbf{x}&#39;) = l(f(\mathbf{x}) - f(\mathbf{x}&#39;))\)</span> is consistent with AUC</li>
+<li><strong>Theorem 2.</strong> Let <span class="math inline">\(\mathbf{w}_{\star} = \mathop{\mathrm{argmin}}_{\mathbf{w}} \sum_t L_t(\mathbf{w})\)</span>. For <span class="math inline">\(\lVert \mathbf{x}_t \rVert \leq 1 \; \; (t \in [T])\)</span>, <span class="math inline">\(\lVert \mathbf{w}_{\star} \rVert \leq B\)</span> and <span class="math inline">\(TL^{\star} \geq \sum_{t=1}^T L_t(\mathbf{w})\)</span>, we have the followings where <span class="math inline">\(\kappa = 4 + \lambda\)</span> and <span class="math inline">\(\eta_t = 1 / (\kappa + \sqrt{\kappa^2 + \kappa T L^{\star}/B^2})\)</span></li>
+</ul>
+<p><span class="math display">\[\begin{equation}
+\sum_t L_t (\mathbf{w}_t) - \sum_t L_t (\mathbf{w}_{\star}) \leq 2 \kappa B^2 + B \sqrt{2 \kappa T L^{\star}}
+\end{equation}\]</span></p>
+<ul>
+<li>Theorem 2 presents an <span class="math inline">\(\mathcal{O}(1/T)\)</span> convergence rate for the OPACU algorithm if the distribution is separable, i.e., <span class="math inline">\(L^{\star} = 0\)</span>, and an <span class="math inline">\(\mathcal{O}(1/\sqrt{T})\)</span> convergence rate for general case</li>
+</ul>
+<hr />
+</div>
+<div id="experiments" class="section level2">
+<h2>Experiments</h2>
+<ul>
+<li>16 benchmark datasets</li>
+<li>Features have been scaled to <span class="math inline">\([-1,1]\)</span> for all datasets</li>
+<li>Multi-class datasets have been transformed into binary ones by randomly partitioning classes into two groups, where each group contains the same number of classes</li>
+</ul>
+<p><br>
+<img src="images/Table_01.PNG" />
+<br></p>
+<ul>
+<li>Comparison method
+<ul>
+<li><span class="math inline">\(\text{OAM}_{\text{seq}}\)</span>, <span class="math inline">\(\text{OAM}_{\text{gra}}\)</span>: (Zhao et al., 2011)</li>
+<li><span class="math inline">\(\text{online Uni-Exp}\)</span>: an online learning algorithm which optimizes the weighted univariate exponential loss (Kotlowski et al., 2011)</li>
+<li><span class="math inline">\(\text{batch Uni-log}\)</span>: a batch learning algorithm which optimized the weighted univariate logistic loss (Kotlowski et al., 2011)</li>
+<li><span class="math inline">\(\text{batch SVM-OR}\)</span>: A batch learning algorithm which optimized the pairwise hinge loss (Joachims, 2006)</li>
+<li><span class="math inline">\(\text{batch LS-SVM}\)</span>: A batch learning algorithm which optimizes the pairwise square loss</li>
+</ul></li>
+<li>5-fold cross validation to decide <span class="math inline">\(\eta_t \in 2^{[-12:10]}\)</span>, <span class="math inline">\(\lambda \in 2^{[-10:2]}\)</span></li>
+<li>Performance evaluation measured by 5 trials of 5-fold cross validation</li>
+</ul>
+<p><br>
+<img src="images/Table_02.PNG" />
+<br></p>
+<hr />
+</div>
+<div id="further-study" class="section level2">
+<h2>Further Study</h2>
+<ul>
+<li>Zhao et al., 2011, <strong>Online AUC maximization</strong>, <em>International Conference on Machine Learning</em>. <a href="https://scholar.google.co.kr/scholar?cluster=3998144449274225696&amp;hl=ko&amp;as_sdt=0,5">pdf</a></li>
+<li>Cortes and Mohri, 2004, <strong>AUC optimization vs. error rate minimization</strong>, <em>Advances in Neural Information Processing Systems</em>. <a href="https://scholar.google.co.kr/scholar?cluster=3571958290589699987&amp;hl=ko&amp;as_sdt=0,5">pdf</a></li>
+<li>Joachims, 2005. <strong>A support vector method for multivariate performance measures</strong>, <em>International Conference on Machine Learning</em>. <a href="https://scholar.google.co.kr/scholar?cluster=14930548401865894598&amp;hl=ko&amp;as_sdt=0,5">pdf</a></li>
+</ul>
+<hr />
+</div>
+<div id="references" class="section level2">
+<h2>References</h2>
+<ul>
+<li>Joachims, 2006, <strong>Training linear svms in linear time</strong>, <em>International Conference on Machine Learning</em>. <a href="https://scholar.google.co.kr/scholar?cluster=210048792073380161&amp;hl=ko&amp;as_sdt=0,5">pdf</a></li>
+<li>Kotlowski et al., 2011, <strong>Bipartite ranking through minimization of univariate loss</strong>, <em>International Conference on Machine Learning</em>. <a href="https://scholar.google.co.kr/scholar?cluster=17930403155227738788&amp;hl=ko&amp;as_sdt=0,5">pdf</a></li>
+</ul>
+<hr />
+</div>
+<div id="note" class="section level2">
+<h2>Note</h2>
+<ul>
+<li>Kernel formulation for nonlinear classification</li>
+<li>Extension to other loss functions using <span class="math inline">\(L_t(\mathbf{w})\)</span> formulation</li>
+</ul>
+</div>
