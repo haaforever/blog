@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Stochastic Online AUC Maximization | Haji blog</title>
+    <link rel="stylesheet" href="https://haaforever.github.io/blog/css/style.css" />
+    <link rel="stylesheet" href="https://haaforever.github.io/blog/css/fonts.css" />
+    
+  </head>
+
+  <body>
+    <nav>
+    <ul class="menu">
+      
+      <li><a href="https://haaforever.github.io/blog/">Home</a></li>
+      
+      <li><a href="https://haaforever.github.io/blog/about/">About</a></li>
+      
+      <li><a href="https://haaforever.github.io/blog/categories/">Categories</a></li>
+      
+      <li><a href="https://haaforever.github.io/blog/tags/">Tags</a></li>
+      
+      <li><a href="https://haaforever.github.io/blog/index.xml">Subscribe</a></li>
+      
+    </ul>
+    <hr/>
+    </nav>
+
+<div class="article-meta">
+<h1><span class="title">Stochastic Online AUC Maximization</span></h1>
+
+<h2 class="date">2020/12/08</h2>
+</div>
+
+<main>
+
+<link href="https://haaforever.github.io/blog/post/2020/12/08/stochastic-online-auc-maximization/index_files/anchor-sections/anchor-sections.css" rel="stylesheet" />
+<script src="https://haaforever.github.io/blog/post/2020/12/08/stochastic-online-auc-maximization/index_files/anchor-sections/anchor-sections.js"></script>
+
+
+
+<p>Ying et al., 2016, <strong>Stochastic online AUC maximization</strong>, <em>NIPS</em>. <a href="https://papers.nips.cc/paper/2016/file/c52f1bd66cc19d05628bd8bf27af3ad6-Paper.pdf">pdf</a></p>
+<hr />
+<div id="introduction" class="section level2">
+<h2>Introduction</h2>
+<ul>
+<li>Topic: online learning algorithms that maximized AUC for large-scale data</li>
+<li>Challenge: learning objective is usually defined over a pair of training examples of opposite classes</li>
+<li>Proposed method
+<ul>
+<li>AUC optimization can be equivalently formulated as a convex-concave saddle point problem (SPP)</li>
+<li>From this SPP representation, a stochastic online algorithm (SOLAM) is proposed which has time and space complexity of one datum</li>
+</ul></li>
+</ul>
+<hr />
+</div>
+<div id="background" class="section level2">
+<h2>Background</h2>
+<ul>
+<li>Input space <span class="math inline">\(\mathcal{X} \subseteq \mathbb{R}^d\)</span></li>
+<li>Output space <span class="math inline">\(\mathcal{Y} = \{ -1, 1\}\)</span></li>
+<li>Training data <span class="math inline">\(\mathbf{z} = \{ (x_i, y_i) \}_{i = 1}^n\)</span>: i.i.d. sample from unknown distribution <span class="math inline">\(\rho\)</span> on <span class="math inline">\(\mathcal{Z} = \mathcal{X} \times \mathcal{Y}\)</span></li>
+<li>Scoring function <span class="math inline">\(f: \mathcal{X} \to \mathbb{R}\)</span></li>
+<li>AUC: the probability of a positive sample ranks higher than a negative sample</li>
+</ul>
+<p><span class="math display">\[\begin{equation}
+\begin{split}
+\mathop{\mathrm{argmax}}_f \; \text{AUC}(f) &amp; = \mathop{\mathrm{argmax}}_f \; \Pr(f(x) \geq f(x&#39;) | y = 1, y&#39; = -1) \\[10pt]
+&amp; = \mathop{\mathrm{argmin}}_f \; \mathbb{E} [\mathbb{I} (f(x&#39;) - f(x) &gt; 0) | y = 1, y&#39; = -1]
+\end{split}
+\end{equation}\]</span></p>
+<ul>
+<li>Squared loss has been shown to be statistically consistent with AUC (Gao and Zhou, 2015)</li>
+<li>In this work, squared loss and linear classifier are used</li>
+<li>Let <span class="math inline">\(p = \Pr (y=1)\)</span></li>
+<li>For any random variable <span class="math inline">\(\xi (z)\)</span>, conditional expectation is defined by <span class="math inline">\(\mathbb{E} [\xi(z) | y=1] = \frac{1}{p} \int \int \xi(z) \mathbb{I}(y = 1) d\rho(z)\)</span></li>
+<li>Bounded solution <span class="math inline">\(\lVert \mathbf{w} \rVert \leq R\)</span></li>
+<li>AUC maximization can be formulated by</li>
+</ul>
+<p><span class="math display">\[\begin{equation}
+\begin{split}
+&amp; \mathop{\mathrm{argmin}}_{\lVert \mathbf{w} \rVert \leq R} \; \mathbb{E} [(1 - \mathbf{w}^\text{T} (x - x&#39;))^2 | y = 1, y&#39; = -1] \\[10pt]
+= &amp; \mathop{\mathrm{argmin}}_{\lvert \mathbf{w} \rVert \leq R} \; \frac{1}{p(1-p)} \int \int_{\mathcal{Z} \times \mathcal{Z}} (1 - \mathbf{w}^\text{T} (x - x&#39;))^2 \mathbb{I}(y = 1) \mathbb{I}(y&#39; = -1) d\rho(z) d\rho(z&#39;)
+\end{split}
+\end{equation}\]</span></p>
+<ul>
+<li><span class="math inline">\(n^+\)</span>, <span class="math inline">\(n^-\)</span>: the number of instances in the positive and negative classes</li>
+<li>Applying empirical risk minimization principle</li>
+</ul>
+<p><span class="math display">\[\begin{equation}
+\mathop{\mathrm{argmin}}_{\lVert \mathbf{w} \rVert \leq R} \frac{1}{n^+ n^-} \sum_{i=1}^{n} \sum_{j=1}^{n} (1 - \mathbf{w}^\text{T} (x_i - x_j))^2 \mathbb{I}(y_i = 1 \land y&#39;_j = -1)
+\end{equation}\]</span></p>
+<hr />
+</div>
+<div id="saddle-point-problems-spp" class="section level2">
+<h2>Saddle Point Problems (SPP)</h2>
+<p><span class="math display">\[\begin{equation}
+\min_{u \in \mathcal{U}} \; \max_{v \in \mathcal{V}} \; g(u, v)
+\end{equation}\]</span></p>
+<ul>
+<li><span class="math inline">\(g\)</span> is a smooth convex-concave function</li>
+<li><span class="math inline">\(g(\cdot, v)\)</span> is convex for all <span class="math inline">\(v \in \mathcal{V}\)</span></li>
+<li><span class="math inline">\(g(u, \cdot)\)</span> is concave for all <span class="math inline">\(u \in \mathcal{U}\)</span></li>
+<li>A saddle point solution to the problem is a pair <span class="math inline">\((u^{\star}, v^{\star}) \in \mathcal{U} \times \mathcal{V}\)</span> such that</li>
+</ul>
+<p><span class="math display">\[\begin{equation}
+g(u^{\star}, v) \leq g(u^{\star}, v^{\star}) \leq g(u, v^{\star}) \quad \forall u \in \mathcal{U}, \; v \in \mathcal{V}
+\end{equation}\]</span></p>
+<hr />
+</div>
+<div id="equivalent-representation-as-a-spp" class="section level2">
+<h2>Equivalent Representation as a SPP</h2>
+<ul>
+<li><strong>Theorem 1.</strong> The AUC optimization is equivalent to</li>
+</ul>
+<p><span class="math display">\[\begin{equation}
+\min_{\begin{array}{c} \lVert \mathbf{w} \rVert \leq R \\[-2pt] (a, b) \in \mathbb{R}^2 \end{array}} \; \max_{\alpha \in \mathbb{R}} \; f(\mathbf{w}, a, b, \alpha) := \int_{\mathcal{Z}} F(\mathbf{w}, a, b, \alpha ; z) d\rho(z)
+\end{equation}\]</span></p>
+<p><span class="math display">\[\begin{equation}
+\begin{split}
+F(\mathbf{w}, a, b, \alpha ; z) &amp; = (1 - p) (\mathbf{w}^{\text{T}} x - a)^2 \mathbb{I}(y = 1) + p (\mathbf{w}^{\text{T}} x - b)^2 \mathbb{I}(y = -1) \\[10pt]
+&amp; + 2 (1 + \alpha) (p \mathbf{w}^{\text{T}} x \mathbb{I}(y = -1) - (1 - p) \mathbf{w}^{\text{T}} x \mathbb{I}(y = 1)) - p (1 - p) \alpha^2
+\end{split}
+\end{equation}\]</span></p>
+<ul>
+<li>Proof omitted (see the paper for more details)</li>
+</ul>
+<hr />
+</div>
+<div id="stocastic-first-order-online-algorithm" class="section level2">
+<h2>Stocastic First-Order Online Algorithm</h2>
+<ul>
+<li>Gradient descent in the primal variable <span class="math inline">\((\mathbf{w}, a, b)\)</span></li>
+<li>Gradient ascent in the dual variable <span class="math inline">\(\alpha\)</span></li>
+<li>Let <span class="math inline">\(v = (\mathbf{w}^{\text{T}}, a, b)^{\text{T}} \in \mathbb{R}^{d+2}\)</span></li>
+<li><span class="math inline">\(\mathbf{w} \in \mathbb{R}^d\)</span>, <span class="math inline">\(a, b, \alpha \in \mathbb{R}\)</span>, <span class="math inline">\(z = (x, y) \in \mathbb{Z}\)</span></li>
+<li>We need the knowledge of the unknown probability <span class="math inline">\(p = \Pr(y = 1)\)</span>, or <span class="math inline">\(\hat{p}_t = \sum_{i=1}^t \mathbb{I}(y_i = 1) \; / \; t\)</span></li>
+<li>By the <strong>Theorem 1.</strong>, we need restriction of the solution</li>
+</ul>
+<p><span class="math display">\[\begin{equation}
+\begin{split}
+&amp; \Omega_1 = \{ (\mathbf{w}, a, b) \; : \; \lvert \mathbf{w} \rVert \leq R, \; |a| \leq R \kappa, \; |b| \leq R \kappa \} \\[10pt]
+&amp; \Omega_2 = \{ \alpha \; : \; |\alpha| \leq 2R \kappa \} \\[10pt]
+&amp; \kappa = \sup_{x \in \mathcal{X}} \; \lVert x \rVert &lt; \inf
+\end{split}
+\end{equation}\]</span>
+<br>
+<span class="math display">\[\begin{equation}
+\hat{F}_t (v, \alpha, z) = 
+\begin{cases}
+(1 - \hat{p}_t) (\mathbf{w}^{\text{T}} x - a)^2 - 2 (1 + \alpha) (1 - \hat{p}_t) \mathbf{w}^{\text{T}} x - \hat{p}_t (1 - \hat{p}_t) \alpha^2 &amp; \text{if} \quad y = 1 \\[10pt]
+\hat{p}_t (\mathbf{w}^{\text{T}} x - b)^2 + 2 (1 + \alpha) \hat{p}_t \mathbf{w}^{\text{T}} x - \hat{p}_t (1 - \hat{p}_t) \alpha^2 &amp; \text{if} \quad y = -1
+\end{cases}
+\end{equation}\]</span>
+<br>
+<span class="math display">\[\begin{equation}
+\nabla_{\mathbf{w}} \hat{F}_t (v, \alpha, z) =
+\begin{cases}
+2 (1 - \hat{p}_t) (\mathbf{w}^{\text{T}} x - a - 1 - \alpha) x &amp; \text{if} \quad y = 1 \\[10pt]
+2 \hat{p}_t (\mathbf{w}^{\text{T}} x - b + 1 + \alpha) x &amp; \text{if} \quad y = -1
+\end{cases}
+\end{equation}\]</span>
+<br>
+<span class="math display">\[\begin{equation}
+\nabla_{a} \hat{F}_t (v, \alpha, z) =
+\begin{cases}
+-2 (1 - \hat{p}_t) (\mathbf{w}^{\text{T}} x - a) &amp; \text{if} \quad y = 1 \\[10pt]
+0 &amp; \text{if} \quad y = -1
+\end{cases}
+\end{equation}\]</span>
+<br>
+<span class="math display">\[\begin{equation}
+\nabla_{b} \hat{F}_t (v, \alpha, z) =
+\begin{cases}
+0 &amp; \text{if} \quad y = 1 \\[10pt]
+-2 \hat{p}_t (\mathbf{w}^{\text{T}} x - b) &amp; \text{if} \quad y = -1
+\end{cases}
+\end{equation}\]</span>
+<br>
+<span class="math display">\[\begin{equation}
+\nabla_{\alpha} \hat{F}_t (v, \alpha, z) =
+\begin{cases}
+- 2 (1 - \hat{p}_t) (\hat{p}_t \alpha + \mathbf{w}^{\text{T}} x) &amp; \text{if} \quad y = 1 \\[10pt]
+2 \hat{p}_t (\hat{p}_t \alpha + \mathbf{w}^{\text{T}} x - \alpha) &amp; \text{if} \quad y = -1
+\end{cases}
+\end{equation}\]</span></p>
+<p><br>
+<img src="images/Table_01.PNG" />
+<br></p>
+<ul>
+<li>In step 6,</li>
+</ul>
+<p><span class="math display">\[\begin{equation}
+\begin{split}
+&amp; \bar{\gamma}_1 = \bar{\gamma}_0 + \gamma_1 = \gamma_1 \\[10pt]
+&amp; \bar{\gamma}_2 = \bar{\gamma}_1 + \gamma_2 = \gamma_1 + \gamma_2 \\[10pt]
+&amp; \bar{\gamma}_3 = \bar{\gamma}_2 + \gamma_3 = \gamma_1 + \gamma_2 + \gamma_3 \\[10pt]
+&amp; \Rightarrow \bar{\gamma}_k = \sum_{j = 1}^k \gamma_j
+\end{split}
+\end{equation}\]</span></p>
+<ul>
+<li>In step 7, 8,</li>
+</ul>
+<p><span class="math display">\[\begin{equation}
+\begin{split}
+&amp; \bar{v}_1 = \frac{1}{\bar{\gamma}_1} (\bar{\gamma}_0 \bar{v}_0 + \gamma_1 v_1) = v_1 \\[10pt]
+&amp; \bar{v}_2 = \frac{1}{\bar{\gamma}_2} (\bar{\gamma}_1 \bar{v}_1 + \gamma_2 v_2) = \frac{\gamma_1 v_1 + \gamma_2 v_2}{\gamma_1 + \gamma_2} \\[10pt]
+&amp; \bar{v}_3 = \frac{1}{\bar{\gamma}_3} (\bar{\gamma}_2 \bar{v}_2 + \gamma_2 v_2) = \frac{\gamma_1 v_1 + \gamma_2 v_2 + \gamma_3 v_3}{\gamma_1 + \gamma_2 + \gamma_3} \\[10pt]
+&amp; \Rightarrow \bar{v}_k = \frac{\sum_{j = 1}^k \gamma_j v_j}{\sum_{j = 1}^k \gamma_j} \\[10pt]
+&amp; \Rightarrow \bar{\alpha}_k = \frac{\sum_{j = 1}^k \gamma_j \alpha_j}{\sum_{j = 1}^k \gamma_j}
+\end{split}
+\end{equation}\]</span></p>
+<hr />
+</div>
+<div id="analysis" class="section level2">
+<h2>Analysis</h2>
+<ul>
+<li>Let <span class="math inline">\(u = (v, \alpha) = (\mathbf{w}, a, b, \alpha)\)</span></li>
+<li>The quality of an approximation solution <span class="math inline">\((\bar{v}_t, \bar{\alpha}_t)\)</span> to the SPP problem is measure by the duality gap</li>
+</ul>
+<p><span class="math display">\[\begin{equation}
+\epsilon_f (\bar{v}_t \bar{\alpha}_t) = \max_{\alpha \in \Omega_2} f(\bar{v}_t, \alpha) - \min_{v \in \Omega_1} f(v, \bar{\alpha}_t)
+\end{equation}\]</span></p>
+<ul>
+<li><strong>Theorem 2.</strong> Assume that samples <span class="math inline">\(\{ (x_1, y_1), \cdots, (x_T, y_T) \}\)</span> are i.i.d. drawn from a distribution <span class="math inline">\(\rho\)</span> over <span class="math inline">\(\mathcal{X} \times \mathcal{Y}\)</span>, let <span class="math inline">\(\Omega_1\)</span>, <span class="math inline">\(\Omega_2\)</span> be given by the former section and the step size given by <span class="math inline">\(\{ \gamma_t &gt; 0 : t \in \mathbb{N} \}\)</span>. For sequence <span class="math inline">\(\{ (\bar{v}_t, \bar{\alpha}_t) : t \in [1,T] \}\)</span> generated by <em>SOLAM</em>, and any <span class="math inline">\(0 &lt; \delta &lt;1\)</span>, with probability <span class="math inline">\(1 - \delta\)</span>, the following holds where <span class="math inline">\(C_{\kappa}\)</span> is an absolute constant independent of <span class="math inline">\(R\)</span> and <span class="math inline">\(T\)</span></li>
+</ul>
+<p><span class="math display">\[\begin{equation}
+\epsilon_f (\bar{v}_t \bar{\alpha}_t) \leq C_{\kappa} \max(R^2, 1) \sqrt{\log{\frac{4T}{\delta}}} (\sum_{j = 1}^T \gamma_j)^{-1} \left( 1 + \sum_{j = 1}^T \gamma_j^2 + (\sum_{j = 1}^T \gamma_j^2)^{1/2} + \sum_{j = 1}^T \frac{\gamma_j}{\sqrt{j}} \right)
+\end{equation}\]</span></p>
+<ul>
+<li><strong>Corollary 1.</strong> Under the same assumptions as in <strong>Theorem 2.</strong>, and <span class="math inline">\(\{ \gamma_j = \zeta j^{-\frac{1}{2}} : j \in \mathbb{N} \}\)</span> with constant <span class="math inline">\(\zeta &gt; 0\)</span>, with probability <span class="math inline">\(1 - \delta\)</span> it holds the following</li>
+</ul>
+<p><span class="math display">\[\begin{equation}
+|f(\bar{v}_T, \bar{\alpha}_T) - f^{\star}| \leq \epsilon_f (\bar{u}_T) = \mathcal{O} \left( \frac{\log{T} \sqrt{\log{(4T / \delta)}}}{\sqrt{T}} \right)
+\end{equation}\]</span></p>
+<hr />
+</div>
+<div id="experiments" class="section level2">
+<h2>Experiments</h2>
+<ul>
+<li>5-fold cross validation to determine <span class="math inline">\(\zeta \in [1:9:100]\)</span>, and <span class="math inline">\(R \in 10^{[-1:1:5]}\)</span> by grid search</li>
+<li>Averaging results from 5 runs of 5-fold cross validation</li>
+<li>Multi-class dataset is transformed into binary classification by randomly partitioning the data into two groups, where each group includes the same number of classes</li>
+<li>Comparison
+<ul>
+<li>OPAUC (Gao et al., 2013)</li>
+<li>OAM (Zhao et al., 2011)</li>
+<li>online Uni-Exp: weighted univariate exponential loss (Kotlowski et al., 2011)</li>
+<li>B-SVM-OR: batch learning algorithm using the hinge loss surrogate of AUC (Joachims, 2006)</li>
+<li>B-LS-SVM: batch learning algorithm using <span class="math inline">\(l_2\)</span> loss surrogate of AUC
+<br>
+<img src="images/Table_02.PNG" />
+<br>
+<img src="images/Table_03.PNG" />
+<br>
+<img src="images/Fig_01.PNG" />
+<br></li>
+</ul></li>
+</ul>
+<hr />
+</div>
+<div id="further-study" class="section level2">
+<h2>Further Study</h2>
+<ul>
+<li>Joachims, 2005, <strong>A support vector method for multivariate performance measures</strong>, <em>International Conference on Machine Learning</em>. <a href="https://icml.cc/imls/conferences/2005/proceedings/papers/048_ASupport_Joachims.pdf">pdf</a></li>
+<li>Kotlowski et al., 2011, <strong>Bipartite ranking through minimization of univariate loss</strong>, <em>International Conference on Machine Learning</em>. <a href="https://icml.cc/2011/papers/567_icmlpaper.pdf">pdf</a></li>
+<li>Rakhlin et al., 2012, <strong>Making gradient descent optimal for strongly convex
+stochastic optimization</strong>, <em>International Conference on Machine Learning</em>. <a href="https://icml.cc/Conferences/2012/papers/261.pdf">pdf</a></li>
+<li>Ying and Zhou, 2016, <strong>Online pairwise learning algorithms</strong>, <em>Neural Computation</em>. <a href="https://arxiv.org/pdf/1502.07229.pdf">pdf</a></li>
+</ul>
+<hr />
+</div>
+<div id="references" class="section level2">
+<h2>References</h2>
+<ul>
+<li>Gao et al., 2013, <strong>One-pass AUC optimization</strong>, <em>International Conference on Machine Learning</em>. <a href="http://proceedings.mlr.press/v28/gao13.pdf">pdf</a>, <a href="https://haaforever.github.io/blog/post/2020/12/07/one-pass-auc-optimization/">summary</a></li>
+<li>Joachims, 2006, <strong>Training linear svms in linear time</strong>, <em>International Conference on Knowledge Discovery and Data Mining</em>. <a href="http://web.engr.oregonstate.edu/~huanlian/teaching/machine-learning/2017fall/extra/linear-svm-linear-time.pdf">pdf</a></li>
+<li>Kotlowski et al., 2011, <strong>Bipartite ranking through minimization of univariate loss</strong>, <em>International Conference on Machine Learning</em>. <a href="https://icml.cc/2011/papers/567_icmlpaper.pdf">pdf</a></li>
+<li>Zhao et al., 2011, <strong>Online AUC maximization</strong>, <em>International Conference on Machine Learning</em>. <a href="http://www.icml-2011.org/papers/198_icmlpaper.pdf">pdf</a>, <a href="https://haaforever.github.io/blog/post/2020/12/07/online-auc-maximization/">summary</a></li>
+</ul>
+</div>
+
+</main>
+
+  <footer>
+  <script src="//yihui.org/js/math-code.js"></script>
+<script async src="//mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+<script async src="//yihui.org/js/center-img.js"></script>
+
+  
+  <hr/>
+  © <a href="https://www.instagram.com/hajiboost/">Jihyeon Ha</a> 2020 &ndash; | <a href="https://github.com/haaforever">Github</a>
+  
+  </footer>
+  </body>
+</html>
+

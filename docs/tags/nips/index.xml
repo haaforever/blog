@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>NIPS on Haji blog</title>
+    <link>https://haaforever.github.io/blog/tags/nips/</link>
+    <description>Recent content in NIPS on Haji blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 08 Dec 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://haaforever.github.io/blog/tags/nips/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Stochastic Online AUC Maximization</title>
+      <link>https://haaforever.github.io/blog/post/2020/12/08/stochastic-online-auc-maximization/</link>
+      <pubDate>Tue, 08 Dec 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://haaforever.github.io/blog/post/2020/12/08/stochastic-online-auc-maximization/</guid>
+      <description>Ying et al., 2016, Stochastic online AUC maximization, NIPS. pdf
+IntroductionTopic: online learning algorithms that maximized AUC for large-scale dataChallenge: learning objective is usually defined over a pair of training examples of opposite classesProposed methodAUC optimization can be equivalently formulated as a convex-concave saddle point problem (SPP)From this SPP representation, a stochastic online algorithm (SOLAM) is proposed which has time and space complexity of one datumBackgroundInput space \(\mathcal{X} \subseteq \mathbb{R}^d\)Output space \(\mathcal{Y} = \{ -1, 1\}\)Training data \(\mathbf{z} = \{ (x_i, y_i) \}_{i = 1}^n\): i.</description>
+    </item>
+    
+  </channel>
+</rss>

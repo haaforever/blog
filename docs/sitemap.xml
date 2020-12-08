@@ -3,22 +3,62 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://haaforever.github.io/blog/tags/auc/</loc>
+    <lastmod>2020-12-08T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://haaforever.github.io/blog/categories/</loc>
+    <lastmod>2020-12-08T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://haaforever.github.io/blog/</loc>
+    <lastmod>2020-12-08T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://haaforever.github.io/blog/tags/nips/</loc>
+    <lastmod>2020-12-08T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://haaforever.github.io/blog/tags/online-learning/</loc>
+    <lastmod>2020-12-08T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://haaforever.github.io/blog/tags/optimization/</loc>
+    <lastmod>2020-12-08T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://haaforever.github.io/blog/categories/paper/</loc>
+    <lastmod>2020-12-08T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://haaforever.github.io/blog/post/</loc>
+    <lastmod>2020-12-08T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://haaforever.github.io/blog/post/2020/12/08/stochastic-online-auc-maximization/</loc>
+    <lastmod>2020-12-08T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://haaforever.github.io/blog/tags/</loc>
+    <lastmod>2020-12-08T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://haaforever.github.io/blog/tags/atstats/</loc>
     <lastmod>2020-12-07T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://haaforever.github.io/blog/tags/auc/</loc>
-    <lastmod>2020-12-07T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
     <loc>https://haaforever.github.io/blog/post/2020/12/07/auc-optimization/</loc>
-    <lastmod>2020-12-07T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://haaforever.github.io/blog/categories/</loc>
     <lastmod>2020-12-07T00:00:00+00:00</lastmod>
   </url>
   
@@ -39,11 +79,6 @@
   
   <url>
     <loc>https://haaforever.github.io/blog/post/2020/12/07/hinge-rank-loss-and-auc/</loc>
-    <lastmod>2020-12-07T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://haaforever.github.io/blog/</loc>
     <lastmod>2020-12-07T00:00:00+00:00</lastmod>
   </url>
   
@@ -103,27 +138,7 @@
   </url>
   
   <url>
-    <loc>https://haaforever.github.io/blog/tags/online-learning/</loc>
-    <lastmod>2020-12-07T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://haaforever.github.io/blog/tags/optimization/</loc>
-    <lastmod>2020-12-07T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
     <loc>https://haaforever.github.io/blog/post/2020/12/07/optimizing-auc-using-wilcoxon-mann-whitney-statistic/</loc>
-    <lastmod>2020-12-07T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://haaforever.github.io/blog/categories/paper/</loc>
-    <lastmod>2020-12-07T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://haaforever.github.io/blog/post/</loc>
     <lastmod>2020-12-07T00:00:00+00:00</lastmod>
   </url>
   
@@ -154,11 +169,6 @@
   
   <url>
     <loc>https://haaforever.github.io/blog/post/2020/12/07/some-experiments-on-loss-functions/</loc>
-    <lastmod>2020-12-07T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://haaforever.github.io/blog/tags/</loc>
     <lastmod>2020-12-07T00:00:00+00:00</lastmod>
   </url>
   
