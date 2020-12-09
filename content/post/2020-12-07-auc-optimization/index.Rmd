@@ -16,8 +16,8 @@ tags:
 ## Approximation
 
 
-  * Yan et al., 2003, **Optimizing classifier performance via an approximation to the Wilcoxon-Mann-Whitney statistic**, *International Conference on Machine Learning*. [pdf](https://www.aaai.org/Papers/ICML/2003/ICML03-110.pdf)
-  * Steck, 2007, **Hinge rank loss and the area under the ROC curve**, *European Conference on Machine Learning*. [pdf](https://link.springer.com/chapter/10.1007/978-3-540-74958-5_33)
+  * Yan et al., 2003, **Optimizing classifier performance via an approximation to the Wilcoxon-Mann-Whitney statistic**, *International Conference on Machine Learning*. [pdf](https://www.aaai.org/Papers/ICML/2003/ICML03-110.pdf), [summary](https://haaforever.github.io/blog/post/2020/12/07/optimizing-auc-using-wilcoxon-mann-whitney-statistic/)
+  * Steck, 2007, **Hinge rank loss and the area under the ROC curve**, *European Conference on Machine Learning*. [pdf](https://link.springer.com/chapter/10.1007/978-3-540-74958-5_33), [summary](https://haaforever.github.io/blog/post/2020/12/07/hinge-rank-loss-and-auc/)
   * Calders and Jaroszewicz, 2007, **Efficient AUC optimization for classification**, *European Conference on Principles of Data Mining and Knowledge Discovery*. [pdf](https://link.springer.com/chapter/10.1007/978-3-540-74976-9_8)
 
 
@@ -50,7 +50,7 @@ tags:
 ## Learning Strategy
 
 
-  * Gao et al., 2013, **One-pass AUC optimization**, *International Conference on Machine Learning*. [pdf](http://proceedings.mlr.press/v28/gao13.pdf)
+  * Gao et al., 2013, **One-pass AUC optimization**, *International Conference on Machine Learning*. [pdf](http://proceedings.mlr.press/v28/gao13.pdf), [summary](https://haaforever.github.io/blog/post/2020/12/07/one-pass-auc-optimization/)
   * Liu et al., 2018, **Fast stochastic AUC maximization with** $O(1/n)$**-convergence rate**, *International Conference on Machine Learning*. [pdf](http://proceedings.mlr.press/v80/liu18g.html)
   * Natole et al., 2018, **Stochastic proximal algorithms for AUC maximization**, *International Conference on Machine Learning*. [pdf](http://proceedings.mlr.press/v80/natole18a.html)
   * Khalid et al., 2018, **Scalable nonlinear AUC maximization methods**, *Joint European Conference on Machine Learning and Knowledge Discovery in Databases*. [pdf](https://link.springer.com/chapter/10.1007/978-3-030-10928-8_18)
@@ -123,10 +123,10 @@ tags:
 ## Online Learning
 
 
-  * Zhao et al., 2011, **Online AUC maximization**, *International Conference on Machine Learning*, [pdf](http://www.icml-2011.org/papers/198_icmlpaper.pdf)
+  * Zhao et al., 2011, **Online AUC maximization**, *International Conference on Machine Learning*, [pdf](http://www.icml-2011.org/papers/198_icmlpaper.pdf), [summary](https://haaforever.github.io/blog/post/2020/12/07/online-auc-maximization/)
   * Kim et al., 2012, **An online AUC formulation for binary classification**, *Pattern Recognition*. [pdf](https://www.sciencedirect.com/science/article/abs/pii/S0031320311004729)
   * Ding et al., 2015, **An adaptive gradient method for online AUC maximization**, *AAAI Conference on Artificial Intelligence*. [pdf](https://y-ding.github.io/papers/AAAI2015.pdf)
-  * Ying et al., 2016, **Stochastic online AUC maximization**, *Advances in Neural Information Processing Systems*. [pdf](http://papers.nips.cc/paper/6065-stochastic-online-auc-maximization)
+  * Ying et al., 2016, **Stochastic online AUC maximization**, *Advances in Neural Information Processing Systems*. [pdf](http://papers.nips.cc/paper/6065-stochastic-online-auc-maximization), [summary](https://haaforever.github.io/blog/post/2020/12/08/stochastic-online-auc-maximization/)
   * Ding et al., 2017, **Large scale kernel methods for online auc maximization**, *IEEE International Conference on Data Mining*. [pdf](https://ieeexplore.ieee.org/abstract/document/8215481?casa_token=aLsWcaHA83cAAAAA:ACL1KT-Cc__zkkY9Go5Id80YDL0AMe3AtDnN1YSzfOHa9w-BFv-_lge3qARvqX-sAVbg1GfDug)
   * Cheng et al., 2018, **An adaptive robust online method for AUC maximization**, *IEEE Access*. [pdf](https://ieeexplore.ieee.org/abstract/document/8463453)
   * Hu et al., 2017, **Online nonlinear AUC maximization for imbalanced data sets**, *IEEE Transactions on Neural Networks and Learning Systems*. [pdf](https://ieeexplore.ieee.org/abstract/document/7835710?casa_token=vOaQhAJ7TZIAAAAA:K4t8WyX1L7VXSTT1-C56Q1vTqeNlMgyd-EengXlOxGcT24suZv7L7rHzIjaXlcEPPl-aD5zGFg)

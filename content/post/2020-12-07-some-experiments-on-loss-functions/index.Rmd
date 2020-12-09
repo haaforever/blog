@@ -228,6 +228,19 @@ legend("topright", legend = c("0-1", "Logit", "Exp", "Hinge", "Sqaure", "Savage"
   * Negative samples $X^{-} \sim N(\mu^{-}, I_2)$ where $\mu^{+} = (0,0)^T$
   * $I_2$: $(2 \times 2)$ identity matrix
   * Same prior distribution
+  
+```{r, echo = FALSE, fig.align = "center", fig.height = 8, fig.width = 8}
+n.pos <- 1000
+n.neg <- 1000
+x.pos <- mvtnorm::rmvnorm(n = n.pos, mean = c(1, 1), sigma = diag(x = 1, nrow = 2))
+x.neg <- mvtnorm::rmvnorm(n = n.neg, mean = c(0, 0), sigma = diag(x = 1, nrow = 2))
+x <- rbind(x.pos, x.neg)
+y <- c(rep(1, n.pos), rep(-1, n.neg))
+col <- c()
+col[y == 1] <- "blue"
+col[y == -1] <- "red"
+plot(x, xlab = "x1", ylab = "x2", col = col)
+```
 
 
 ***
