@@ -6,7 +6,17 @@
     <description>Recent content in ICML on Haji blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 07 Dec 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://haaforever.github.io/blog/tags/icml/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 10 Dec 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://haaforever.github.io/blog/tags/icml/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Fast Stochastic AUC Maximization</title>
+      <link>https://haaforever.github.io/blog/post/2020/12/10/fast-stochastic-auc-maximization/</link>
+      <pubDate>Thu, 10 Dec 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://haaforever.github.io/blog/post/2020/12/10/fast-stochastic-auc-maximization/</guid>
+      <description>Liu et al., 2016, Fast stochastic AUC maximization with \(O(1/n)\) convergence rate, ICML. pdf
+IntroductionConvergence rate of SOLAM (Ying et al., 2016): \(\tilde{\mathcal{O}} (1 / \sqrt{n})\)Need to improve the convergence rate of stochastic optimizationThis paper proposes FSAUC algorithm with convergence rate of \(\tilde{\mathcal{O}} (1 / n)\)BackgroundInput space \(\mathcal{X} \subseteq \mathbb{R}^d\), output space \(\mathcal{Y} = \{ -1, 1\}\)Training data \(\mathbf{z} = \{ (x_i, y_i) \}_{i = 1}^n\): i.</description>
+    </item>
+    
     <item>
       <title>One-Pass AUC Optimization</title>
       <link>https://haaforever.github.io/blog/post/2020/12/07/one-pass-auc-optimization/</link>

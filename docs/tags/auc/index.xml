@@ -6,7 +6,17 @@
     <description>Recent content in AUC on Haji blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 08 Dec 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://haaforever.github.io/blog/tags/auc/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 10 Dec 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://haaforever.github.io/blog/tags/auc/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Fast Stochastic AUC Maximization</title>
+      <link>https://haaforever.github.io/blog/post/2020/12/10/fast-stochastic-auc-maximization/</link>
+      <pubDate>Thu, 10 Dec 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://haaforever.github.io/blog/post/2020/12/10/fast-stochastic-auc-maximization/</guid>
+      <description>Liu et al., 2016, Fast stochastic AUC maximization with \(O(1/n)\) convergence rate, ICML. pdf
+IntroductionConvergence rate of SOLAM (Ying et al., 2016): \(\tilde{\mathcal{O}} (1 / \sqrt{n})\)Need to improve the convergence rate of stochastic optimizationThis paper proposes FSAUC algorithm with convergence rate of \(\tilde{\mathcal{O}} (1 / n)\)BackgroundInput space \(\mathcal{X} \subseteq \mathbb{R}^d\), output space \(\mathcal{Y} = \{ -1, 1\}\)Training data \(\mathbf{z} = \{ (x_i, y_i) \}_{i = 1}^n\): i.</description>
+    </item>
+    
     <item>
       <title>Stochastic Online AUC Maximization</title>
       <link>https://haaforever.github.io/blog/post/2020/12/08/stochastic-online-auc-maximization/</link>

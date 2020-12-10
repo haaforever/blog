@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Fast Stochastic AUC Maximization | Haji blog</title>
+    <link rel="stylesheet" href="https://haaforever.github.io/blog/css/style.css" />
+    <link rel="stylesheet" href="https://haaforever.github.io/blog/css/fonts.css" />
+    
+  </head>
+
+  <body>
+    <nav>
+    <ul class="menu">
+      
+      <li><a href="https://haaforever.github.io/blog/">Home</a></li>
+      
+      <li><a href="https://haaforever.github.io/blog/about/">About</a></li>
+      
+      <li><a href="https://haaforever.github.io/blog/categories/">Categories</a></li>
+      
+      <li><a href="https://haaforever.github.io/blog/tags/">Tags</a></li>
+      
+      <li><a href="https://haaforever.github.io/blog/index.xml">Subscribe</a></li>
+      
+    </ul>
+    <hr/>
+    </nav>
+
+<div class="article-meta">
+<h1><span class="title">Fast Stochastic AUC Maximization</span></h1>
+
+<h2 class="date">2020/12/10</h2>
+</div>
+
+<main>
+
+<link href="https://haaforever.github.io/blog/post/2020/12/10/fast-stochastic-auc-maximization/index_files/anchor-sections/anchor-sections.css" rel="stylesheet" />
+<script src="https://haaforever.github.io/blog/post/2020/12/10/fast-stochastic-auc-maximization/index_files/anchor-sections/anchor-sections.js"></script>
+
+
+
+<p>Liu et al., 2016, <strong>Fast stochastic AUC maximization with</strong> <span class="math inline">\(O(1/n)\)</span> <strong>convergence rate</strong>, <em>ICML</em>. <a href="http://proceedings.mlr.press/v80/liu18g/liu18g.pdf">pdf</a></p>
+<hr />
+<div id="introduction" class="section level2">
+<h2>Introduction</h2>
+<ul>
+<li>Convergence rate of SOLAM (Ying et al., 2016): <span class="math inline">\(\tilde{\mathcal{O}} (1 / \sqrt{n})\)</span></li>
+<li>Need to improve the convergence rate of stochastic optimization</li>
+<li>This paper proposes FSAUC algorithm with convergence rate of <span class="math inline">\(\tilde{\mathcal{O}} (1 / n)\)</span></li>
+</ul>
+<hr />
+</div>
+<div id="background" class="section level2">
+<h2>Background</h2>
+<ul>
+<li>Input space <span class="math inline">\(\mathcal{X} \subseteq \mathbb{R}^d\)</span>, output space <span class="math inline">\(\mathcal{Y} = \{ -1, 1\}\)</span></li>
+<li>Training data <span class="math inline">\(\mathbf{z} = \{ (x_i, y_i) \}_{i = 1}^n\)</span>: i.i.d. sample from unknown distribution <span class="math inline">\(\rho\)</span> on <span class="math inline">\(\mathcal{Z} = \mathcal{X} \times \mathcal{Y}\)</span></li>
+<li>Scoring function <span class="math inline">\(f: \mathcal{X} \to \mathbb{R}\)</span></li>
+<li>Using linear classifier <span class="math inline">\(f(\mathbf{x}) = \mathbf{w}^{\text{T}} \mathbf{x}\)</span> and squared loss, the problem of AUC optimization can be formulated as saddle point problem as follow (Ying et al., 2016)</li>
+</ul>
+<p><span class="math display">\[\begin{equation}
+\min_{\begin{array}{c} \lVert \mathbf{w} \rVert \leq R \\[-2pt] (a, b) \in \mathbb{R}^2 \end{array}} \; \max_{\alpha \in \mathbb{R}} \; f(\mathbf{w}, a, b, \alpha) := \mathbb{E}_{\mathbf{z}} [F(\mathbf{w}, a, b, \alpha ; z)]
+\end{equation}\]</span></p>
+<p><span class="math display">\[\begin{equation}
+\begin{split}
+F(\mathbf{w}, a, b, \alpha ; z) &amp; = (1 - p) (\mathbf{w}^{\text{T}} \mathbf{x} - a)^2 \mathbb{I}(y = 1) + p (\mathbf{w}^{\text{T}} \mathbf{x} - b)^2 \mathbb{I}(y = -1) \\[10pt]
+&amp; + 2 (1 + \alpha) (p \mathbf{w}^{\text{T}} x \mathbb{I}(y = -1) - (1 - p) \mathbf{w}^{\text{T}} \mathbf{x} \mathbb{I}(y = 1)) - p (1 - p) \alpha^2
+\end{split}
+\end{equation}\]</span></p>
+<ul>
+<li>Assume the optimal solution sits in a bounded domain</li>
+</ul>
+<p><span class="math display">\[\begin{equation}
+\begin{split}
+&amp; \Omega_1 = \{ (\mathbf{w}, a, b) \; : \; \lvert \mathbf{w} \rVert \leq R, \; |a| \leq R \kappa, \; |b| \leq R \kappa \} \\[10pt]
+&amp; \Omega_2 = \{ \alpha \; : \; |\alpha| \leq 2R \kappa \} \\[10pt]
+&amp; \kappa = \sup_{x \in \mathcal{X}} \; \lVert x \rVert &lt; \infty
+\end{split}
+\end{equation}\]</span></p>
+<hr />
+</div>
+<div id="alrogithm" class="section level2">
+<h2>Alrogithm</h2>
+<ul>
+<li>Based on multi-stage scheme (see the paper for references)</li>
+<li><span class="math inline">\(\bar{\mathbf{x}} \in \mathbb{R}^{d+2}\)</span>: an augmented feature vector with the last two components being 0</li>
+<li><span class="math inline">\(\mathcal{B} (c, r) = \{ x: \lVert x - c \rVert _2 \leq r\}\)</span>: <span class="math inline">\(L_2\)</span> ball centered at <span class="math inline">\(c\)</span> with a radius <span class="math inline">\(r\)</span></li>
+<li>Primal variable <span class="math inline">\(\mathbf{v} = (\mathbf{w}^{\text{T}}, a, b)^{\text{T}}\)</span></li>
+<li><span class="math inline">\(\prod_{A \cap B}\)</span>: projection onto the intersection of two sets <span class="math inline">\(A\)</span> and <span class="math inline">\(B\)</span></li>
+<li>Description of values
+<ul>
+<li><span class="math inline">\(n\)</span>: the number of samples</li>
+<li><span class="math inline">\(m\)</span>: the number of iteration of FSAUC</li>
+<li><span class="math inline">\(n_0\)</span>: the number of iteration of PDSG</li>
+<li><span class="math inline">\(R\)</span>: upper bound of <span class="math inline">\(\lVert \mathbf{w} \rVert _1\)</span> (<em>user</em>)</li>
+<li><span class="math inline">\(R_k\)</span>: radius of <span class="math inline">\(\mathbf{v}_1\)</span> ball</li>
+<li><span class="math inline">\(G\)</span>: for computing the learning rate <span class="math inline">\(\eta_k\)</span> of PDSG (<em>user</em>)</li>
+<li><span class="math inline">\(\beta_0\)</span>: for computing the learning rate <span class="math inline">\(\eta_k\)</span> of PDSG</li>
+<li><span class="math inline">\(D_k\)</span>: radius of <span class="math inline">\(\alpha_1\)</span> ball</li>
+<li><span class="math inline">\(\hat{A}_{\pm}\)</span>: cumulative (augmented) feature vector for positive and negative class</li>
+<li><span class="math inline">\(T_{\pm}\)</span>: the number of positive and negative examples received so far</li>
+<li><span class="math inline">\(\hat{p}\)</span>: estimated positive ratio based on the received examples</li>
+</ul></li>
+<li>Differences between SOLAM and FSAUC
+<ol style="list-style-type: decimal">
+<li>Step size is given as a constant for each call of PDSG</li>
+<li>Each update of primal and dual variable is projected into an intersection of their constrained domain <span class="math inline">\(\Omega\)</span> and ball <span class="math inline">\(\mathcal{B}\)</span> centered at the initial solution <span class="math inline">\(\mathbf{v}_1\)</span>, <span class="math inline">\(\alpha\)</span>
+<br>
+<br>
+<img src="images/Algorithm_01.PNG" />
+<br>
+<br>
+<img src="images/Algorithm_02.PNG" />
+<br>
+<br>
+<img src="images/Algorithm_03.PNG" />
+<br>
+<br></li>
+</ol></li>
+</ul>
+<hr />
+</div>
+<div id="convergence-analysis" class="section level2">
+<h2>Convergence Analysis</h2>
+<ul>
+<li><strong>Theorem 1.</strong> Given <span class="math inline">\(\delta \in (0, 1)\)</span>, assume <span class="math inline">\(n\)</span> is sufficiently large such that <span class="math inline">\(n &gt; \max \left( 100, m \frac{32 \log{(12/\delta)}}{(\min{(p, 1-p)})^2} \right)\)</span>. Then with probability at least <span class="math inline">\(1 - \delta\)</span>, the following holds where <span class="math inline">\(\tilde{\mathcal{O}} (\cdot)\)</span> suppresses logarithmic factor of <span class="math inline">\(\log{n}\)</span> and some constants of the problem independent of <span class="math inline">\(n\)</span></li>
+</ul>
+<p><span class="math display">\[\begin{equation}
+\max_{\alpha \in \Omega_2} f(\hat{\mathbf{v}}_m, \alpha) - \min_{\mathbf{v} \in \Omega_1} \max_{\alpha \in \Omega_2} f(\mathbf{v}, \alpha) \leq \tilde{\mathcal{O}} \left( \frac{\log{(1 / \delta)}}{n} \right)
+\end{equation}\]</span></p>
+<ul>
+<li><strong>Lemma 1.</strong> For each call of Algorithm 2, we update <span class="math inline">\(D\)</span>, <span class="math inline">\(\beta\)</span> according to the following.
+<span class="math display">\[\begin{equation}
+\begin{split}
+&amp; D = 2 \sqrt{2} \kappa r + \frac{4 \sqrt{2} \kappa (2 + \sqrt{2 \log{(12 / \delta)}}) (1 + 2 \kappa) R}{\sqrt{\min{(\hat{p}, 1 - \hat{p})} T - \sqrt{2 T \log{(12 / \delta)}}}}
+\\[10pt]
+&amp; \beta = 1 + 8 \kappa^2 + \frac{32 \kappa^2 (1 + 2 \kappa)^2 (2 + \sqrt{2 \log{(12 / \delta)}})^2}{\min{(\hat{p}, 1 - \hat{p})} - \sqrt{\frac{2 \log{(12 / \delta)}}{T}}}
+\end{split}
+\end{equation}\]</span>
+Suppose <span class="math inline">\(\lVert \mathbf{v}_1 - \mathbf{v}_{\star} \rVert _2 \leq r\)</span>, where <span class="math inline">\(\mathbf{v}_{\star} \in \Omega_1\)</span> is the optimal solution closet to <span class="math inline">\(\mathbf{v}_1\)</span>, and <span class="math inline">\(T &gt; \max{\left( \frac{R^2}{r^2}, \frac{32 \log{(12 / \delta)}}{(\min{(p, 1 - p)})^2} \right)}\)</span>, then
+<span class="math display">\[\begin{equation}
+\max_{\alpha \in \Omega_2} f(\bar{\mathbf{v}}_T, \alpha) - \min_{\mathbf{v} \in \Omega_1} \max_{\alpha \in \Omega_2} f(\mathbf{v}, \alpha) \leq \frac{(2 \sqrt{3 \gamma_1} + \sqrt{\log{(6T/ \delta)}} \gamma_2) r G}{\sqrt{T}}
+\end{equation}\]</span>
+where <span class="math inline">\(\gamma_1 = 1 + 8 \kappa^2 + \frac{32 \kappa^2 (1 + 2 \kappa)^2 (2 + \sqrt{2 \log{(12 / \delta)}})^2}{0.5 \min{(p, 1-p)}}\)</span>, <span class="math inline">\(\gamma_2 = 16 \left( 1 + 2 \sqrt{2} \kappa + \frac{8 \kappa (2 + \sqrt{2 \log{(12 / \delta)}}) (1 + 2 \kappa)}{\sqrt{0.5 \min{(p, 1-p)}}} \right)\)</span></li>
+</ul>
+<hr />
+</div>
+<div id="experiments" class="section level2">
+<h2>Experiments</h2>
+<ul>
+<li>Comparison
+<ul>
+<li>OPAUC (Gao et al., 2013)</li>
+<li>SOLAM (Ying et al., 2016): <span class="math inline">\(L_2\)</span> norm constraint</li>
+<li>SOLAM-l1 (Ying et al., 2016): <span class="math inline">\(L_1\)</span> norm constraint (original)</li>
+</ul></li>
+<li>Randomly splitting dataset: training, validation, test (4, 1, 1)</li>
+<li>Parameter setting using validation dataset
+<ul>
+<li>OPAUC: <span class="math inline">\(\eta \in 2^{[-12:1:-4]}\)</span>, <span class="math inline">\(\lambda \in 2^{[-10:1:10]}\)</span></li>
+<li>SOLAM: <span class="math inline">\(R \in 10^{[-1:1:5]}\)</span>, <span class="math inline">\(\text{learning rate} \in 2^{[-10:1:10]}\)</span></li>
+<li>FSAUC: <span class="math inline">\(R \in 10^{[-1:1:5]}\)</span>, <span class="math inline">\(\eta_1 \in 2^{[-10:1:10]}\)</span></li>
+</ul></li>
+<li>Test performance over 5 random runs
+<br>
+<br>
+<img src="images/Table_01.PNG" />
+<br>
+<br>
+<img src="images/Fig_01.PNG" />
+<br>
+<br>
+<img src="images/Fig_02.PNG" />
+<br>
+<br></li>
+</ul>
+<hr />
+</div>
+<div id="references" class="section level2">
+<h2>References</h2>
+<ul>
+<li>Gao et al., 2013, <strong>One-pass AUC optimization</strong>, <em>International Conference on Machine Learning</em>. <a href="http://proceedings.mlr.press/v28/gao13.pdf">pdf</a>, <a href="https://haaforever.github.io/blog/post/2020/12/07/one-pass-auc-optimization/">summary</a></li>
+<li>Ying et al., 2016, <strong>Stochastic online AUC maximization</strong>, <em>Advances in Neural Information Processing Systems</em>. <a href="https://papers.nips.cc/paper/2016/file/c52f1bd66cc19d05628bd8bf27af3ad6-Paper.pdf">pdf</a>, <a href="https://haaforever.github.io/blog/post/2020/12/08/stochastic-online-auc-maximization/">summary</a></li>
+</ul>
+</div>
+
+</main>
+
+  <footer>
+  <script src="//yihui.org/js/math-code.js"></script>
+<script async src="//mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+<script async src="//yihui.org/js/center-img.js"></script>
+
+  
+  <hr/>
+  © <a href="https://www.instagram.com/hajiboost/">Jihyeon Ha</a> 2020 &ndash; | <a href="https://github.com/haaforever">Github</a>
+  
+  </footer>
+  </body>
+</html>
+

@@ -58,7 +58,7 @@ Ying et al., 2016, **Stochastic online AUC maximization**, *NIPS*. [pdf](https:/
 \begin{equation}
 \begin{split}
 & \argmin _{\lVert \mathbf{w} \rVert \leq R} \; \mathbb{E} [(1 - \mathbf{w}^\text{T} (x - x'))^2 | y = 1, y' = -1] \\[10pt]
-= & \argmin _{\lvert \mathbf{w} \rVert \leq R} \; \frac{1}{p(1-p)} \int \int_{\mathcal{Z} \times \mathcal{Z}} (1 - \mathbf{w}^\text{T} (x - x'))^2 \mathbb{I}(y = 1) \mathbb{I}(y' = -1) d\rho(z) d\rho(z')
+= \; & \argmin _{\lvert \mathbf{w} \rVert \leq R} \; \frac{1}{p(1-p)} \int \int_{\mathcal{Z} \times \mathcal{Z}} (1 - \mathbf{w}^\text{T} (x - x'))^2 \mathbb{I}(y = 1) \mathbb{I}(y' = -1) d\rho(z) d\rho(z')
 \end{split}
 \end{equation}
 
@@ -85,8 +85,32 @@ Ying et al., 2016, **Stochastic online AUC maximization**, *NIPS*. [pdf](https:/
   * A saddle point solution to the problem is a pair $(u^{\star}, v^{\star}) \in \mathcal{U} \times \mathcal{V}$ such that
 
 \begin{equation}
-g(u^{\star}, v) \leq g(u^{\star}, v^{\star}) \leq g(u, v^{\star}) \quad \forall u \in \mathcal{U}, \; v \in \mathcal{V}
+g(u^{\star}, v) \leq g(u^{\star}, v^{\star}) \leq g(u, v^{\star}) \quad \forall \; u \in \mathcal{U}, \; v \in \mathcal{V}
 \end{equation}
+
+```{r echo = FALSE, message = FALSE, fig.width = 8, fig.height = 8}
+# Data generation for visualization
+x1 <- seq(from = -1, to = 1, by = 0.1)
+x2 <- x1
+z <- matrix(data = 0, nrow = length(x1), ncol = length(x2))
+for (i in 1:length(x1)) {
+  for (j in 1:length(x2)) {
+    z[i, j] <- x1[i]^2 - x2[j]^2
+  }
+}
+
+# 3D visualization using plotly
+library(plotly)
+fig <- plot_ly(x = x1, y = x2, z = z, type = "surface", colorscale = "Picnic")
+fig <- fig %>% layout(title = TeX("f(u, v) = u^2 - v^2"),
+                      scene = list(
+                        xaxis = list(title = "v"),
+                        yaxis = list(title = "u"),
+                        zaxis = list(title = "f")
+                        ))
+fig <- fig %>% config(mathjax = 'cdn')
+fig
+```
 
 
 ***
@@ -123,9 +147,9 @@ F(\mathbf{w}, a, b, \alpha ; z) & = (1 - p) (\mathbf{w}^{\text{T}} x - a)^2 \mat
 
 \begin{equation}
 \begin{split}
-& \Omega_1 = \{ (\mathbf{w}, a, b) \; : \; \lvert \mathbf{w} \rVert \leq R, \; |a| \leq R \kappa, \; |b| \leq R \kappa \} \\[10pt]
+& \Omega_1 = \{ (\mathbf{w}, a, b) \; : \; \lVert \mathbf{w} \rVert \leq R, \; |a| \leq R \kappa, \; |b| \leq R \kappa \} \\[10pt]
 & \Omega_2 = \{ \alpha \; : \; |\alpha| \leq 2R \kappa \} \\[10pt]
-& \kappa = \sup_{x \in \mathcal{X}} \; \lVert x \rVert < \inf
+& \kappa = \sup_{x \in \mathcal{X}} \; \lVert x \rVert < \infty
 \end{split}
 \end{equation}
 <br>
