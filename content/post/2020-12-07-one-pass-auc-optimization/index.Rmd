@@ -169,10 +169,12 @@ res
   * $T_t^+$ and $T_t^-$: their respective cardinality
   * For $y_t = 1$, (trick: $+ \mathbf{c}_t^- [\mathbf{c}_t^-]^\text{T} \mathbf{w} - \mathbf{c}_t^- [\mathbf{c}_t^-]^\text{T} \mathbf{w}$)
 
-\begin{aligned}
-\nabla L_t(\mathbf{w}) & = \lambda \mathbf{w} + \mathbf{x}_t \mathbf{x}_t^\text{T} \mathbf{w} - \mathbf{x}_t + \sum_{i:y_i = -1} \frac{(\mathbf{x}_i + (\mathbf{x}_i \mathbf{x}_i^\text{T} - \mathbf{x}_i \mathbf{x}_t^\text{T} - \mathbf{x}_t \mathbf{x}_i^\text{T}) \mathbf{w})}{T_t^-} \\[10pt]
+\begin{equation}
+\begin{split}
+\nabla L_t(\mathbf{w}) & = \lambda \mathbf{w} + \mathbf{x}_t \mathbf{x}_t^\text{T} \mathbf{w} - \mathbf{x}_t + \sum_{i:y_i = -1} \frac{(\mathbf{x}_i + (\mathbf{x}_i \mathbf{x}_i^\text{T} - \mathbf{x}_i \mathbf{x}_t^\text{T} - \mathbf{x}_t \mathbf{x}_i^\text{T}) \mathbf{w})}{T_t^-} \\[11pt]
 & = \lambda \mathbf{w} - \mathbf{x}_t + \mathbf{c}_t^- + (\mathbf{x}_t - \mathbf{c}_t^-)(\mathbf{x}_t - \mathbf{c}_t^-)^\text{T} \mathbf{w} + S_t^- \mathbf{w}
-\end{aligned}
+\end{split}
+\end{equation}
 
   * Mean vector of negative class at $t$
 
@@ -200,10 +202,12 @@ S_t^- = \sum_{i:y_i = -1} \frac{\mathbf{x}_i \mathbf{x}_i^\text{T} - \mathbf{c}_
   * Initialize $\Gamma_0^- = \Gamma_0^+ = [\mathbf{0}]_{d \times d}$ where $u = d$
   * At each iteration, set $S_t^+ = \Gamma_t^+$ and $S_t^- = \Gamma_t^-$
 
-\begin{aligned}
-& \Gamma_t^+ = \Gamma_{t-1}^+ + \frac{\mathbf{x}_t \mathbf{x}_t^\text{T} - \Gamma_{t-1}^+}{T_t^+} + \mathbf{c}_{t-1}^+ [\mathbf{c}_{t-1}^+]^\text{T} - \mathbf{c}_{t}^+ [\mathbf{c}_{t}^+]^\text{T} \\[10pt]
+\begin{equation}
+\begin{split}
+& \Gamma_t^+ = \Gamma_{t-1}^+ + \frac{\mathbf{x}_t \mathbf{x}_t^\text{T} - \Gamma_{t-1}^+}{T_t^+} + \mathbf{c}_{t-1}^+ [\mathbf{c}_{t-1}^+]^\text{T} - \mathbf{c}_{t}^+ [\mathbf{c}_{t}^+]^\text{T} \\[11pt]
 & \Gamma_t^- = \Gamma_{t-1}^- + \frac{\mathbf{x}_t \mathbf{x}_t^\text{T} - \Gamma_{t-1}^-}{T_t^-} + \mathbf{c}_{t-1}^- [\mathbf{c}_{t-1}^-]^\text{T} - \mathbf{c}_{t}^- [\mathbf{c}_{t}^-]^\text{T}
-\end{aligned}
+\end{split}
+\end{equation}
 
 <br>
 ![](images/Algorithm_01.PNG)

@@ -82,22 +82,22 @@ dt &lt;- dt[sample(x = 1:n, size = n),]
 dt &lt;- data.frame(t = 1:n, dt)
 rownames(dt) &lt;-  NULL
 dt</code></pre>
-<pre><code>##     t  y           f
-## 1   1 -1  0.57115627
-## 2   2  1  0.69148004
-## 3   3 -1  0.65319819
-## 4   4 -1  0.28752907
-## 5   5 -1 -0.76962313
-## 6   6  1  0.92191846
-## 7   7 -1  0.13493007
-## 8   8  1  0.09643691
-## 9   9  1  0.94639890
-## 10 10 -1 -0.90878564
-## 11 11 -1  0.03024890
-## 12 12  1  0.81600953
-## 13 13 -1  0.84330899
-## 14 14 -1  0.93284236
-## 15 15 -1  0.67318396</code></pre>
+<pre><code>##     t  y          f
+## 1   1 -1 -0.8844970
+## 2   2 -1  0.4662707
+## 3   3 -1 -0.1335122
+## 4   4  1  0.6150921
+## 5   5 -1  0.6800609
+## 6   6 -1  0.2450584
+## 7   7  1  0.3393403
+## 8   8  1  0.8620739
+## 9   9 -1  0.9500818
+## 10 10 -1  0.5120460
+## 11 11  1  0.5243264
+## 12 12  1  0.3499180
+## 13 13 -1 -0.2718626
+## 14 14 -1 -0.3591815
+## 15 15 -1 -0.6821666</code></pre>
 <pre class="r"><code>##### Define functions #####
 fn.auc &lt;- function(y, yhat) {
   ix.pos &lt;- which(y == 1)
@@ -155,21 +155,21 @@ res$&quot;cumsum.a.t&quot; &lt;- cumsum(res$&quot;a.t&quot;)
 res &lt;- round(x = res, digits = 4)
 res</code></pre>
 <pre><code>##     t  y       f    AUC     A.n    a.t cumsum.a.t AUC.square AUC.square.t
-## 1   1 -1  0.5712 0.0000  0.0000 0.0000     0.0000     0.0000       0.0000
-## 2   2  1  0.6915 1.0000  0.7738 0.7738     0.7738     0.7738       0.7738
-## 3   3 -1  0.6532 1.0000  1.6987 0.9249     1.6987     0.8494       0.4625
-## 4   4 -1  0.2875 1.0000  2.0540 0.3553     2.0540     0.6847       0.1184
-## 5   5 -1 -0.7696 1.0000  2.2666 0.2126     2.2666     0.5667       0.0532
-## 6   6  1  0.9219 1.0000  3.8348 1.5682     3.8348     0.4794       0.1960
-## 7   7 -1  0.1349 1.0000  4.0768 0.2420     4.0768     0.4077       0.0242
-## 8   8  1  0.0964 0.7333 11.1902 7.1134    11.1902     0.7460       0.4742
-## 9   9  1  0.9464 0.8000 12.7447 1.5545    12.7447     0.6372       0.0777
-## 10 10 -1 -0.9088 0.8333 14.5265 1.7818    14.5265     0.6053       0.0742
-## 11 11 -1  0.0302 0.8571 15.5320 1.0055    15.5320     0.5547       0.0359
-## 12 12  1  0.8160 0.8857 18.0414 2.5094    18.0414     0.5155       0.0717
-## 13 13 -1  0.8433 0.8250 25.1284 7.0870    25.1284     0.6282       0.1772
-## 14 14 -1  0.9328 0.7556 33.2841 8.1557    33.2841     0.7396       0.1812
-## 15 15 -1  0.6732 0.7600 38.5614 5.2772    38.5614     0.7712       0.1055</code></pre>
+## 1   1 -1 -0.8845 0.0000  0.0000 0.0000     0.0000     0.0000       0.0000
+## 2   2 -1  0.4663 0.0000  0.0000 0.0000     0.0000     0.0000       0.0000
+## 3   3 -1 -0.1335 0.0000  0.0000 0.0000     0.0000     0.0000       0.0000
+## 4   4  1  0.6151 1.0000  1.0373 1.0373     1.0373     0.3458       0.3458
+## 5   5 -1  0.6801 0.7500  2.1715 1.1342     2.1715     0.5429       0.2835
+## 6   6 -1  0.2451 0.8000  2.5683 0.3969     2.5683     0.5137       0.0794
+## 7   7  1  0.3393 0.7000  6.7841 4.2158     6.7841     0.6784       0.4216
+## 8   8  1  0.8621 0.8000  8.5223 1.7382     8.5223     0.5682       0.1159
+## 9   9 -1  0.9501 0.6667 14.0828 5.5604    14.0828     0.7824       0.3089
+## 10 10 -1  0.5120 0.6667 16.6850 2.6022    16.6850     0.7945       0.1239
+## 11 11  1  0.5243 0.6786 22.7200 6.0350    22.7200     0.8114       0.2155
+## 12 12  1  0.3499 0.6286 30.7697 8.0497    30.7697     0.8791       0.2300
+## 13 13 -1 -0.2719 0.6750 31.1362 0.3665    31.1362     0.7784       0.0092
+## 14 14 -1 -0.3592 0.7111 31.3749 0.2387    31.3749     0.6972       0.0053
+## 15 15 -1 -0.6822 0.7400 31.8036 0.4287    31.8036     0.6361       0.0086</code></pre>
 <hr />
 </div>
 <div id="gradients" class="section level2">
@@ -179,10 +179,12 @@ res</code></pre>
 <li><span class="math inline">\(T_t^+\)</span> and <span class="math inline">\(T_t^-\)</span>: their respective cardinality</li>
 <li>For <span class="math inline">\(y_t = 1\)</span>, (trick: <span class="math inline">\(+ \mathbf{c}_t^- [\mathbf{c}_t^-]^\text{T} \mathbf{w} - \mathbf{c}_t^- [\mathbf{c}_t^-]^\text{T} \mathbf{w}\)</span>)</li>
 </ul>
-<p>\begin{aligned}
-L_t() &amp; =  + _t _t^  - <em>t + </em>{i:y_i = -1}  \[10pt]
-&amp; =  - _t + _t^- + (_t - _t^-)(_t - _t<sup>-)</sup>  + S_t^- 
-\end{aligned}</p>
+<p><span class="math display">\[\begin{equation}
+\begin{split}
+\nabla L_t(\mathbf{w}) &amp; = \lambda \mathbf{w} + \mathbf{x}_t \mathbf{x}_t^\text{T} \mathbf{w} - \mathbf{x}_t + \sum_{i:y_i = -1} \frac{(\mathbf{x}_i + (\mathbf{x}_i \mathbf{x}_i^\text{T} - \mathbf{x}_i \mathbf{x}_t^\text{T} - \mathbf{x}_t \mathbf{x}_i^\text{T}) \mathbf{w})}{T_t^-} \\[11pt]
+&amp; = \lambda \mathbf{w} - \mathbf{x}_t + \mathbf{c}_t^- + (\mathbf{x}_t - \mathbf{c}_t^-)(\mathbf{x}_t - \mathbf{c}_t^-)^\text{T} \mathbf{w} + S_t^- \mathbf{w}
+\end{split}
+\end{equation}\]</span></p>
 <ul>
 <li>Mean vector of negative class at <span class="math inline">\(t\)</span></li>
 </ul>
@@ -209,10 +211,12 @@ S_t^- = \sum_{i:y_i = -1} \frac{\mathbf{x}_i \mathbf{x}_i^\text{T} - \mathbf{c}_
 <li>Initialize <span class="math inline">\(\Gamma_0^- = \Gamma_0^+ = [\mathbf{0}]_{d \times d}\)</span> where <span class="math inline">\(u = d\)</span></li>
 <li>At each iteration, set <span class="math inline">\(S_t^+ = \Gamma_t^+\)</span> and <span class="math inline">\(S_t^- = \Gamma_t^-\)</span></li>
 </ul>
-<p>\begin{aligned}
-&amp; <em>t^+ = </em>{t-1}^+ +  + <em>{t-1}^+ [_{t-1}^+]^ - </em>{t}^+ [_{t}^+]^ \[10pt]
-&amp; <em>t^- = </em>{t-1}^- +  + <em>{t-1}^- [_{t-1}^-]^ - </em>{t}^- [_{t}^-]^
-\end{aligned}</p>
+<p><span class="math display">\[\begin{equation}
+\begin{split}
+&amp; \Gamma_t^+ = \Gamma_{t-1}^+ + \frac{\mathbf{x}_t \mathbf{x}_t^\text{T} - \Gamma_{t-1}^+}{T_t^+} + \mathbf{c}_{t-1}^+ [\mathbf{c}_{t-1}^+]^\text{T} - \mathbf{c}_{t}^+ [\mathbf{c}_{t}^+]^\text{T} \\[11pt]
+&amp; \Gamma_t^- = \Gamma_{t-1}^- + \frac{\mathbf{x}_t \mathbf{x}_t^\text{T} - \Gamma_{t-1}^-}{T_t^-} + \mathbf{c}_{t-1}^- [\mathbf{c}_{t-1}^-]^\text{T} - \mathbf{c}_{t}^- [\mathbf{c}_{t}^-]^\text{T}
+\end{split}
+\end{equation}\]</span></p>
 <p><br>
 <img src="images/Algorithm_01.PNG" />
 <br></p>
