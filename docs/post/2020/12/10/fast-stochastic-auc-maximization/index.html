@@ -35,8 +35,6 @@
 
 <main>
 
-<link href="https://haaforever.github.io/blog/post/2020/12/10/fast-stochastic-auc-maximization/index_files/anchor-sections/anchor-sections.css" rel="stylesheet" />
-<script src="https://haaforever.github.io/blog/post/2020/12/10/fast-stochastic-auc-maximization/index_files/anchor-sections/anchor-sections.js"></script>
 
 
 
@@ -60,7 +58,7 @@
 <li>Using linear classifier <span class="math inline">\(f(\mathbf{x}) = \mathbf{w}^{\text{T}} \mathbf{x}\)</span> and squared loss, the problem of AUC optimization can be formulated as saddle point problem as follow (Ying et al., 2016)</li>
 </ul>
 <p><span class="math display">\[\begin{equation}
-\min_{\begin{array}{c} \lVert \mathbf{w} \rVert \leq R \\[-2pt] (a, b) \in \mathbb{R}^2 \end{array}} \; \max_{\alpha \in \mathbb{R}} \; f(\mathbf{w}, a, b, \alpha) := \mathbb{E}_{\mathbf{z}} [F(\mathbf{w}, a, b, \alpha ; z)]
+\min_{\begin{array}{c} \lVert \mathbf{w} \rVert _1 \leq R \\[-2pt] (a, b) \in \mathbb{R}^2 \end{array}} \; \max_{\alpha \in \mathbb{R}} \; f(\mathbf{w}, a, b, \alpha) := \mathbb{E}_{\mathbf{z}} [F(\mathbf{w}, a, b, \alpha ; z)]
 \end{equation}\]</span></p>
 <p><span class="math display">\[\begin{equation}
 \begin{split}
@@ -73,9 +71,9 @@ F(\mathbf{w}, a, b, \alpha ; z) &amp; = (1 - p) (\mathbf{w}^{\text{T}} \mathbf{x
 </ul>
 <p><span class="math display">\[\begin{equation}
 \begin{split}
-&amp; \Omega_1 = \{ (\mathbf{w}, a, b) \; : \; \lvert \mathbf{w} \rVert \leq R, \; |a| \leq R \kappa, \; |b| \leq R \kappa \} \\[10pt]
+&amp; \Omega_1 = \{ (\mathbf{w}, a, b) \; : \; \lVert \mathbf{w} \rVert _1 \leq R, \; |a| \leq R \kappa, \; |b| \leq R \kappa \} \\[10pt]
 &amp; \Omega_2 = \{ \alpha \; : \; |\alpha| \leq 2R \kappa \} \\[10pt]
-&amp; \kappa = \sup_{x \in \mathcal{X}} \; \lVert x \rVert &lt; \infty
+&amp; \kappa = \sup_{x \in \mathcal{X}} \; \lVert x \rVert _1 &lt; \infty
 \end{split}
 \end{equation}\]</span></p>
 <hr />

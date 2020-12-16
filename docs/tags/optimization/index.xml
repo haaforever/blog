@@ -24,7 +24,7 @@ IntroductionConvergence rate of SOLAM (Ying et al., 2016): \(\tilde{\mathcal{O
       
       <guid>https://haaforever.github.io/blog/post/2020/12/08/stochastic-online-auc-maximization/</guid>
       <description>Ying et al., 2016, Stochastic online AUC maximization, NIPS. pdf
-IntroductionTopic: online learning algorithms that maximized AUC for large-scale dataChallenge: learning objective is usually defined over a pair of training examples of opposite classesProposed methodAUC optimization can be equivalently formulated as a convex-concave saddle point problem (SPP)From this SPP representation, a stochastic online algorithm (SOLAM) is proposed which has time and space complexity of one datumBackgroundInput space \(\mathcal{X} \subseteq \mathbb{R}^d\)Output space \(\mathcal{Y} = \{ -1, 1\}\)Training data \(\mathbf{z} = \{ (x_i, y_i) \}_{i = 1}^n\): i.</description>
+IntroductionTopic: online learning algorithms that maximize AUC for large-scale dataChallenge: learning objective is usually defined over a pair of training examples of opposite classesProposed methodAUC optimization can be equivalently formulated as a convex-concave saddle point problem (SPP)From this SPP representation, a stochastic online algorithm (SOLAM) is proposed which has time and space complexity of one datumBackgroundInput space \(\mathcal{X} \subseteq \mathbb{R}^d\)Output space \(\mathcal{Y} = \{ -1, 1\}\)Training data \(\mathbf{z} = \{ (x_i, y_i) \}_{i = 1}^n\): i.</description>
     </item>
     
     <item>

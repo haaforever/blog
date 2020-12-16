@@ -24,7 +24,7 @@ Ying et al., 2016, **Stochastic online AUC maximization**, *NIPS*. [pdf](https:/
 
 
 ## Introduction
-  * Topic: online learning algorithms that maximized AUC for large-scale data
+  * Topic: online learning algorithms that maximize AUC for large-scale data
   * Challenge: learning objective is usually defined over a pair of training examples of opposite classes
   * Proposed method
     + AUC optimization can be equivalently formulated as a convex-concave saddle point problem (SPP)
@@ -52,13 +52,13 @@ Ying et al., 2016, **Stochastic online AUC maximization**, *NIPS*. [pdf](https:/
   * In this work, squared loss and linear classifier are used
   * Let $p = \Pr (y=1)$
   * For any random variable $\xi (z)$, conditional expectation is defined by $\mathbb{E} [\xi(z) | y=1] = \frac{1}{p} \int \int \xi(z) \mathbb{I}(y = 1) d\rho(z)$
-  * Bounded solution $\lVert \mathbf{w} \rVert \leq R$
+  * Bounded solution $\lVert \mathbf{w} \rVert _1 \leq R$
   * AUC maximization can be formulated by
 
 \begin{equation}
 \begin{split}
-& \argmin _{\lVert \mathbf{w} \rVert \leq R} \; \mathbb{E} [(1 - \mathbf{w}^\text{T} (x - x'))^2 | y = 1, y' = -1] \\[10pt]
-= \; & \argmin _{\lvert \mathbf{w} \rVert \leq R} \; \frac{1}{p(1-p)} \int \int_{\mathcal{Z} \times \mathcal{Z}} (1 - \mathbf{w}^\text{T} (x - x'))^2 \mathbb{I}(y = 1) \mathbb{I}(y' = -1) d\rho(z) d\rho(z')
+& \argmin _{\lVert \mathbf{w} \rVert _1 \leq R} \; \mathbb{E} [(1 - \mathbf{w}^\text{T} (x - x'))^2 | y = 1, y' = -1] \\[10pt]
+= \; & \argmin _{\lVert \mathbf{w} \rVert _1 \leq R} \; \frac{1}{p(1-p)} \int \int_{\mathcal{Z} \times \mathcal{Z}} (1 - \mathbf{w}^\text{T} (x - x'))^2 \mathbb{I}(y = 1) \mathbb{I}(y' = -1) d\rho(z) d\rho(z')
 \end{split}
 \end{equation}
 
@@ -66,7 +66,7 @@ Ying et al., 2016, **Stochastic online AUC maximization**, *NIPS*. [pdf](https:/
   * Applying empirical risk minimization principle
 
 \begin{equation}
-\argmin _{\lVert \mathbf{w} \rVert \leq R} \frac{1}{n^+ n^-} \sum_{i=1}^{n} \sum_{j=1}^{n} (1 - \mathbf{w}^\text{T} (x_i - x_j))^2 \mathbb{I}(y_i = 1 \land y'_j = -1)
+\argmin _{\lVert \mathbf{w} \rVert _1 \leq R} \frac{1}{n^+ n^-} \sum_{i=1}^{n} \sum_{j=1}^{n} (1 - \mathbf{w}^\text{T} (x_i - x_j))^2 \mathbb{I}(y_i = 1 \land y'_j = -1)
 \end{equation}
 
 
@@ -121,7 +121,7 @@ fig
   * **Theorem 1.** The AUC optimization is equivalent to
 
 \begin{equation}
-\min_{\begin{array}{c} \lVert \mathbf{w} \rVert \leq R \\[-2pt] (a, b) \in \mathbb{R}^2 \end{array}} \; \max_{\alpha \in \mathbb{R}} \; f(\mathbf{w}, a, b, \alpha) := \int_{\mathcal{Z}} F(\mathbf{w}, a, b, \alpha ; z) d\rho(z)
+\min_{\begin{array}{c} \lVert \mathbf{w} \rVert _1 \leq R \\[-2pt] (a, b) \in \mathbb{R}^2 \end{array}} \; \max_{\alpha \in \mathbb{R}} \; f(\mathbf{w}, a, b, \alpha) := \int_{\mathcal{Z}} F(\mathbf{w}, a, b, \alpha ; z) d\rho(z)
 \end{equation}
 
 \begin{equation}
@@ -147,9 +147,9 @@ F(\mathbf{w}, a, b, \alpha ; z) & = (1 - p) (\mathbf{w}^{\text{T}} x - a)^2 \mat
 
 \begin{equation}
 \begin{split}
-& \Omega_1 = \{ (\mathbf{w}, a, b) \; : \; \lVert \mathbf{w} \rVert \leq R, \; |a| \leq R \kappa, \; |b| \leq R \kappa \} \\[10pt]
+& \Omega_1 = \{ (\mathbf{w}, a, b) \; : \; \lVert \mathbf{w} \rVert _1 \leq R, \; |a| \leq R \kappa, \; |b| \leq R \kappa \} \\[10pt]
 & \Omega_2 = \{ \alpha \; : \; |\alpha| \leq 2R \kappa \} \\[10pt]
-& \kappa = \sup_{x \in \mathcal{X}} \; \lVert x \rVert < \infty
+& \kappa = \sup_{x \in \mathcal{X}} \; \lVert x \rVert _1 < \infty
 \end{split}
 \end{equation}
 <br>
@@ -289,6 +289,7 @@ stochastic optimization**, *International Conference on Machine Learning*. [pdf]
 
 
   * Gao et al., 2013, **One-pass AUC optimization**, *International Conference on Machine Learning*. [pdf](http://proceedings.mlr.press/v28/gao13.pdf), [summary](https://haaforever.github.io/blog/post/2020/12/07/one-pass-auc-optimization/)
+  * Gao and Zhou, 2015, **On the consistency of AUC pairwise optimization**, *International Joint Conference on Artificial Intelligence*. [pdf]()
   * Joachims, 2006, **Training linear svms in linear time**, *International Conference on Knowledge Discovery and Data Mining*. [pdf](http://web.engr.oregonstate.edu/~huanlian/teaching/machine-learning/2017fall/extra/linear-svm-linear-time.pdf)
   * Kotlowski et al., 2011, **Bipartite ranking through minimization of univariate loss**, *International Conference on Machine Learning*. [pdf](https://icml.cc/2011/papers/567_icmlpaper.pdf)
   * Zhao et al., 2011, **Online AUC maximization**, *International Conference on Machine Learning*. [pdf](http://www.icml-2011.org/papers/198_icmlpaper.pdf), [summary](https://haaforever.github.io/blog/post/2020/12/07/online-auc-maximization/)

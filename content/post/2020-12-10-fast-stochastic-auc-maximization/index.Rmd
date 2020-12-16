@@ -39,7 +39,7 @@ Liu et al., 2016, **Fast stochastic AUC maximization with** $O(1/n)$ **convergen
   * Using linear classifier $f(\mathbf{x}) = \mathbf{w}^{\text{T}} \mathbf{x}$ and squared loss, the problem of AUC optimization can be formulated as saddle point problem as follow (Ying et al., 2016)
 
 \begin{equation}
-\min_{\begin{array}{c} \lVert \mathbf{w} \rVert \leq R \\[-2pt] (a, b) \in \mathbb{R}^2 \end{array}} \; \max_{\alpha \in \mathbb{R}} \; f(\mathbf{w}, a, b, \alpha) := \mathbb{E}_{\mathbf{z}} [F(\mathbf{w}, a, b, \alpha ; z)]
+\min_{\begin{array}{c} \lVert \mathbf{w} \rVert _1 \leq R \\[-2pt] (a, b) \in \mathbb{R}^2 \end{array}} \; \max_{\alpha \in \mathbb{R}} \; f(\mathbf{w}, a, b, \alpha) := \mathbb{E}_{\mathbf{z}} [F(\mathbf{w}, a, b, \alpha ; z)]
 \end{equation}
 
 \begin{equation}
@@ -53,9 +53,9 @@ F(\mathbf{w}, a, b, \alpha ; z) & = (1 - p) (\mathbf{w}^{\text{T}} \mathbf{x} - 
 
 \begin{equation}
 \begin{split}
-& \Omega_1 = \{ (\mathbf{w}, a, b) \; : \; \lvert \mathbf{w} \rVert \leq R, \; |a| \leq R \kappa, \; |b| \leq R \kappa \} \\[10pt]
+& \Omega_1 = \{ (\mathbf{w}, a, b) \; : \; \lVert \mathbf{w} \rVert _1 \leq R, \; |a| \leq R \kappa, \; |b| \leq R \kappa \} \\[10pt]
 & \Omega_2 = \{ \alpha \; : \; |\alpha| \leq 2R \kappa \} \\[10pt]
-& \kappa = \sup_{x \in \mathcal{X}} \; \lVert x \rVert < \infty
+& \kappa = \sup_{x \in \mathcal{X}} \; \lVert x \rVert _1 < \infty
 \end{split}
 \end{equation}
 
