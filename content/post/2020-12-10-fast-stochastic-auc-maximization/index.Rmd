@@ -34,12 +34,12 @@ Liu et al., 2016, **Fast stochastic AUC maximization with** $O(1/n)$ **convergen
 
 ## Background
   * Input space $\mathcal{X} \subseteq \mathbb{R}^d$, output space $\mathcal{Y} = \{ -1, 1\}$
-  * Training data $\mathbf{z} = \{ (x_i, y_i) \}_{i = 1}^n$: i.i.d. sample from unknown distribution $\rho$ on $\mathcal{Z} = \mathcal{X} \times \mathcal{Y}$
+  * Training data $\mathbf{z} = \{ (\mathbf{x}_i, y_i) \}_{i = 1}^n$: i.i.d. sample from unknown distribution $\rho$ on $\mathcal{Z} = \mathcal{X} \times \mathcal{Y}$
   * Scoring function $f: \mathcal{X} \to \mathbb{R}$
   * Using linear classifier $f(\mathbf{x}) = \mathbf{w}^{\text{T}} \mathbf{x}$ and squared loss, the problem of AUC optimization can be formulated as saddle point problem as follow (Ying et al., 2016)
 
 \begin{equation}
-\min_{\begin{array}{c} \lVert \mathbf{w} \rVert _1 \leq R \\[-2pt] (a, b) \in \mathbb{R}^2 \end{array}} \; \max_{\alpha \in \mathbb{R}} \; f(\mathbf{w}, a, b, \alpha) := \mathbb{E}_{\mathbf{z}} [F(\mathbf{w}, a, b, \alpha ; z)]
+\min_{\begin{array}{c} \lVert \mathbf{w} \rVert _2 \leq R \\[-2pt] (a, b) \in \mathbb{R}^2 \end{array}} \; \max_{\alpha \in \mathbb{R}} \; f(\mathbf{w}, a, b, \alpha) := \mathbb{E}_{\mathbf{z}} [F(\mathbf{w}, a, b, \alpha ; z)]
 \end{equation}
 
 \begin{equation}
@@ -53,9 +53,9 @@ F(\mathbf{w}, a, b, \alpha ; z) & = (1 - p) (\mathbf{w}^{\text{T}} \mathbf{x} - 
 
 \begin{equation}
 \begin{split}
-& \Omega_1 = \{ (\mathbf{w}, a, b) \; : \; \lVert \mathbf{w} \rVert _1 \leq R, \; |a| \leq R \kappa, \; |b| \leq R \kappa \} \\[10pt]
+& \Omega_1 = \{ (\mathbf{w}, a, b) \; : \; \lVert \mathbf{w} \rVert _2 \leq R, \; |a| \leq R \kappa, \; |b| \leq R \kappa \} \\[10pt]
 & \Omega_2 = \{ \alpha \; : \; |\alpha| \leq 2R \kappa \} \\[10pt]
-& \kappa = \sup_{x \in \mathcal{X}} \; \lVert x \rVert _1 < \infty
+& \kappa = \sup_{x \in \mathcal{X}} \; \lVert x \rVert _2 < \infty
 \end{split}
 \end{equation}
 
@@ -73,7 +73,7 @@ F(\mathbf{w}, a, b, \alpha ; z) & = (1 - p) (\mathbf{w}^{\text{T}} \mathbf{x} - 
     + $n$: the number of samples
     + $m$: the number of iteration of FSAUC
     + $n_0$: the number of iteration of PDSG
-    + $R$: upper bound of $\lVert \mathbf{w} \rVert _1$ (*user*)
+    + $R$: upper bound of $\lVert \mathbf{w} \rVert _2$ (*user*)
     + $R_k$: radius of $\mathbf{v}_1$ ball
     + $G$: for computing the learning rate $\eta_k$ of PDSG (*user*)
     + $\beta_0$: for computing the learning rate $\eta_k$ of PDSG
@@ -128,8 +128,8 @@ F(\mathbf{w}, a, b, \alpha ; z) & = (1 - p) (\mathbf{w}^{\text{T}} \mathbf{x} - 
 ## Experiments
   * Comparison
     + OPAUC (Gao et al., 2013)
-    + SOLAM (Ying et al., 2016): $L_2$ norm constraint
-    + SOLAM-l1  (Ying et al., 2016): $L_1$ norm constraint (original)
+    + SOLAM (Ying et al., 2016): $L_2$ norm constraint (original)
+    + SOLAM-L1  (Ying et al., 2016): $L_1$ norm constraint
   * Randomly splitting dataset: training, validation, test (4, 1, 1)
   * Parameter setting using validation dataset
     + OPAUC: $\eta \in 2^{[-12:1:-4]}$, $\lambda \in 2^{[-10:1:10]}$

@@ -49,16 +49,16 @@ Ying et al., 2016, **Stochastic online AUC maximization**, *NIPS*. [pdf](https:/
 \end{equation}
 
   * Squared loss has been shown to be statistically consistent with AUC (Gao and Zhou, 2015)
-  * In this work, squared loss and linear classifier are used
+  * In this work, squared loss and linear classifier $f(x) = \mathbf{w}^{\text{T}} x$ are used
   * Let $p = \Pr (y=1)$
   * For any random variable $\xi (z)$, conditional expectation is defined by $\mathbb{E} [\xi(z) | y=1] = \frac{1}{p} \int \int \xi(z) \mathbb{I}(y = 1) d\rho(z)$
-  * Bounded solution $\lVert \mathbf{w} \rVert _1 \leq R$
+  * Bounded solution $\lVert \mathbf{w} \rVert _2 = \sqrt{w_1^2 + \cdots + w_d^2} \leq R$
   * AUC maximization can be formulated by
 
 \begin{equation}
 \begin{split}
-& \argmin _{\lVert \mathbf{w} \rVert _1 \leq R} \; \mathbb{E} [(1 - \mathbf{w}^\text{T} (x - x'))^2 | y = 1, y' = -1] \\[10pt]
-= \; & \argmin _{\lVert \mathbf{w} \rVert _1 \leq R} \; \frac{1}{p(1-p)} \int \int_{\mathcal{Z} \times \mathcal{Z}} (1 - \mathbf{w}^\text{T} (x - x'))^2 \mathbb{I}(y = 1) \mathbb{I}(y' = -1) d\rho(z) d\rho(z')
+& \argmin _{\lVert \mathbf{w} \rVert _2 \leq R} \; \mathbb{E} [(1 - \mathbf{w}^\text{T} (x - x'))^2 | y = 1, y' = -1] \\[10pt]
+= \; & \argmin _{\lVert \mathbf{w} \rVert _2 \leq R} \; \frac{1}{p(1-p)} \int \int_{\mathcal{Z} \times \mathcal{Z}} (1 - \mathbf{w}^\text{T} (x - x'))^2 \mathbb{I}(y = 1) \mathbb{I}(y' = -1) d\rho(z) d\rho(z')
 \end{split}
 \end{equation}
 
@@ -66,7 +66,7 @@ Ying et al., 2016, **Stochastic online AUC maximization**, *NIPS*. [pdf](https:/
   * Applying empirical risk minimization principle
 
 \begin{equation}
-\argmin _{\lVert \mathbf{w} \rVert _1 \leq R} \frac{1}{n^+ n^-} \sum_{i=1}^{n} \sum_{j=1}^{n} (1 - \mathbf{w}^\text{T} (x_i - x_j))^2 \mathbb{I}(y_i = 1 \land y'_j = -1)
+\argmin _{\lVert \mathbf{w} \rVert _2 \leq R} \frac{1}{n^+ n^-} \sum_{i=1}^{n} \sum_{j=1}^{n} (1 - \mathbf{w}^\text{T} (x_i - x_j))^2 \mathbb{I}(y_i = 1 \land y'_j = -1)
 \end{equation}
 
 
@@ -121,7 +121,7 @@ fig
   * **Theorem 1.** The AUC optimization is equivalent to
 
 \begin{equation}
-\min_{\begin{array}{c} \lVert \mathbf{w} \rVert _1 \leq R \\[-2pt] (a, b) \in \mathbb{R}^2 \end{array}} \; \max_{\alpha \in \mathbb{R}} \; f(\mathbf{w}, a, b, \alpha) := \int_{\mathcal{Z}} F(\mathbf{w}, a, b, \alpha ; z) d\rho(z)
+\min_{\begin{array}{c} \lVert \mathbf{w} \rVert _2 \leq R \\[-2pt] (a, b) \in \mathbb{R}^2 \end{array}} \; \max_{\alpha \in \mathbb{R}} \; f(\mathbf{w}, a, b, \alpha) := \int_{\mathcal{Z}} F(\mathbf{w}, a, b, \alpha ; z) d\rho(z)
 \end{equation}
 
 \begin{equation}
@@ -147,9 +147,9 @@ F(\mathbf{w}, a, b, \alpha ; z) & = (1 - p) (\mathbf{w}^{\text{T}} x - a)^2 \mat
 
 \begin{equation}
 \begin{split}
-& \Omega_1 = \{ (\mathbf{w}, a, b) \; : \; \lVert \mathbf{w} \rVert _1 \leq R, \; |a| \leq R \kappa, \; |b| \leq R \kappa \} \\[10pt]
+& \Omega_1 = \{ (\mathbf{w}, a, b) \; : \; \lVert \mathbf{w} \rVert _2 \leq R, \; |a| \leq R \kappa, \; |b| \leq R \kappa \} \\[10pt]
 & \Omega_2 = \{ \alpha \; : \; |\alpha| \leq 2R \kappa \} \\[10pt]
-& \kappa = \sup_{x \in \mathcal{X}} \; \lVert x \rVert _1 < \infty
+& \kappa = \sup_{x \in \mathcal{X}} \; \lVert x \rVert _2 < \infty
 \end{split}
 \end{equation}
 <br>

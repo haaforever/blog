@@ -14,7 +14,7 @@
       
       <guid>https://haaforever.github.io/blog/post/2020/12/10/fast-stochastic-auc-maximization/</guid>
       <description>Liu et al., 2016, Fast stochastic AUC maximization with \(O(1/n)\) convergence rate, ICML. pdf
-IntroductionConvergence rate of SOLAM (Ying et al., 2016): \(\tilde{\mathcal{O}} (1 / \sqrt{n})\)Need to improve the convergence rate of stochastic optimizationThis paper proposes FSAUC algorithm with convergence rate of \(\tilde{\mathcal{O}} (1 / n)\)BackgroundInput space \(\mathcal{X} \subseteq \mathbb{R}^d\), output space \(\mathcal{Y} = \{ -1, 1\}\)Training data \(\mathbf{z} = \{ (x_i, y_i) \}_{i = 1}^n\): i.</description>
+IntroductionConvergence rate of SOLAM (Ying et al., 2016): \(\tilde{\mathcal{O}} (1 / \sqrt{n})\)Need to improve the convergence rate of stochastic optimizationThis paper proposes FSAUC algorithm with convergence rate of \(\tilde{\mathcal{O}} (1 / n)\)BackgroundInput space \(\mathcal{X} \subseteq \mathbb{R}^d\), output space \(\mathcal{Y} = \{ -1, 1\}\)Training data \(\mathbf{z} = \{ (\mathbf{x}_i, y_i) \}_{i = 1}^n\): i.</description>
     </item>
     
     <item>
