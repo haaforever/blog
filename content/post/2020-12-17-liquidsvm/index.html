@@ -1,0 +1,301 @@
+---
+title: liquidSVM
+author: ''
+date: '2020-12-17'
+slug: liquidsvm
+categories:
+  - R
+tags:
+  - R
+  - SVM
+output:
+  blogdown::html_page:
+    toc: true
+---
+
+
+<div id="TOC">
+<ul>
+<li><a href="#key-features">Key Features</a></li>
+<li><a href="#installation">Installation</a></li>
+<li><a href="#application-cycle">Application Cycle</a></li>
+<li><a href="#type-of-svm">Type of SVM</a></li>
+<li><a href="#configuration-parameters">Configuration Parameters</a></li>
+<li><a href="#hyperparameter-grid">Hyperparameter Grid</a></li>
+<li><a href="#kernel-matrix">Kernel matrix</a></li>
+<li><a href="#input-format">Input format</a></li>
+<li><a href="#simple-classification-example">Simple Classification Example</a></li>
+</ul>
+</div>
+
+<p>Steinwart and Thomann, 2017, <strong>liquidSVM: A Fast and Versatile SVM package</strong>, <em>arXiv</em>. <a href="https://arxiv.org/pdf/1702.06899.pdf">pdf</a><br />
+Vignette 1: Documentation <a href="https://cran.r-project.org/web/packages/liquidSVM/vignettes/documentation.html">pdf</a><br />
+Vignette 2: Demo <a href="https://cran.r-project.org/web/packages/liquidSVM/vignettes/demo.html">pdf</a></p>
+<hr />
+<div id="key-features" class="section level2">
+<h2>Key Features</h2>
+<ul>
+<li>Written <strong>C++</strong></li>
+<li>Fully integrated hyper-parameter selection</li>
+<li>Extreme speed on both small and large data sets</li>
+<li>Multi-class classification, ROC, and Neyman-Pearson learning, least-squares, quantile, and expectile regression</li>
+<li>Flexible user interface ranging from a <strong>C++</strong> API and a command line version to bindings
+for <strong>R</strong>, <strong>MATLAB</strong>, <strong>Java</strong>, <strong>Python</strong>, and <strong>Spark</strong></li>
+</ul>
+</div>
+<div id="installation" class="section level2">
+<h2>Installation</h2>
+<pre class="r"><code># install.packages(&quot;liquidSVM&quot;,configure.args=&quot;native&quot;)
+# install.packages(&#39;liquidSVM&#39;, configure.args=&quot;native /usr/local/cuda&quot;) # CUDA path
+library(liquidSVM)</code></pre>
+<hr />
+</div>
+<div id="application-cycle" class="section level2">
+<h2>Application Cycle</h2>
+<ol style="list-style-type: decimal">
+<li>Training phase: various SVM models are created and validated</li>
+<li>Selection phase: the SVM models that best satisfy a certain criterion are selected</li>
+<li>Test phase: in which the selected models are applied to test data</li>
+</ol>
+<ul>
+<li>These phases are based upon several components, which can be freely combined using different components: solvers, hyper-parameter selection, working sets</li>
+<li>All of these can be configured (see Configuration)</li>
+</ul>
+<hr />
+</div>
+<div id="type-of-svm" class="section level2">
+<h2>Type of SVM</h2>
+<ul>
+<li><em>mcSVM</em>: binary and multi-class classification</li>
+<li><em>lsSVM</em>: least squares regression</li>
+<li><em>nplSVM</em>: Neyman-Pearson learning to classify with a specified rate on one type of error</li>
+<li><em>rocSVM</em>: Receivert Operating Characteristic (ROC) curve to solve multiple weighted binary classification problems.</li>
+<li><em>qtSVM</em>: quantile regression</li>
+<li><em>exSVM</em>: expectile regression</li>
+<li><em>bsSVM</em>: bootstrapping</li>
+</ul>
+<hr />
+</div>
+<div id="configuration-parameters" class="section level2">
+<h2>Configuration Parameters</h2>
+<ul>
+<li><em>display</em> = 1
+<ul>
+<li>The amount of output of you see at the screen</li>
+<li>The larger its value is, the more you see</li>
+</ul></li>
+<li><em>scale</em> = TRUE
+<ul>
+<li>[0, 1]</li>
+<li>The training then is performed using these scaled values and any testing data is scaled transparently as well</li>
+</ul></li>
+<li><em>threads</em>
+<ul>
+<li>The number of cores used for computing the kernel matrices, the validation error, and the test error</li>
+<li><em>threads</em> = 0 (default) means that all physical cores of your CPU run one thread</li>
+<li><em>threads</em> = -1 means that all but one physical cores of your CPU run one thread</li>
+</ul></li>
+<li><em>partition_choice</em>
+<ul>
+<li>The way the input space is partitioned</li>
+<li>This allows larger data sets for which the kernel matrix does not fit into memory</li>
+<li><em>partition_choice</em> = 0 (default) disables partitioning</li>
+<li><em>partition_choice</em> = 6 gives usually highest speed</li>
+<li><em>partition_choice</em> = 5 gives usually the best test error</li>
+</ul></li>
+<li><em>grid_choice</em>
+<ul>
+<li>The size of the hyper-parameter grid used during the training phase</li>
+<li>Larger values correspond to larger grids</li>
+<li>By default, a 10x10 grid is used</li>
+</ul></li>
+<li><em>adaptivity_control</em>
+<ul>
+<li>Whether an adaptive grid search heuristic is employed</li>
+<li>Larger values lead to more aggressive strategies</li>
+<li><em>adaptivity_control</em> = 0 (default) disables the heuristic</li>
+</ul></li>
+<li><em>random_seed</em>
+<ul>
+<li>This parameter determines the seed for the random generator</li>
+<li><em>random_seed</em> = -1 uses the internal timer create the seed</li>
+<li>All other values lead to repeatable behavior of the svm</li>
+</ul></li>
+<li><em>folds</em>
+<ul>
+<li>How many folds should be used</li>
+</ul></li>
+</ul>
+<hr />
+</div>
+<div id="hyperparameter-grid" class="section level2">
+<h2>Hyperparameter Grid</h2>
+<ul>
+<li><em>liquidSVM</em> has a built-in a cross-validation scheme to calculate validation errors for many values of these hyperparameters and then to choose the best pair</li>
+<li><em>gamma</em>: the bandwith of the kernel</li>
+<li><em>lambda</em>: regularization parameter in front of the norm term</li>
+<li><em>gamma_steps</em>, <em>min_gamma</em>, <em>max_gamma</em>: the interval between <em>min_gamma</em> and <em>max_gamma</em></li>
+<li><em>gammas</em> = c(0.1,1,10,100) will do these four gamma values</li>
+<li><em>lambda_steps</em>, <em>min_lambda</em>, <em>max_lambda</em>: the interval between <em>min_lambda</em> and <em>max_lambda</em></li>
+<li><em>lambdas</em> = c(0.1,1,10,100) will do these four lambda values</li>
+<li><em>c_values</em>
+<ul>
+<li>the classical term in front of the empirical error term</li>
+<li><em>c_values</em>=c(0.1,1,10,100) will do these four cost values (basically inverse of lambdas)</li>
+</ul></li>
+<li>Using <em>grid_choice</em> allows for some general choices of these parameters</li>
+<li><em>grid_choice</em> = 0
+<ul>
+<li><em>gamma_steps</em>, <em>min_gamma</em>, <em>max_gamma</em> = 10, 0.2, 5</li>
+<li><em>lambda_steps</em>, <em>min_lambda</em>, <em>max_lambda</em> = 10, 0.001, 0.01</li>
+</ul></li>
+<li><em>grid_choice</em> = 1
+<ul>
+<li><em>gamma_steps</em>, <em>min_gamma</em>, <em>max_gamma</em> = 15, 0.1, 10</li>
+<li><em>lambda_steps</em>, <em>min_lambda</em>, <em>max_lambda</em> = 15, 0.0001, 0.01</li>
+</ul></li>
+<li><em>grid_choice</em> = 2
+<ul>
+<li><em>gamma_steps</em>, <em>min_gamma</em>, <em>max_gamma</em> = 20, 0.05, 20</li>
+<li><em>lambda_steps</em>, <em>min_lambda</em>, <em>max_lambda</em> = 20, 0.00001, 0.01</li>
+</ul></li>
+<li><em>grid_choice</em> = -1
+<ul>
+<li><em>gammas</em> = c(10.0, 5.0, 2.0, 1.0, 0.5, 0.25, 0.1, 0.05)</li>
+<li><em>lambdas</em> = c(1.0, 0.1, 0.01, 0.001, 0.0001, 0.00001, 0.000001, 0.0000001)</li>
+</ul></li>
+<li><em>grid_choice</em> -2
++ <em>gammas</em> = c(10.0, 5.0, 2.0, 1.0, 0.5, 0.25, 0.1, 0.05)
++ <em>c_values</em> = c(0.01, 0.1, 1, 10, 100, 1000, 10000)</li>
+</ul>
+<hr />
+</div>
+<div id="kernel-matrix" class="section level2">
+<h2>Kernel matrix</h2>
+<pre class="r"><code>x &lt;- mvtnorm::rmvnorm(n = 10000, mean = c(0, 0), sigma = diag(x = 1, nrow = 2))
+n.thrd &lt;- c(-1, 0, 1, 2, 4, 8)
+# Check running time
+for (i in 1:length(n.thrd)) {
+  print(system.time(k &lt;- kern(data = x, gamma = 1, type = &quot;gaussian.rbf&quot;, threads = n.thrd[i])))
+  rm(k) 
+}</code></pre>
+<pre><code>##  사용자  시스템 elapsed 
+##    4.20    0.97    2.39 
+##  사용자  시스템 elapsed 
+##    5.08    0.64    2.16 
+##  사용자  시스템 elapsed 
+##    3.61    0.53    4.20 
+##  사용자  시스템 elapsed 
+##    3.70    0.60    2.59 
+##  사용자  시스템 elapsed 
+##    4.89    0.64    2.01 
+##  사용자  시스템 elapsed 
+##    8.11    1.11    1.94</code></pre>
+<hr />
+</div>
+<div id="input-format" class="section level2">
+<h2>Input format</h2>
+<pre class="r"><code># liquidData()
+dt.liquid.iris &lt;- ttsplit(data = iris, target = &quot;Species&quot;, testProb = 0.3, stratified = TRUE)
+is(dt.liquid.iris)</code></pre>
+<pre><code>## [1] &quot;liquidData&quot;</code></pre>
+<pre class="r"><code>dt.liquid.iris</code></pre>
+<pre><code>## LiquidData &quot;iris&quot; with 105 train samples and 45 test samples
+##   having 5 columns named Sepal.Length,Sepal.Width,Petal.Length,Petal.Width,Species
+##   target &quot;Species&quot; factor with 3 levels: setosa (35 samples) versicolor (35 samples) virginica (35 samples)</code></pre>
+<pre class="r"><code>names(dt.liquid.iris)</code></pre>
+<pre><code>## [1] &quot;test&quot;      &quot;testIndex&quot; &quot;target&quot;    &quot;name&quot;      &quot;train&quot;     &quot;orig&quot;</code></pre>
+<pre class="r"><code>head(dt.liquid.iris$&quot;test&quot;)</code></pre>
+<pre><code>##    Sepal.Length Sepal.Width Petal.Length Petal.Width    Species
+## 3           4.7         3.2          1.3         0.2     setosa
+## 27          5.0         3.4          1.6         0.4     setosa
+## 42          4.5         2.3          1.3         0.3     setosa
+## 65          5.6         2.9          3.6         1.3 versicolor
+## 89          5.6         3.0          4.1         1.3 versicolor
+## 44          5.0         3.5          1.6         0.6     setosa</code></pre>
+<hr />
+</div>
+<div id="simple-classification-example" class="section level2">
+<h2>Simple Classification Example</h2>
+<pre class="r"><code>##### Data Generation #####
+fn.gen.bincls.2gauss &lt;- function(n.neg, n.pos, mu, d) {
+  x.0 &lt;- mvtnorm::rmvnorm(n = n.neg, mean = rep(0, d), sigma = diag(1, d))
+  x.1 &lt;- mvtnorm::rmvnorm(n = n.pos, mean = rep(mu, d), sigma = diag(1, d))
+  y.0 &lt;- rep(-1, n.neg)
+  y.1 &lt;- rep(1, n.pos)
+  dt &lt;- data.frame(rbind(x.0, x.1), y = c(y.0, y.1))
+  colnames(dt)[1:d] &lt;- paste0(&quot;x&quot;, 1:d)
+  return(dt)
+}
+dt &lt;- fn.gen.bincls.2gauss(n.neg = 1000, n.pos = 1000, mu = 1, d = 2)
+plot(x = dt$&quot;x1&quot;, y = dt$&quot;x2&quot;, col = dt$&quot;y&quot; + 3, xlab = &quot;x1&quot;, ylab = &quot;x2&quot;)</code></pre>
+<p><img src="{{< relref "post/2020-12-17-liquidsvm/index.html" >}}index_files/figure-html/unnamed-chunk-4-1.png" width="576" /></p>
+<pre class="r"><code>##### Input Format #####
+dt.liquid &lt;- ttsplit(data = dt, target = &quot;y&quot;, testProb = 0.3, stratified = TRUE)
+# default: (train, test = 0.8, 0.2)
+is(dt.liquid)</code></pre>
+<pre><code>## [1] &quot;liquidData&quot;</code></pre>
+<pre class="r"><code>object.size(dt) ; object.size(dt.liquid) # wow</code></pre>
+<pre><code>## 48984 bytes</code></pre>
+<pre><code>## 288 bytes</code></pre>
+<pre class="r"><code># View(dt.liquid)</code></pre>
+<pre class="r"><code>##### Train, Select, Prediction #####
+model.svm &lt;- svm(y ~., dt.liquid$&quot;train&quot;,
+                 scenario = &quot;mcSVM&quot;, d = 1, scale = TRUE,
+                 threads = 0, gird_choice = -1)</code></pre>
+<pre><code>##  chr &quot;-r 1 -s 1.000000 -W 1 -S 2 -P 0 -f 4 5 -g 10 0.200000 5.000000 -l 10 0.001000 0.010000 -a 0 -L 0 -d 1 -T 0 -GPU 0&quot;
+## 
+## Welcome to SVM train (dim=2 size=1400 decision_functions=0 cookie=1)
+## liquidSVM-train -r 1 -s 1.000000 -W 1 -S 2 -P 0 -f 4 5 -g 10 0.200000 5.000000 -l 10 0.001000 0.010000 -a 0 -L 0 -d 1 -T 0 -GPU 0 
+## Assigning samples to cells for task 0.
+## 
+## Considering cell 1 out of 1 for task 1 out of 1.
+## Fold 1: training set size 1120,   validation set size 280.
+## Fold 2: training set size 1120,   validation set size 280.
+## Fold 3: training set size 1120,   validation set size 280.
+## Fold 4: training set size 1120,   validation set size 280.
+## Fold 5: training set size 1120,   validation set size 280.
+## tpt: 0.01  tbt: 0.47  tnt: 0.03   vpt: 0.01  vbt: 0.21   it: 0.115  tt: 0.936  vt: 0.104   ii:   95646  ti:  242314  tu:  484628  vi: 102193   h2D: 0.493
+## 
+## Welcome to SVM select (dim=2 size=1400 decision_functions=0 cookie=1)
+## liquidSVM-select -R 1 -d 1 
+## 
+## Considering cell 1 out of 1 for task 1 out of 1.
+## Fold 1: best validation error 0.1857.
+## Fold 2: best validation error 0.2321.
+## Fold 3: best validation error 0.2536.
+## Fold 4: best validation error 0.2214.
+## Fold 5: best validation error 0.2357.
+## 
+## Warning: The best gamma was 0 times at the lower boundary and 2 times at the
+## upper boundary of your gamma grid. 5 times a gamma value was selected.
+## 
+## Warning: The best lambda was 1 times at the lower boundary and 0 times at the
+## upper boundary of your lambda grid. 5 times a lambda value was selected.</code></pre>
+<pre class="r"><code>selectSVMs(model.svm)</code></pre>
+<pre><code>## 
+## Welcome to SVM select (dim=2 size=1400 decision_functions=5 cookie=1)
+## liquidSVM-select -R 1 -d 1 
+## 
+## Considering cell 1 out of 1 for task 1 out of 1.
+## Fold 1: best validation error 0.1857.
+## Fold 2: best validation error 0.2321.
+## Fold 3: best validation error 0.2536.
+## Fold 4: best validation error 0.2214.
+## Fold 5: best validation error 0.2357.
+## 
+## Warning: The best gamma was 0 times at the lower boundary and 4 times at the
+## upper boundary of your gamma grid. 5 times a gamma value was selected.
+## 
+## Warning: The best lambda was 2 times at the lower boundary and 0 times at the
+## upper boundary of your lambda grid. 5 times a lambda value was selected.</code></pre>
+<pre class="r"><code>yhat &lt;- predict(object = model.svm, newdata = dt.liquid$&quot;test&quot;)</code></pre>
+<pre><code>## 
+## Welcome to SVM test (using SVM with dim=2 trained on size=1400 decision_functions=10 cookie=1)
+## liquidSVM-test -L 0 -v 1 0 -d 1 -T 0 -GPU 0</code></pre>
+<pre class="r"><code>table(dt.liquid$test$&quot;y&quot;, yhat)</code></pre>
+<pre><code>##     yhat
+##       -1   1
+##   -1 238  62
+##   1   93 207</code></pre>
+</div>

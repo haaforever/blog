@@ -6,7 +6,19 @@
     <description>Recent content in Posts on Haji blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 10 Dec 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://haaforever.github.io/blog/post/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 17 Dec 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://haaforever.github.io/blog/post/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>liquidSVM</title>
+      <link>https://haaforever.github.io/blog/post/2020/12/17/liquidsvm/</link>
+      <pubDate>Thu, 17 Dec 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://haaforever.github.io/blog/post/2020/12/17/liquidsvm/</guid>
+      <description>Key FeaturesInstallationApplication CycleType of SVMConfiguration ParametersHyperparameter GridKernel matrixInput formatSimple Classification ExampleSteinwart and Thomann, 2017, liquidSVM: A Fast and Versatile SVM package, arXiv. pdf
+Vignette 1: Documentation pdf
+Vignette 2: Demo pdf
+Key FeaturesWritten C++Fully integrated hyper-parameter selectionExtreme speed on both small and large data setsMulti-class classification, ROC, and Neyman-Pearson learning, least-squares, quantile, and expectile regressionFlexible user interface ranging from a C++ API and a command line version to bindingsfor R, MATLAB, Java, Python, and SparkInstallation# install.</description>
+    </item>
+    
     <item>
       <title>Fast Stochastic AUC Maximization</title>
       <link>https://haaforever.github.io/blog/post/2020/12/10/fast-stochastic-auc-maximization/</link>
