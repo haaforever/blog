@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>SPAM - Stochastic Proximal Algorithms for AUC Maximization | Haji blog</title>
+    <link rel="stylesheet" href="https://haaforever.github.io/blog/css/style.css" />
+    <link rel="stylesheet" href="https://haaforever.github.io/blog/css/fonts.css" />
+    
+  </head>
+
+  <body>
+    <nav>
+    <ul class="menu">
+      
+      <li><a href="https://haaforever.github.io/blog/">Home</a></li>
+      
+      <li><a href="https://haaforever.github.io/blog/about/">About</a></li>
+      
+      <li><a href="https://haaforever.github.io/blog/categories/">Categories</a></li>
+      
+      <li><a href="https://haaforever.github.io/blog/tags/">Tags</a></li>
+      
+      <li><a href="https://haaforever.github.io/blog/index.xml">Subscribe</a></li>
+      
+    </ul>
+    <hr/>
+    </nav>
+
+<div class="article-meta">
+<h1><span class="title">SPAM - Stochastic Proximal Algorithms for AUC Maximization</span></h1>
+
+<h2 class="date">2020/12/29</h2>
+</div>
+
+<main>
+
+
+
+
+<p>Natole et al., 2018, <strong>Stochastic proximal algorithms for AUC maximization</strong>, <em>International Conference on Machine Learning</em>. <a href="http://proceedings.mlr.press/v80/natole18a.html">pdf</a></p>
+<hr />
+<div id="introduction" class="section level2">
+<h2>Introduction</h2>
+<ul>
+<li>Stochastic proximal algorithm for AUC maximization (SPAM)</li>
+<li>SPAM applies to general non-smooth regularization terms</li>
+<li>Under the assumption of strong convexity, SPAM can achieve a convergence rate of <span class="math inline">\(\mathcal{O}(\frac{\log{t}}{t})\)</span></li>
+</ul>
+<hr />
+</div>
+<div id="background" class="section level2">
+<h2>Background</h2>
+<ul>
+<li>Input space <span class="math inline">\(\mathcal{X} \subseteq \mathbb{R}^d\)</span></li>
+<li>Output space <span class="math inline">\(\mathcal{Y} = \{ -1, 1\}\)</span></li>
+<li>Training data <span class="math inline">\(\mathbf{z} = \{ (x_i, y_i) \}_{i = 1}^n\)</span>: i.i.d. sample from unknown distribution <span class="math inline">\(\rho\)</span> on <span class="math inline">\(\mathcal{Z} = \mathcal{X} \times \mathcal{Y}\)</span></li>
+<li>Scoring function <span class="math inline">\(f: \mathcal{X} \to \mathbb{R}\)</span></li>
+<li>AUC: the probability of a positive sample ranks higher than a negative sample</li>
+</ul>
+<p><span class="math display">\[\begin{equation}
+\begin{split}
+\mathop{\mathrm{argmax}}_f \; \text{AUC}(f) &amp; = \mathop{\mathrm{argmax}}_f \; \Pr(f(x) \geq f(x&#39;) | y = 1, y&#39; = -1) \\[10pt]
+&amp; = \mathop{\mathrm{argmin}}_f \; \mathbb{E} [\mathbb{I} (f(x&#39;) - f(x) &gt; 0) | y = 1, y&#39; = -1]
+\end{split}
+\end{equation}\]</span></p>
+<ul>
+<li>Using squared loss and linear classifier <span class="math inline">\(f(x) = \mathbf{w}^{\text{T}} x\)</span>,</li>
+<li>Here consider the following regularized formulation for AUC maximization</li>
+</ul>
+<p><span class="math display">\[\begin{equation}
+\min _{\mathbf{w} \in \mathbb{R}^d} \; \mathbb{E} [(1 - \mathbf{w}^\text{T} (x - x&#39;))^2 | y = 1, y&#39; = -1] + \Omega(\mathbf{w})
+\end{equation}\]</span></p>
+<ul>
+<li>Here assume that <span class="math inline">\(\Omega\)</span> is strongly convex with parameter <span class="math inline">\(\beta &gt; 0\)</span>
+<ul>
+<li>For any <span class="math inline">\(\mathbf{w}, \; \mathbf{w}&#39; \in \mathbb{R}^d\)</span>, <span class="math inline">\(\Omega(\mathbf{w}) \geq \Omega(\mathbf{w}&#39;) + \partial \Omega(\mathbf{w}&#39;) \cdot (\mathbf{w} - \mathbf{w}&#39;) + \frac{\beta}{2} \lVert \mathbf{w} - \mathbf{w}&#39; \rVert ^2\)</span></li>
+<li>Frobenius norm: <span class="math inline">\(\beta \lVert \mathbf{w} \rVert ^2\)</span></li>
+<li>Elastic net: <span class="math inline">\(\beta \lVert \mathbf{w} \rVert ^2 + \nu \lVert \mathbf{w} \rVert _1\)</span></li>
+</ul></li>
+</ul>
+<hr />
+</div>
+<div id="proposed-method" class="section level2">
+<h2>Proposed Method</h2>
+<ul>
+<li>Observe the following</li>
+</ul>
+<p><span class="math display">\[\begin{equation}
+\begin{split}
+&amp; \mathbb{E}[(1 - \mathbf{w}^{\text{T}} (x - x&#39;))^2 | y = 1, y&#39; = -1] \\[11pt]
+= &amp; 1 - 2 \mathbb{E}[\mathbf{w}^{\text{T}} x | y = 1] + 2 \mathbb{E}[\mathbf{w}^{\text{T}} x&#39; | y&#39; = -1] \\[11pt]
++ &amp; (\mathbb{E}[\mathbf{w}^{\text{T}} x | y = 1] - \mathbb{E}[\mathbf{w}^{\text{T}} x&#39; | y&#39; = -1])^2 + \mathbb{V}[\mathbf{w}^{\text{T}} x | y = 1] + \mathbb{V}[\mathbf{w}^{\text{T}} x&#39; | y&#39; = 1]
+\end{split}
+\end{equation}\]</span>
+</br>
+<span class="math display">\[\begin{equation}
+\begin{split}
+&amp; (\mathbb{E}[\mathbf{w}^{\text{T}} x | y = 1] - \mathbb{E}[\mathbf{w}^{\text{T}} x&#39; | y&#39; = -1])^2 = \max _{\alpha} \; - \alpha^2 + 2 \alpha (\mathbb{E}[\mathbf{w}^{\text{T}} x&#39; | y&#39; = -1] - \mathbb{E}[\mathbf{w}^{\text{T}} x | y = 1]) \\[11pt]
+&amp; \mathbb{V}[\mathbf{w}^{\text{T}} x | y = 1] = \min _{a} \mathbb{E} [(\mathbf{w}^{\text{T}} x - a)^2 | y = 1] \\[11pt]
+&amp; \mathbb{V}[\mathbf{w}^{\text{T}} x&#39; | y&#39; = -1] = \min _{b} \mathbb{E} [(\mathbf{w}^{\text{T}} x&#39; - b)^2 | y&#39; = -1]
+\end{split}
+\end{equation}\]</span></p>
+<ul>
+<li>It is easy to see that the optima for <span class="math inline">\(a\)</span>, <span class="math inline">\(b\)</span>, <span class="math inline">\(\alpha\)</span> are respectively achieved at the following</li>
+</ul>
+<p><span class="math display">\[\begin{equation}
+\begin{split}
+&amp; a = \mathbf{w}^{\text{T}} \mathbb{E}[x | y = 1] \\[11pt]
+&amp; b = \mathbf{w}^{\text{T}} \mathbb{E}[x&#39; | y&#39; = -1] \\[11pt]
+&amp; \alpha = \mathbf{w}^{\text{T}} (\mathbb{E}[x&#39; | y&#39; = -1] - \mathbb{E}[x | y = 1])
+\end{split}
+\end{equation}\]</span></p>
+<ul>
+<li>Using the similar theorem from (Ying et al., 2016), the above AUC optimization is equivalent to</li>
+</ul>
+<p><span class="math display">\[\begin{equation}
+\begin{split}
+\min _{\mathbf{w}, a, b} \; \max_{\alpha \in \mathbb{R}} \; &amp; \mathbb{E}_z [F(\mathbf{w}, a, b, \alpha ; z)] + \Omega(\mathbf{w}) \\[11pt]
+F(\mathbf{w}, a, b, \alpha ; z) &amp; = (1 - p)(\mathbf{w}^{\text{T}} x - a)^2 \mathbb{I}(y = 1) + p (\mathbf{w}^{\text{T}} x - b)^2 \mathbb{I}(y = -1) \\[11pt]
+&amp; + 2 (1 + \alpha) \mathbf{w}^{\text{T}} x (p \mathbb{I}(y = -1) - (1 - p) \mathbb{I}(y = 1)) - p (1 - p) \alpha^2
+\end{split}
+\end{equation}\]</span></p>
+<ul>
+<li>For fixed <span class="math inline">\(\mathbf{w}\)</span>, the optimal for <span class="math inline">\(a\)</span>, <span class="math inline">\(b\)</span>, <span class="math inline">\(\alpha\)</span> in saddle formulation has the exact formulation as given above</li>
+<li>This leads to conduct stochastic gradient descent only no <span class="math inline">\(\mathbf{w}\)</span>, while <span class="math inline">\(a\)</span>, <span class="math inline">\(b\)</span>, <span class="math inline">\(\alpha\)</span> are the updated in a deterministic manner</li>
+<li>The proximal mapping associated with a convex function <span class="math inline">\(\Omega : \mathbb{R}^d \to \mathbb{R}\)</span> is defined as following</li>
+</ul>
+<p><span class="math display">\[\begin{equation}
+\text{prox} _{\eta_t, \Omega} (\mathbf{w}) = \mathop{\mathrm{argmin}}_{\mathbf{u}} \frac{1}{2} \lVert \mathbf{u} - \mathbf{w} \rVert ^2 + \eta_t \Omega(\mathbf{w})
+\end{equation}\]</span></p>
+<p></br>
+<img src="images/Algorithm_01.PNG" />
+</br></p>
+<hr />
+</div>
+<div id="convergence-analysis" class="section level2">
+<h2>Convergence Analysis</h2>
+<ul>
+<li>Notations</li>
+</ul>
+<p><span class="math display">\[\begin{equation}
+\begin{split}
+&amp; f(\mathbf{w}) = p(1 - p) \mathbb{E}[(1 - \mathbf{w}^{\text{T}} (x - x&#39;))^2 | y = 1, y&#39; = -1] \\[11pt]
+&amp; \mathbf{w}^{\star} = \mathop{\mathrm{argmin}}_{\mathbf{w} \in \mathbb{R}^d} {f(\mathbf{w}) + \Omega(\mathbf{w})} \\[11pt]
+&amp; G(\mathbf{w} ; z) = \partial _1 F(\mathbf{w} ; a(\mathbf{w}), b(\mathbf{w}), \alpha(\mathbf{w}), z) \\[11pt]
+&amp; \mathbb{E} [\lVert G(\mathbf{w}^{\star} ; z) - \partial f(\mathbf{w}^{\star})\rVert ^2] = \sigma^2_{\star} \\[11pt]
+&amp; C_{\beta, M} = \frac{\beta}{128 M^4} \\[11pt]
+&amp; \tilde{C}_{\beta, M} = \frac{\beta}{(1 + \frac{\beta^2}{128 M^4})^2} \\[11pt]
+&amp; \bar{C}_{\beta, M} = \tilde{C}_{\beta, M} {\beta, M}
+\end{split}
+\end{equation}\]</span></p>
+<ul>
+<li>Assumptions
+<ul>
+<li>(A1) <span class="math inline">\(\Omega(\cdot)\)</span> is <span class="math inline">\(\beta\)</span>-strongly convex</li>
+<li>(A2) There exists and <span class="math inline">\(M &gt; 0\)</span> such that <span class="math inline">\(\lVert x \rVert \leq M\)</span> for any <span class="math inline">\(x \in \mathcal{X}\)</span></li>
+</ul></li>
+<li><strong>Theorem 2.</strong> Under the assumptions (A1), (A2), and choosing step sizes with some <span class="math inline">\(\theta \in (0,1)\)</span> in the form of <span class="math inline">\(\{ \eta_t = \frac{C_{\beta, M}}{t^{\theta}} : t \in \mathbb{N} \}\)</span>, the algorithm SPAM achieves the following</li>
+</ul>
+<p><span class="math display">\[\begin{equation}
+\begin{split}
+\mathbb{E}[\lVert \mathbf{W}_{T+1} - \mathbf{w}^{\star} \rVert ^2] &amp; \leq T^{- \theta}  \exp{\left(\frac{\bar{C}_{\beta, M}}{1 - \theta}\right)\left(\frac{\theta}{e \bar{C}_{\beta, M}}\right)^{\frac{\theta}{1 - \theta}}} \mathbb{E}[\lVert \mathbf{w}_1 - \mathbf{w}^{\star} \rVert ^2] \\[11pt]
+&amp; + 2 T^{- \theta} \sigma^2_{\star} C^2_{\beta, M} \left( \frac{9}{(1 - \theta)2^{1 - \theta}} \left( \frac{1}{\bar{C}_{\beta, M} (1 - 2^{\theta - 1}) e} \right)^{\frac{1}{1 - \theta}} + \frac{18}{\bar{C}_{\beta, M}} + 1 \right)
+\end{split}
+\end{equation}\]</span></p>
+<ul>
+<li><strong>Theorem 3.</strong> Under the assumptions (A1), (A2), and choosing step sizes <span class="math inline">\(\{ \eta_t = (\tilde{C}_{\beta, M}(t + 1))^{-1} : t \in \mathbb{N} \}\)</span>, the algorithm SPAM achieves the following where <span class="math inline">\(t_0 = \max{\left( 2, \left \lceil {1 + \frac{(128 M^4 + \beta^2)^2}{128 M^4 \beta^2}} \right \rceil \right)}\)</span></li>
+</ul>
+<p><span class="math display">\[\begin{equation}
+\mathbb{E}[\lVert \mathbf{w}_{T+1} - \mathbf{w}^{\star} \rVert ^2] \leq \frac{1}{T} (t_0 \mathbb{E}[\lVert \mathbf{w}_{t_0} - \mathbf{w}^{\star} \rVert^2]) + \frac{4 \sigma^2_{\star}}{\tilde{C}^2_{\beta, M}} \frac{\log{T}}{T}
+\end{equation}\]</span></p>
+<hr />
+</div>
+<div id="experiments" class="section level2">
+<h2>Experiments</h2>
+<ul>
+<li>Methods
+<ul>
+<li>SPAM-<span class="math inline">\(L^2\)</span>: SPAM with Frobenius norm <span class="math inline">\(\Omega (\mathbf{w}) = \frac{\beta}{2} \lVert \mathbf{w} \rVert ^2\)</span></li>
+<li>SPAM-NET: SPAM with elastic net norm <span class="math inline">\(\Omega (\mathbf{w}) = \frac{\beta}{2} \lVert \mathbf{w} \rVert ^2 + \beta_1 \lVert \mathbf{w} \rVert _1\)</span></li>
+<li>SOLAM (Ying et al., 2016)</li>
+<li>OPAUC (Gao et al., 2013)</li>
+<li>OAMseq and OAMgra (Zhao et al., 2013)</li>
+<li>B-LS-SVM (Joachims, 2006): a batch learning algorithm for AUC maximization with square loss</li>
+</ul></li>
+<li>Proximal step for elastic net norm can be written as</li>
+</ul>
+<p><span class="math display">\[\begin{equation}
+\mathop{\mathrm{argmin}}_{\mathbf{w}} \frac{1}{2} \lVert \mathbf{w} - \frac{\hat{\mathbf{w}}_{t+1}}{\eta_t \beta + 1} \rVert^2 + \frac{\eta_t \beta_1}{\eta_t \beta + 1} \lVert \mathbf{w} \rVert_1
+\end{equation}\]</span></p>
+<ul>
+<li>80% training, 20% test with 20 runs</li>
+<li>5-fold cross validation on the trainig dataset to determine <span class="math inline">\(\beta \in 10^{[-5:5]}\)</span>, <span class="math inline">\(\beta_1 \in 10^{[-5:5]}\)</span></li>
+</ul>
+<p></br>
+<img src="images/Table_01.PNG" />
+</br>
+<img src="images/Table_02.PNG" />
+</br>
+<img src="images/Figure_01.PNG" />
+</br></p>
+<hr />
+</div>
+<div id="references" class="section level2">
+<h2>References</h2>
+<ul>
+<li>Gao et al., 2013, <strong>One-pass AUC optimization</strong>, <em>International Conference on Machine Learning</em>. <a href="http://proceedings.mlr.press/v28/gao13.pdf">pdf</a>, <a href="https://haaforever.github.io/blog/post/2020/12/07/one-pass-auc-optimization/">summary</a></li>
+<li>Joachims, 2006, <strong>Training linear svms in linear time</strong>, <em>International Conference on Knowledge Discovery and Data Mining</em>. <a href="http://web.engr.oregonstate.edu/~huanlian/teaching/machine-learning/2017fall/extra/linear-svm-linear-time.pdf">pdf</a></li>
+<li>Ying et al., 2016, <strong>Stochastic online AUC maximization</strong>, <em>Advances in Neural Information Processing Systems</em>. <a href="https://papers.nips.cc/paper/2016/file/c52f1bd66cc19d05628bd8bf27af3ad6-Paper.pdf">pdf</a>, <a href="https://haaforever.github.io/blog/post/2020/12/08/stochastic-online-auc-maximization/">summary</a></li>
+<li>Zhao et al., 2011, <strong>Online AUC maximization</strong>, <em>International Conference on Machine Learning</em>. <a href="http://www.icml-2011.org/papers/198_icmlpaper.pdf">pdf</a>, <a href="https://haaforever.github.io/blog/post/2020/12/07/online-auc-maximization/">summary</a></li>
+</ul>
+<hr />
+</div>
+<div id="further-study" class="section level2">
+<h2>Further Study</h2>
+<ul>
+<li>Bottou and LeCun, 2003, <strong>Large scale online learning</strong>, <em>Advances in Neural Information Processing Systems</em>. <a href="https://papers.nips.cc/paper/2003/file/9fb7b048c96d44a0337f049e0a61ff06-Paper.pdf">pdf</a></li>
+<li>(AdaGrad) Duchi et al., 2011, <strong>Adaptive subgradient methods for online learning and stochastic optimization</strong>, <em>Journal of Machine Learning Research</em>. <a href="https://www.jmlr.org/papers/volume12/duchi11a/duchi11a.pdf?source=post_page---------------------------">pdf</a></li>
+<li>Hazan et al., 2012, <strong>Projection-free online learning</strong>, <em>International Conference on Machine Learning</em>, <a href="https://icml.cc/2012/papers/292.pdf">pdf</a></li>
+<li>Johnson and Zhang, 2013, <strong>Accelerating stochastic gradient descent using predictive variance reduction</strong>, <em>Advances in Neural Information Processing Systems</em>. <a href="https://papers.nips.cc/paper/2013/file/ac1dd209cbcc5e5d1c6e28598e8cbbe8-Paper.pdf">pdf</a></li>
+<li>Parikh and Boyd, 2014, <strong>Proximal algorithms</strong>, <em>Foundations and Trends in Optimization</em>. <a href="http://www.math.uni.wroc.pl/~p-wyk4/opt2019/prox_algs.pdf">pdf</a></li>
+<li>Rakhlin et al., 2012, <strong>Making gradient descent optimal for strongly convex stochastic optimization</strong>, <em>International Conference on Machine Learning</em>. <a href="https://icml.cc/Conferences/2012/papers/261.pdf">pdf</a></li>
+<li>Shalev-Shwartz, 2011, <strong>Online learning and online convex optimization</strong>, <em>Foundations and Trends in Machine Learning</em>. <a href="https://www.cs.huji.ac.il/~shais/papers/OLsurvey.pdf">pdf</a></li>
+<li>Shamir and Zhang, 2013, <strong>Stochastic gradient descent for non-smooth optimization: Convergence results and optimal averaging schemes</strong>, <em>International Conference on Machine Learning</em>. <a href="http://proceedings.mlr.press/v28/shamir13.pdf">pdf</a></li>
+<li>Smale and Yao, 2006, <strong>Online learning algorithm</strong>, <em>Foundations of Computational Mathematics</em>. <a href="http://web.mit.edu/~9.520/www/spring08/Papers/online_learning.pdf">pdf</a></li>
+<li>Yang and Lin, 2018, <strong>RSG: Beating subgradient method without smoothness and strong convexity</strong>, <em>Journal of Machine Learning Research</em>. <a href="https://jmlr.csail.mit.edu/papers/volume19/17-016/17-016.pdf">pdf</a></li>
+<li>Zhang and Xiao, 2017, <strong>Stochastic primal-dual coordinate method for regularized empirical risk minimization</strong>, <em>Journal of Machine Learning Research</em>. <a href="https://jmlr.csail.mit.edu/papers/volume18/16-568/16-568.pdf">pdf</a></li>
+<li>Zou and Hastie, 2005, <strong>Regularization and variable selection via the elastic net</strong>, <em>Journal of the Royal Statistical Society: Series B (Statistical Methodology)</em>. <a href="https://www.math.arizona.edu/~hzhang/math574m/Read/elasticnet.pdf">pdf</a></li>
+</ul>
+</div>
+
+</main>
+
+  <footer>
+  <script src="//yihui.org/js/math-code.js"></script>
+<script async src="//mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+<script async src="//yihui.org/js/center-img.js"></script>
+
+  
+  <hr/>
+  © <a href="https://www.instagram.com/hajiboost/">Jihyeon Ha</a> 2020 &ndash; | <a href="https://github.com/haaforever">Github</a>
+  
+  </footer>
+  </body>
+</html>
+

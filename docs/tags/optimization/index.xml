@@ -6,9 +6,19 @@
     <description>Recent content in Optimization on Haji blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 10 Dec 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://haaforever.github.io/blog/tags/optimization/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 29 Dec 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://haaforever.github.io/blog/tags/optimization/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Fast Stochastic AUC Maximization</title>
+      <title>SPAM - Stochastic Proximal Algorithms for AUC Maximization</title>
+      <link>https://haaforever.github.io/blog/post/2020/12/29/spam-stochastic-proximal-algorithms-for-auc-maximization/</link>
+      <pubDate>Tue, 29 Dec 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://haaforever.github.io/blog/post/2020/12/29/spam-stochastic-proximal-algorithms-for-auc-maximization/</guid>
+      <description>Natole et al., 2018, Stochastic proximal algorithms for AUC maximization, International Conference on Machine Learning. pdf
+IntroductionStochastic proximal algorithm for AUC maximization (SPAM)SPAM applies to general non-smooth regularization termsUnder the assumption of strong convexity, SPAM can achieve a convergence rate of \(\mathcal{O}(\frac{\log{t}}{t})\)BackgroundInput space \(\mathcal{X} \subseteq \mathbb{R}^d\)Output space \(\mathcal{Y} = \{ -1, 1\}\)Training data \(\mathbf{z} = \{ (x_i, y_i) \}_{i = 1}^n\): i.</description>
+    </item>
+    
+    <item>
+      <title>FSAUC - Fast Stochastic AUC Maximization</title>
       <link>https://haaforever.github.io/blog/post/2020/12/10/fast-stochastic-auc-maximization/</link>
       <pubDate>Thu, 10 Dec 2020 00:00:00 +0000</pubDate>
       
@@ -18,7 +28,7 @@ IntroductionConvergence rate of SOLAM (Ying et al., 2016): \(\tilde{\mathcal{O
     </item>
     
     <item>
-      <title>Stochastic Online AUC Maximization</title>
+      <title>SOLAM - Stochastic Online AUC Maximization</title>
       <link>https://haaforever.github.io/blog/post/2020/12/08/stochastic-online-auc-maximization/</link>
       <pubDate>Tue, 08 Dec 2020 00:00:00 +0000</pubDate>
       
@@ -28,13 +38,23 @@ IntroductionTopic: online learning algorithms that maximize AUC for large-scal
     </item>
     
     <item>
-      <title>Label Distribution Learning</title>
+      <title>LDL - Label Distribution Learning</title>
       <link>https://haaforever.github.io/blog/post/2020/12/07/label-distribution-learning/</link>
       <pubDate>Mon, 07 Dec 2020 00:00:00 +0000</pubDate>
       
       <guid>https://haaforever.github.io/blog/post/2020/12/07/label-distribution-learning/</guid>
       <description>Geng, 2016, Label distribution learning, IEEE Transactions on Knowledge and Data Engineering. pdf
 Formulation of LDLNotationInput space: \(\mathbf{x} \in \mathcal{X} = \mathbb{R}^q\)Complete set of labels: \(\mathcal{Y} = \{ y_1, \cdots, y_c \}\)Label distribution of \(\mathbf{x}_i\): \(D_i = \{ d_{\mathbf{x}_i}^{y_1}, \cdots, d_{\mathbf{x}_i}^{y_c} \}\)Description degree of \(y\) to \(\mathbf{x}\): \(d_{\mathbf{x}}^y\)\(d_{\mathbf{x}}^y \in [0,1]\) and \(\sum_y d_{\mathbf{x}}^y = 1\)Training set: \(S = \{ (\mathbf{x}_1, D_1), \cdots, (\mathbf{x}_n, D_n) \}\)Learn a conditional probability mass function \(p(y|\mathbf{x})\) from \(S\), where \(\mathbf{x} \in \mathcal{X}\) and \(y \in \mathcal{Y}\)Optimization formulationGiven a parametric model \(p(y|\mathbf{x} ; \theta)\), the goal of LDL is to find \(\theta\) that can generate a distribution similar to \(D_i\), given \(\mathbf{x}_i\)Example: Kullback-Leibler divergence\[\begin{equation}\begin{split}&amp;amp; \mathop{\mathrm{argmin}}_{\theta} \sum_i \sum_j \left( d_{\mathbf{x}_i}^{y_j} \log{\frac{d_{\mathbf{x}_i}^{y_j}}{p(y_j|\mathbf{x}_i ; \theta)}} \right) \\= \quad &amp;amp; \mathop{\mathrm{argmax}}_{\theta} \sum_i \sum_j d_{\mathbf{x}_i}^{y_j} \log{p(y_j|\mathbf{x}_i ; \theta)}\end{split}\end{equation}\]When \(d_{\mathbf{x}_i}^{y_j} = I(y_j = y(\mathbf{x}_i))\), single label learning\[\begin{equation}\mathop{\mathrm{argmax}}_{\theta} \sum_i \log{p(y(\mathbf{x}_i)|\mathbf{x}_i ; \theta)}\end{equation}\]When each instance is associated with a specific label set, multi-label learning\[\begin{equation}\mathop{\mathrm{argmax}}_{\theta} \sum_i \frac{1}{|Y_i|} \sum_{y \in Y_i} \log{p(y | \mathbf{x}_i ; \theta)}\end{equation}\]LDL may be viewed as a more general learning framework which includes both SLL and MLL as its special cases</description>
+    </item>
+    
+    <item>
+      <title>NCE - Noise Constrative Estimation</title>
+      <link>https://haaforever.github.io/blog/post/2020/12/07/noise-constrative-estimation/</link>
+      <pubDate>Mon, 07 Dec 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://haaforever.github.io/blog/post/2020/12/07/noise-constrative-estimation/</guid>
+      <description>Gutmann and Hyvarinen, 2010, Noise-contrastive estimation: A new estimation principle for unnormalized statistical models, AISTATS. pdf
+Estimation ProblemGiven a sample of a random vector \(\mathbf{x} \in \mathbb{R}^n\) from an unknown pdf \(p_d(\cdot)\)Our model: a parameterized family of functions \(\{ p_m(\cdot;\alpha) \}_{\alpha}\)How to estimate \(\alpha\) from the observed sample by maximizing some objective function?Any solution to this estimation problem must yield a normalized density\[\begin{equation}\begin{split}&amp;amp; p_m(\cdot;\alpha) = \frac{p_m^0(\cdot;\alpha)}{Z(\alpha)} \\[10pt]&amp;amp; Z(\alpha) = \int p_m^0(\mathbf{u};\alpha) d\mathbf{u}\end{split}\end{equation}\]</description>
     </item>
     
     <item>
@@ -48,33 +68,23 @@ Formulation of LDLNotationInput space: \(\mathbf{x} \in \mathcal{X} = \mathb
     </item>
     
     <item>
-      <title>Noise Constrative Estimation</title>
-      <link>https://haaforever.github.io/blog/post/2020/12/07/noise-constrative-estimation/</link>
-      <pubDate>Mon, 07 Dec 2020 00:00:00 +0000</pubDate>
-      
-      <guid>https://haaforever.github.io/blog/post/2020/12/07/noise-constrative-estimation/</guid>
-      <description>Gutmann and Hyvarinen, 2010, Noise-contrastive estimation: A new estimation principle for unnormalized statistical models, AISTATS. pdf
-Estimation ProblemGiven a sample of a random vector \(\mathbf{x} \in \mathbb{R}^n\) from an unknown pdf \(p_d(\cdot)\)Our model: a parameterized family of functions \(\{ p_m(\cdot;\alpha) \}_{\alpha}\)How to estimate \(\alpha\) from the observed sample by maximizing some objective function?Any solution to this estimation problem must yield a normalized density\[\begin{equation}\begin{split}&amp;amp; p_m(\cdot;\alpha) = \frac{p_m^0(\cdot;\alpha)}{Z(\alpha)} \\[10pt]&amp;amp; Z(\alpha) = \int p_m^0(\mathbf{u};\alpha) d\mathbf{u}\end{split}\end{equation}\]</description>
-    </item>
-    
-    <item>
-      <title>One-Pass AUC Optimization</title>
-      <link>https://haaforever.github.io/blog/post/2020/12/07/one-pass-auc-optimization/</link>
-      <pubDate>Mon, 07 Dec 2020 00:00:00 +0000</pubDate>
-      
-      <guid>https://haaforever.github.io/blog/post/2020/12/07/one-pass-auc-optimization/</guid>
-      <description>Gao et al., 2013, One-pass AUC optimization, ICML. pdf
-MotivationAUC is measured by a sum of losses defined over pairs of instances from different classesThis causes a problem in applications involving big data or streaming data in which a large volume of data come in a short time periodIn this work, one-pass AUC optimization that requires going through the training data only once without storing the entire training dataset is proposedPreliminariesInstance space \(\mathcal{X} \in \mathbb{R}^d\)Label set \(\mathcal{Y} = \{ -1, +1 \}\)Unknown distribution \(\mathcal{D}\) over \(\mathcal{X} \times \mathcal{Y}\)A training sample of \(n_{+}\) positive instances and \(n_{-}\) negative onesTraining set \(\mathcal{S} = \{ (\mathbf{x}_1^{+}, +1), \cdots, (\mathbf{x}_{n_{+}}^{+}, +1), (\mathbf{x}_1^{-}, -1), \cdots, (\mathbf{x}_{n_{-}}^{-}, -1) \}\)Real-valued function \(f: \mathcal{X} \rightarrow \mathbb{R}\)AUC of \(f\) on \(\mathcal{S}\)\[\begin{equation}\sum_{i=1}^{n_{+}} \sum_{j=1}^{n_{-}} \frac{\mathbb{I}[f(\mathbf{x}_{i}^{+}) &amp;gt; f(\mathbf{x}_{j}^{-})]}{n_{+} n_{-}}\end{equation}\]</description>
-    </item>
-    
-    <item>
-      <title>Online AUC Maximization</title>
+      <title>OAM - Online AUC Maximization</title>
       <link>https://haaforever.github.io/blog/post/2020/12/07/online-auc-maximization/</link>
       <pubDate>Mon, 07 Dec 2020 00:00:00 +0000</pubDate>
       
       <guid>https://haaforever.github.io/blog/post/2020/12/07/online-auc-maximization/</guid>
       <description>Zhao et al., 2011, Online AUC Maximization, ICML. pdf
 MotivationMost studies of online learning measure the performance of a learner by classification accuracy, which is inappropriate for applications where the data are unevenly distributed among different classesAUC maximization needs to optimize the pairwise loss between two instances from different classes, making it unattractive for large-scale applicationsThe authors address this challenge by exploiting the reservoir samplingPreliminaries\((\mathbf{x}_t, y_t)\): the training examples received at the \(t\)-th trial where \(\mathbf{x}_t \in \mathbb{R}^d\) and \(y_t \in \{ -1, 1\}\)Training dataset: \(\mathcal{D} = \{ (\mathbf{x}_i, y_i) \in \mathbb{R} \times \{ -1, 1\} | i \in [T] \}\)The set of positive instances: \(\mathcal{D}_+ = \{ (\mathbf{x}_i^+, 1) | i \in [T_+] \}\)The set of negative instances: \(\mathcal{D}_- = \{ (\mathbf{x}_j^-, -1) | j \in [T_-] \}\)\(T_+\), \(T_-\): the number of positive and negative instancesLinear classifier: \(\mathbf{w} \cdot \mathbf{x}\)\[\begin{equation}\begin{split}\text{AUC} (\mathbf{w}) &amp;amp; = \frac{\sum_{i=1}^{T^+} \sum_{j=1}^{T_-} \mathbb{I} (\mathbf{w} \cdot \mathbf{x}_i^+ &amp;gt; \mathbf{w} \cdot \mathbf{x}_j^-)}{T_+ T_-} \\[10pt]&amp;amp; = 1 - \frac{\sum_{i=1}^{T^+} \sum_{j=1}^{T_-} \mathbb{I} (\mathbf{w} \cdot \mathbf{x}_i^+ \leq \mathbf{w} \cdot \mathbf{x}_j^-)}{T_+ T_-}\end{split}\end{equation}\]</description>
+    </item>
+    
+    <item>
+      <title>OPAUC - One-Pass AUC Optimization</title>
+      <link>https://haaforever.github.io/blog/post/2020/12/07/one-pass-auc-optimization/</link>
+      <pubDate>Mon, 07 Dec 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://haaforever.github.io/blog/post/2020/12/07/one-pass-auc-optimization/</guid>
+      <description>Gao et al., 2013, One-pass AUC optimization, ICML. pdf
+MotivationAUC is measured by a sum of losses defined over pairs of instances from different classesThis causes a problem in applications involving big data or streaming data in which a large volume of data come in a short time periodIn this work, one-pass AUC optimization that requires going through the training data only once without storing the entire training dataset is proposedPreliminariesInstance space \(\mathcal{X} \in \mathbb{R}^d\)Label set \(\mathcal{Y} = \{ -1, +1 \}\)Unknown distribution \(\mathcal{D}\) over \(\mathcal{X} \times \mathcal{Y}\)A training sample of \(n_{+}\) positive instances and \(n_{-}\) negative onesTraining set \(\mathcal{S} = \{ (\mathbf{x}_1^{+}, +1), \cdots, (\mathbf{x}_{n_{+}}^{+}, +1), (\mathbf{x}_1^{-}, -1), \cdots, (\mathbf{x}_{n_{-}}^{-}, -1) \}\)Real-valued function \(f: \mathcal{X} \rightarrow \mathbb{R}\)AUC of \(f\) on \(\mathcal{S}\)\[\begin{equation}\sum_{i=1}^{n_{+}} \sum_{j=1}^{n_{-}} \frac{\mathbb{I}[f(\mathbf{x}_{i}^{+}) &amp;gt; f(\mathbf{x}_{j}^{-})]}{n_{+} n_{-}}\end{equation}\]</description>
     </item>
     
   </channel>

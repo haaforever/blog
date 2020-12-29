@@ -6,7 +6,43 @@
     <description>Recent content in Tags on Haji blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 17 Dec 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://haaforever.github.io/blog/tags/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 29 Dec 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://haaforever.github.io/blog/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>AUC</title>
+      <link>https://haaforever.github.io/blog/tags/auc/</link>
+      <pubDate>Tue, 29 Dec 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://haaforever.github.io/blog/tags/auc/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>ICML</title>
+      <link>https://haaforever.github.io/blog/tags/icml/</link>
+      <pubDate>Tue, 29 Dec 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://haaforever.github.io/blog/tags/icml/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Online Learning</title>
+      <link>https://haaforever.github.io/blog/tags/online-learning/</link>
+      <pubDate>Tue, 29 Dec 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://haaforever.github.io/blog/tags/online-learning/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Optimization</title>
+      <link>https://haaforever.github.io/blog/tags/optimization/</link>
+      <pubDate>Tue, 29 Dec 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://haaforever.github.io/blog/tags/optimization/</guid>
+      <description></description>
+    </item>
+    
     <item>
       <title>R</title>
       <link>https://haaforever.github.io/blog/tags/r/</link>
@@ -22,42 +58,6 @@
       <pubDate>Thu, 17 Dec 2020 00:00:00 +0000</pubDate>
       
       <guid>https://haaforever.github.io/blog/tags/svm/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>AUC</title>
-      <link>https://haaforever.github.io/blog/tags/auc/</link>
-      <pubDate>Thu, 10 Dec 2020 00:00:00 +0000</pubDate>
-      
-      <guid>https://haaforever.github.io/blog/tags/auc/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>ICML</title>
-      <link>https://haaforever.github.io/blog/tags/icml/</link>
-      <pubDate>Thu, 10 Dec 2020 00:00:00 +0000</pubDate>
-      
-      <guid>https://haaforever.github.io/blog/tags/icml/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Online Learning</title>
-      <link>https://haaforever.github.io/blog/tags/online-learning/</link>
-      <pubDate>Thu, 10 Dec 2020 00:00:00 +0000</pubDate>
-      
-      <guid>https://haaforever.github.io/blog/tags/online-learning/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Optimization</title>
-      <link>https://haaforever.github.io/blog/tags/optimization/</link>
-      <pubDate>Thu, 10 Dec 2020 00:00:00 +0000</pubDate>
-      
-      <guid>https://haaforever.github.io/blog/tags/optimization/</guid>
       <description></description>
     </item>
     

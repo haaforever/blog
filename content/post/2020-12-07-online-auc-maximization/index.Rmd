@@ -1,5 +1,5 @@
 ---
-title: Online AUC Maximization
+title: OAM - Online AUC Maximization
 date: '2020-12-07'
 slug: online-auc-maximization
 categories:

@@ -1,5 +1,5 @@
 ---
-title: Stochastic Online AUC Maximization
+title: SOLAM - Stochastic Online AUC Maximization
 date: '2020-12-08'
 slug: stochastic-online-auc-maximization
 categories:

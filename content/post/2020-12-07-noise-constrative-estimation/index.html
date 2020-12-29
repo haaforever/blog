@@ -1,5 +1,5 @@
 ---
-title: Noise Constrative Estimation
+title: NCE - Noise Constrative Estimation
 author: ''
 date: '2020-12-07'
 slug: noise-constrative-estimation
@@ -11,8 +11,6 @@ tags:
   - Optimization
 ---
 
-<link href="{{< relref "post/2020-12-07-noise-constrative-estimation/index.html" >}}index_files/anchor-sections/anchor-sections.css" rel="stylesheet" />
-<script src="{{< relref "post/2020-12-07-noise-constrative-estimation/index.html" >}}index_files/anchor-sections/anchor-sections.js"></script>
 
 
 
@@ -202,11 +200,11 @@ fn.log.p.m &lt;- function(x, theta) {
   return(log.p.m)
 }</code></pre>
 <pre class="r"><code>fn.log.p.m(x = x[1:10,], theta = c(w.init, c.init))</code></pre>
-<pre><code>##  [1] -0.1230594 -3.0495950 -4.4729246 -4.2063108  1.0260953 -3.2700812
-##  [7] -1.5275617  0.4567511 -2.4646030 -3.6735548</code></pre>
+<pre><code>##  [1] -4.8040590 -5.3653919 -2.3110068 -4.4353252 -0.5586472 -3.7668042
+##  [7] -1.5666857 -2.2549565 -0.4199653 -4.4434660</code></pre>
 <pre class="r"><code>fn.log.p.m(x = y[1:10,], theta = c(w.init, c.init))</code></pre>
-<pre><code>##  [1] -3.9148040 -3.6832952 -3.7856016 -6.8454587 -3.8719122 -2.4799451
-##  [7] -0.6408185 -2.9219549  0.2443362 -2.8604239</code></pre>
+<pre><code>##  [1] -4.66346452 -0.99064835  0.86599533 -0.04283494 -2.03964117  0.11927468
+##  [7]  1.58332400 -5.04416379 -0.16288726 -7.83155865</code></pre>
 <ul>
 <li>Optimization using BFGS method</li>
 </ul>
@@ -225,7 +223,7 @@ fn.loss &lt;- function(x, theta, y, s) {
   return(loss)
 }
 fn.loss(x = x, theta = c(w.init, c.init), y = y, s = s)</code></pre>
-<pre><code>## [1] 2.189919</code></pre>
+<pre><code>## [1] 2.21899</code></pre>
 <pre class="r"><code># Optimization
 itr &lt;- 500
 res.opt &lt;- optim(par = c(w.init, c.init), method = &quot;BFGS&quot;,
@@ -234,14 +232,14 @@ res.opt &lt;- optim(par = c(w.init, c.init), method = &quot;BFGS&quot;,
 res.opt</code></pre>
 <pre><code>## $par
 ##          x1          x2       x1*x1       x1*x2       x2*x2           c 
-##  0.01037291 -0.02037821 -0.45569975  0.05815747 -0.49241408 -1.86343752 
+##  0.01963715 -0.03351169 -0.47629752  0.05382216 -0.45761572 -1.91112469 
 ## 
 ## $value
-## [1] 1.009165
+## [1] 1.008357
 ## 
 ## $counts
 ## function gradient 
-##       17       14 
+##       21       16 
 ## 
 ## $convergence
 ## [1] 0
@@ -358,9 +356,9 @@ b.opt &lt;- solve(a)
 c.opt &lt;- log(abs(det(b.opt))) - log(4)
 b.opt &lt;- as.numeric(t(b.opt))
 c(b.opt, c.opt)</code></pre>
-<pre><code>##  [1]  -1.0678034   2.7347721 -11.4978249  -0.5658957   1.5007761  -1.5540557
-##  [7]   4.3488915  -0.3689997   4.9651959  -7.6275323  34.6154340  -0.4827444
-## [13]  -2.5772972   3.1499491 -16.3455963  -0.4142487   1.7389489</code></pre>
+<pre><code>##  [1]  0.16377802  1.84978262  1.54860462 -0.28984092 -2.60705922 -2.48963748
+##  [7] -0.28319271 -0.03778955  0.73095654 -0.46924317 -0.02723079  0.91004734
+## [13]  1.20512945  2.24159192  0.81735067  0.76902596  0.19449211</code></pre>
 <ul>
 <li>Model</li>
 </ul>
@@ -385,8 +383,8 @@ fn.log.p.m &lt;- function(x, theta) {
   return(log.p.m)
 }
 fn.log.p.m(x = x[1:10,], theta = c(b.init, c.init))</code></pre>
-<pre><code>##  [1] -10.167318 -18.046268  -3.493401  -3.851108 -14.295308 -20.772439
-##  [7] -16.389326  -8.988520  -4.958315 -17.833190</code></pre>
+<pre><code>##  [1]  -4.886656 -19.901507 -26.570543 -22.821405  -8.327898 -20.590749
+##  [7]  -8.824790  -2.865636 -14.054144 -28.687737</code></pre>
 <ul>
 <li>Estimation method
 <ul>
@@ -406,8 +404,8 @@ plot(data.frame(rbind(x, y)), col = c(rep(1, n), rep(3, n)))</code></pre>
   return(log.p.n)
 }
 fn.log.p.n(y = y[1:10,], mu = mu, sigma = sigma)</code></pre>
-<pre><code>##  [1] -3.306050 -2.346724 -2.792790 -2.778671 -2.418834 -2.568218 -2.749788
-##  [8] -2.210911 -2.423041 -5.291618</code></pre>
+<pre><code>##  [1] -4.193448 -5.272017 -4.690582 -3.975235 -8.061068 -4.793246 -3.956588
+##  [8] -3.816087 -5.425503 -4.008252</code></pre>
 <pre class="r"><code># Loss function
 fn.loss &lt;- function(x, theta, y, mu, sigma) {
   u &lt;- rbind(x, y)
@@ -423,15 +421,14 @@ fn.loss &lt;- function(x, theta, y, mu, sigma) {
   return(loss)
 }
 fn.loss(x = x, theta = c(b.init, c.init), y = y, mu = mu, sigma = sigma)</code></pre>
-<pre><code>## [1] 8.281887</code></pre>
+<pre><code>## [1] 8.235895</code></pre>
 <pre class="r"><code># Optimization
 itr &lt;- 200
 res.opt &lt;- optim(par = c(b.init, c.init), method = &quot;CG&quot;, control = list(maxit = itr), fn = fn.loss, x = x, y = y, mu = mu, sigma = sigma)
 res.opt$&quot;par&quot;</code></pre>
-<pre><code>##  [1] -0.679131403  0.485405892 -0.270039202  0.211353185 -0.244509196
-##  [6] -0.141846388 -0.938414194 -0.405202736  0.209630474  0.438933188
-## [11] -1.441725296 -0.426648616 -0.269371291  0.363076643 -1.726505072
-## [16] -0.008731007 -0.550986547</code></pre>
+<pre><code>##  [1]  0.88548920  1.62568656  0.56695467  0.51969550 -0.24582165  0.58147406
+##  [7]  0.05563596 -0.57810113  0.04868180  1.16585245  0.99956172 -0.26714867
+## [13] -1.96468867 -1.83186554 -0.25545399 -0.14022244 -1.28852983</code></pre>
 <pre class="r"><code># Optimization for tracking MSE
 res.par &lt;- matrix(data = 0, nrow = itr + 1, ncol = length(c(b.init, c.init)))
 res.par[1,] &lt;- c(b.init, c.init)
@@ -454,24 +451,24 @@ plot(mse)</code></pre>
 <pre class="r"><code>data.frame(&quot;Min_MSE&quot; = res.par[which.min(mse),],
            &quot;Min_Loss&quot; = res.par[which.min(loss),],
            &quot;Optimal&quot; = par.opt)</code></pre>
-<pre><code>##         Min_MSE    Min_Loss     Optimal
-## 1  -0.011472646 -0.36675074  -1.0678034
-## 2  -0.327915670 -0.15439597   2.7347721
-## 3   0.209830192  0.27801739 -11.4978249
-## 4   0.253137812  0.27687560  -0.5658957
-## 5   0.077913174 -0.02118762   1.5007761
-## 6  -0.334477071 -0.37518392  -1.5540557
-## 7   0.187742140  0.14740258   4.3488915
-## 8  -0.341547155 -0.45805840  -0.3689997
-## 9  -0.149873243 -0.09708178   4.9651959
-## 10  0.444342222  0.32190585  -7.6275323
-## 11 -1.199189518 -1.31235201  34.6154340
-## 12 -0.135373881 -0.13879506  -0.4827444
-## 13 -0.609603903 -0.65712203  -2.5772972
-## 14  0.055091891  0.54343559   3.1499491
-## 15 -0.638170121 -0.59206225 -16.3455963
-## 16  0.006906337  0.14873637  -0.4142487
-## 17 -0.158763430 -0.59071193   1.7389489</code></pre>
+<pre><code>##        Min_MSE    Min_Loss     Optimal
+## 1   1.03833374  0.74457595  0.16377802
+## 2   0.50471770  0.28185001  1.84978262
+## 3  -0.02701037 -0.11592811  1.54860462
+## 4  -0.29672808 -0.22906401 -0.28984092
+## 5  -0.26717227 -0.03742444 -2.60705922
+## 6   1.44804643  0.87941809 -2.48963748
+## 7   0.30772058  0.16000609 -0.28319271
+## 8  -0.98968110 -0.57333455 -0.03778955
+## 9  -0.72891854 -0.35481799  0.73095654
+## 10  0.24188275  0.69273730 -0.46924317
+## 11  0.86112499  0.89135227 -0.02723079
+## 12 -0.50835129 -0.33359972  0.91004734
+## 13 -1.42801464 -1.58534430  1.20512945
+## 14 -1.38875883 -2.11787973  2.24159192
+## 15  0.02290327 -0.65128278  0.81735067
+## 16  0.44106837 -0.42265331  0.76902596
+## 17  1.18855554 -1.42374356  0.19449211</code></pre>
 <ul>
 <li>Results
 <br>

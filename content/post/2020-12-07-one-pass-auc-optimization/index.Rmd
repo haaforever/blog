@@ -1,5 +1,5 @@
 ---
-title: One-Pass AUC Optimization
+title: OPAUC - One-Pass AUC Optimization
 author: ''
 date: '2020-12-07'
 slug: one-pass-auc-optimization

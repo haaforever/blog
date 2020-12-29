@@ -58,6 +58,8 @@ tags:
   * Lei and Ying, 2019, **Stochastic proximal AUC maximization**, *arXiv*. [pdf](https://arxiv.org/abs/1906.06053)
   * Dan and Sahoo, 2019, **Variance reduced stochastic proximal algorithm for AUC maximization**, *arXiv*. [pdf](https://arxiv.org/abs/1911.03548)
   * Gultekin et al., 2020, **MBA: Mini-batch AUC optimization**, *IEEE Transactions on Neural Networks and Learning Systems*. [pdf](https://ieeexplore.ieee.org/abstract/document/9018079?casa_token=4brIaaIJfGAAAAAA:vyKfPao9gWSPoWMEQi96NQmUvgGqucIH-OettyT54ZIkEFcEwF_2qsjaMzdUchhGWrtZmdCYXQ)
+  * Khalid et al., 2020, **Proximal Stochastic AUC Maximization**, *International Joint Conference on Neural Networks*. [pdf](https://ieeexplore.ieee.org/abstract/document/9206926?casa_token=n6Hynrc7xkYAAAAA:n6LKZ88ZWP-USt8T74Egeks3JfcM2IZP05x9egQEWzgOkN_7pKToaldlXBZEryU2EfxPnGaxLlU)
+  * Yang et al., 2020, **Stochastic AUC Optimization with General Loss**, *Communication on Pure and Applied Analysis*. [pdf](https://www.aimsciences.org/article/doi/10.3934/cpaa.2020188)
 
 
 ***
@@ -169,6 +171,7 @@ tags:
   * Fan et al., 2019, **AUC optimization for deep learning based voice activity detection**, *IEEE International Conference on Acoustics, Speech and Signal Processing*. [pdf](https://ieeexplore.ieee.org/abstract/document/8682803/?casa_token=MXcKWwsV6FoAAAAA:X6pEnJNqtKytzOmnbqdi2UPfXbhPy3vI4lQ-F-gky2zk1SxyXuMl2tZA66f3S2jfuozRbDbRyw)
   * Liu et al., 2019, **Stochastic AUC maximization with deep neural networks**, *International Conference on Learning Representations*. [pdf](https://openreview.net/forum?id=HJepXaVYDr)
   * Bai et al., 2020, **Partial AUC optimization based deep speaker embeddings with class-center learning for text-independent speaker verification**, *IEEE International Conference on Acoustics, Speech and Signal Processing*. [pdf](https://ieeexplore.ieee.org/abstract/document/9053674?casa_token=hrC-kAhCVxkAAAAA:aJ4xRuoTIxmnDSbNIcSRHHBs8aL2fbuBlLdw-qofcOtdAabznED_n3zePOCr_zFEFFIlyxanJg)
+  * Yuan et al., 2020, **Robust Deep AUC Maximization: A New Surrogate Loss and Empirical Studies on Medical Image Classification**, *arXiv*. [pdf](https://arxiv.org/pdf/2012.03173.pdf)
 
 
 ***
